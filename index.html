@@ -909,7 +909,7 @@
                     <div class="flex items-center gap-3">
                         <label class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl cursor-pointer transition-all text-xs flex items-center gap-2">
                             <i class="fa-solid fa-paperclip"></i> Pilih Berkas
-                            <input type="file" id="fFileUpload" onchange="handleFileUpload(event)" accept=".doc,.docx,.pdf,.xls,.xlsx" class="hidden">
+                            <input type="file" id="fFileUpload" onchange="handleFileUpload(event)" accept=".doc,.docx,.pdf,.xls,.xlsx,image/*" class="hidden">
                         </label>
                         <span id="uploadedFileName" class="text-slate-400 text-xs truncate italic">Belum ada file dipilih (Maks. 10MB)</span>
                     </div>
@@ -1080,6 +1080,7 @@
         let activeChartInstance = null;
         let currentPerangkatList = [];
         let uploadedFileMeta = null;
+        let uploadedFileDataUrl = null;
         let currentFormType = 'RPP';
 
         // INITIALIZATION ON PAGE LOAD
@@ -1107,6 +1108,7 @@
                         status: 'Dipublikasikan',
                         author: 'Nindy Octavia, S.Pd.',
                         fileAttachment: 'Modul_Ajar_Jurnal_Penyesuaian.pdf',
+                        fileDataUrl: null,
                         content: {
                             kompetensiAwal: 'Siswa memahami saldo normal akun dan jurnal umum.',
                             profilPancasila: 'Bernalar Kritis dan Mandiri',
@@ -1120,22 +1122,23 @@
                     },
                     {
                         id: 'DOC-002',
-                        title: 'RPP Dasar-Dasar Akuntansi: Konsep Persamaan Dasar',
+                        title: 'RPP - Akuntansi Keuangan (11 AKL 1)',
                         type: 'RPP',
-                        kelas: '10 AKL 1',
-                        mapel: 'Dasar-Dasar Akuntansi dan Keuangan Lembaga',
+                        kelas: '11 AKL 1',
+                        mapel: 'Akuntansi Keuangan',
                         semester: 'Ganjil',
                         tahunAjaran: '2025/2026',
                         updatedAt: '2026-03-10',
                         status: 'Draft',
                         author: 'Nindy Octavia, S.Pd.',
-                        fileAttachment: null,
+                        fileAttachment: 'Rencana Pelaksanaan Pembelajaran.pdf',
+                        fileDataUrl: null,
                         content: {
                             alokasiWaktu: '2 JP x 45 Menit',
                             tujuanPembelajaran: 'Siswa mampu menganalisis transaksi keuangan terhadap persamaan dasar akuntansi.',
                             metodePembelajaran: 'Problem Based Learning (PBL)',
-                            langkahAktivitas: 'Diskusi kelompok pembuatan tabel Aktiva = Pasiva',
-                            penilaian: 'Lembar observasi dan tes tertulis'
+                            langkahAktivitas: '1. Pendahuluan: Salam & Doa (15m)\n2. Inti: Analisis kasus & Diskusi kelompok (60m)\n3. Penutup: Kuis singkat & Refleksi (15m)',
+                            penilaian: 'Lembar observasi sikap dan tes tertulis'
                         }
                     }
                 ];
@@ -1278,8 +1281,12 @@
             tbody.innerHTML = filtered.map(item => `
                 <tr class="hover:bg-pink-50/40 transition-colors">
                     <td class="p-3">
-                        <div class="font-bold text-slate-800">${item.title}</div>
-                        ${item.fileAttachment ? `<span class="text-[10px] text-pink-500 font-semibold flex items-center gap-1 mt-0.5"><i class="fa-solid fa-paperclip"></i> ${item.fileAttachment}</span>` : ''}
+                        <div class="font-bold text-slate-800 cursor-pointer hover:text-pink-600 transition-colors" onclick="previewPerangkatById('${item.id}')">${item.title}</div>
+                        ${item.fileAttachment ? `
+                            <button onclick="previewPerangkatById('${item.id}')" class="text-[10px] text-pink-500 hover:text-pink-700 font-semibold flex items-center gap-1 mt-0.5 transition-colors">
+                                <i class="fa-solid fa-paperclip"></i> ${item.fileAttachment}
+                            </button>
+                        ` : ''}
                     </td>
                     <td class="p-3">
                         <span class="px-2 py-0.5 rounded-md text-[10px] font-bold ${getTypeBadgeClass(item.type)}">${item.type}</span>
@@ -1297,7 +1304,7 @@
                         </span>
                     </td>
                     <td class="p-3 text-right space-x-1">
-                        <button onclick="previewPerangkatById('${item.id}')" title="Pratinjau & Cetak" class="p-1.5 bg-purple-50 hover:bg-purple-100 text-purple-600 rounded-lg transition-all">
+                        <button onclick="previewPerangkatById('${item.id}')" title="Pratinjau & Lihat Dokumen" class="p-1.5 bg-purple-50 hover:bg-purple-100 text-purple-600 rounded-lg transition-all">
                             <i class="fa-solid fa-eye text-xs"></i>
                         </button>
                         <button onclick="editPerangkatById('${item.id}')" title="Edit" class="p-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-lg transition-all">
@@ -1347,6 +1354,7 @@
 
             document.getElementById('fJudul').value = type + ' - ' + mapel + ' (' + kelas + ')';
             uploadedFileMeta = null;
+            uploadedFileDataUrl = null;
             document.getElementById('uploadedFileName').innerText = 'Belum ada file dipilih (Maks. 10MB)';
 
             // Fetch defaults based on mapel
@@ -1467,7 +1475,7 @@
             }
         }
 
-        // HANDLE FILE UPLOAD VALIDATION
+        // HANDLE FILE UPLOAD VALIDATION & CONVERT TO DATA URL
         function handleFileUpload(event) {
             const file = event.target.files[0];
             const filenameEl = document.getElementById('uploadedFileName');
@@ -1480,6 +1488,13 @@
             }
 
             uploadedFileMeta = file.name;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                uploadedFileDataUrl = e.target.result;
+            };
+            reader.readAsDataURL(file);
+
             if (filenameEl) {
                 filenameEl.innerText = file.name + ' (' + (file.size / 1024 / 1024).toFixed(2) + ' MB)';
                 filenameEl.className = 'text-pink-600 font-bold text-xs truncate';
@@ -1499,6 +1514,11 @@
             const mapel = document.getElementById('pMapelSelect').value || 'Akuntansi Keuangan';
             const semester = document.getElementById('pSemesterSelect').value;
             const ta = document.getElementById('pTahunAjaranSelect').value;
+
+            // Preserve file URL if existing edit
+            const existingDoc = currentPerangkatList.find(d => d.id === docId);
+            const fileUrlToSave = uploadedFileDataUrl || (existingDoc ? existingDoc.fileDataUrl : null);
+            const fileNameToSave = uploadedFileMeta || (existingDoc ? existingDoc.fileAttachment : null);
 
             // Collect dynamic content
             let contentObj = {};
@@ -1549,7 +1569,8 @@
                 updatedAt: new Date().toISOString().split('T')[0],
                 status: status,
                 author: 'Nindy Octavia, S.Pd.',
-                fileAttachment: uploadedFileMeta || null,
+                fileAttachment: fileNameToSave,
+                fileDataUrl: fileUrlToSave,
                 content: contentObj
             };
 
@@ -1583,6 +1604,7 @@
 
             document.getElementById('fJudul').value = doc.title;
             uploadedFileMeta = doc.fileAttachment;
+            uploadedFileDataUrl = doc.fileDataUrl || null;
             document.getElementById('uploadedFileName').innerText = doc.fileAttachment ? ('File terlampir: ' + doc.fileAttachment) : 'Belum ada file dipilih';
 
             const mapelDefaults = MAPEL_DEFAULT_TEMPLATES[doc.mapel] || MAPEL_DEFAULT_TEMPLATES['Akuntansi Keuangan'];
@@ -1600,12 +1622,224 @@
             }
         }
 
+        // HELPER TO RENDER FORMATTED DOCUMENT CONTENT IN PREVIEW
+        function renderFormattedContent(doc) {
+            const c = doc.content || {};
+            let detailsHtml = '';
+
+            if (doc.type === 'RPP') {
+                detailsHtml = `
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                        <div class="p-3 bg-pink-50/60 rounded-2xl border border-pink-100">
+                            <span class="text-[10px] uppercase font-bold text-pink-500 block">Alokasi Waktu</span>
+                            <p class="font-bold text-slate-800 text-xs">${c.alokasiWaktu || '-'}</p>
+                        </div>
+                        <div class="p-3 bg-purple-50/60 rounded-2xl border border-purple-100">
+                            <span class="text-[10px] uppercase font-bold text-purple-500 block">Model Pembelajaran</span>
+                            <p class="font-bold text-slate-800 text-xs">${c.metodePembelajaran || '-'}</p>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                            <h4 class="font-bold text-slate-800 mb-1 flex items-center gap-2"><i class="fa-solid fa-bullseye text-pink-500"></i> Tujuan Pembelajaran</h4>
+                            <p class="text-slate-600 text-xs leading-relaxed">${c.tujuanPembelajaran || '-'}</p>
+                        </div>
+                        <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                            <h4 class="font-bold text-slate-800 mb-1 flex items-center gap-2"><i class="fa-solid fa-list-check text-purple-500"></i> Langkah-Langkah Kegiatan</h4>
+                            <div class="text-slate-600 text-xs leading-relaxed whitespace-pre-line">${c.langkahAktivitas || '-'}</div>
+                        </div>
+                        <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                            <h4 class="font-bold text-slate-800 mb-1 flex items-center gap-2"><i class="fa-solid fa-square-poll-vertical text-emerald-500"></i> Penilaian & Refleksi</h4>
+                            <p class="text-slate-600 text-xs leading-relaxed">${c.penilaian || '-'}</p>
+                        </div>
+                    </div>
+                `;
+            } else if (doc.type === 'Modul Ajar') {
+                detailsHtml = `
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                        <div class="p-3 bg-purple-50/60 rounded-2xl border border-purple-100">
+                            <span class="text-[10px] uppercase font-bold text-purple-500 block">Kompetensi Awal</span>
+                            <p class="font-bold text-slate-800 text-xs">${c.kompetensiAwal || '-'}</p>
+                        </div>
+                        <div class="p-3 bg-pink-50/60 rounded-2xl border border-pink-100">
+                            <span class="text-[10px] uppercase font-bold text-pink-500 block">Profil Pelajar Pancasila</span>
+                            <p class="font-bold text-slate-800 text-xs">${c.profilPancasila || '-'}</p>
+                        </div>
+                        <div class="p-3 bg-blue-50/60 rounded-2xl border border-blue-100">
+                            <span class="text-[10px] uppercase font-bold text-blue-500 block">Pemahaman Bermakna</span>
+                            <p class="font-bold text-slate-800 text-xs">${c.pemahamanBermakna || '-'}</p>
+                        </div>
+                        <div class="p-3 bg-amber-50/60 rounded-2xl border border-amber-100">
+                            <span class="text-[10px] uppercase font-bold text-amber-500 block">Pertanyaan Pemantik</span>
+                            <p class="font-bold text-slate-800 text-xs">${c.pertanyaanPemantik || '-'}</p>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                            <h4 class="font-bold text-slate-800 mb-1 flex items-center gap-2"><i class="fa-solid fa-book-open text-purple-500"></i> Materi & Media Pembelajaran</h4>
+                            <p class="text-slate-600 text-xs leading-relaxed">${c.materiMedia || '-'}</p>
+                        </div>
+                        <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                            <h4 class="font-bold text-slate-800 mb-1 flex items-center gap-2"><i class="fa-solid fa-clipboard-check text-emerald-500"></i> Asesmen & Penilaian</h4>
+                            <p class="text-slate-600 text-xs leading-relaxed">${c.asesmen || '-'}</p>
+                        </div>
+                    </div>
+                `;
+            } else if (doc.type.includes('CP') || doc.type.includes('TP') || doc.type.includes('ATP')) {
+                detailsHtml = `
+                    <div class="space-y-4">
+                        <div class="p-3 bg-blue-50/60 rounded-2xl border border-blue-100">
+                            <span class="text-[10px] uppercase font-bold text-blue-500 block">Elemen / Lingkup Materi</span>
+                            <p class="font-bold text-slate-800 text-xs">${c.elemen || '-'}</p>
+                        </div>
+                        <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                            <h4 class="font-bold text-slate-800 mb-1 flex items-center gap-2"><i class="fa-solid fa-bullseye text-blue-500"></i> Capaian Pembelajaran (CP)</h4>
+                            <p class="text-slate-600 text-xs leading-relaxed">${c.cpText || '-'}</p>
+                        </div>
+                        <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                            <h4 class="font-bold text-slate-800 mb-1 flex items-center gap-2"><i class="fa-solid fa-diagram-project text-amber-500"></i> Alur Tujuan Pembelajaran (ATP / TP)</h4>
+                            <div class="text-slate-600 text-xs leading-relaxed whitespace-pre-line">${c.atpList || '-'}</div>
+                        </div>
+                    </div>
+                `;
+            } else if (doc.type === 'Bahan Ajar') {
+                detailsHtml = `
+                    <div class="space-y-4">
+                        <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                            <h4 class="font-bold text-slate-800 mb-1 flex items-center gap-2"><i class="fa-solid fa-file-lines text-rose-500"></i> Uraian Ringkas Materi</h4>
+                            <p class="text-slate-600 text-xs leading-relaxed">${c.uraianMateri || '-'}</p>
+                        </div>
+                        <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                            <h4 class="font-bold text-slate-800 mb-1 flex items-center gap-2"><i class="fa-solid fa-lightbulb text-amber-500"></i> Contoh Kasus & Studi Transaksi</h4>
+                            <p class="text-slate-600 text-xs leading-relaxed">${c.contohKasus || '-'}</p>
+                        </div>
+                    </div>
+                `;
+            } else {
+                detailsHtml = `
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                        <div class="p-3 bg-teal-50/60 rounded-2xl border border-teal-100">
+                            <span class="text-[10px] uppercase font-bold text-teal-600 block">Jenis & Teknik Asesmen</span>
+                            <p class="font-bold text-slate-800 text-xs">${c.jenisTeknik || '-'}</p>
+                        </div>
+                        <div class="p-3 bg-emerald-50/60 rounded-2xl border border-emerald-100">
+                            <span class="text-[10px] uppercase font-bold text-emerald-600 block">Skor Maksimum & KKM</span>
+                            <p class="font-bold text-slate-800 text-xs">${c.skorKKM || '-'}</p>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                        <h4 class="font-bold text-slate-800 mb-1 flex items-center gap-2"><i class="fa-solid fa-square-poll-vertical text-teal-500"></i> Rubrik & Kriteria Penilaian</h4>
+                        <div class="text-slate-600 text-xs leading-relaxed whitespace-pre-line">${c.rubrikPenilaian || '-'}</div>
+                    </div>
+                `;
+            }
+
+            // FILE ATTACHMENT VIEW SECTION
+            let filePreviewHtml = '';
+            if (doc.fileAttachment) {
+                if (doc.fileDataUrl && doc.fileDataUrl.startsWith('data:application/pdf')) {
+                    filePreviewHtml = `
+                        <div class="mt-6 pt-6 border-t border-slate-200">
+                            <div class="flex items-center justify-between mb-3">
+                                <h4 class="font-bold text-slate-800 flex items-center gap-2">
+                                    <i class="fa-solid fa-file-pdf text-rose-500 text-base"></i> Lampiran File PDF: ${doc.fileAttachment}
+                                </h4>
+                                <a href="${doc.fileDataUrl}" download="${doc.fileAttachment}" class="px-3 py-1.5 bg-pink-50 hover:bg-pink-100 text-pink-600 font-bold rounded-xl text-xs flex items-center gap-1.5 transition-all">
+                                    <i class="fa-solid fa-download"></i> Unduh File PDF
+                                </a>
+                            </div>
+                            <iframe src="${doc.fileDataUrl}" class="w-full h-[450px] rounded-2xl border border-slate-200 shadow-inner"></iframe>
+                        </div>
+                    `;
+                } else if (doc.fileDataUrl && doc.fileDataUrl.startsWith('data:image/')) {
+                    filePreviewHtml = `
+                        <div class="mt-6 pt-6 border-t border-slate-200">
+                            <div class="flex items-center justify-between mb-3">
+                                <h4 class="font-bold text-slate-800 flex items-center gap-2">
+                                    <i class="fa-solid fa-file-image text-blue-500 text-base"></i> Lampiran Gambar: ${doc.fileAttachment}
+                                </h4>
+                                <a href="${doc.fileDataUrl}" download="${doc.fileAttachment}" class="px-3 py-1.5 bg-pink-50 hover:bg-pink-100 text-pink-600 font-bold rounded-xl text-xs flex items-center gap-1.5 transition-all">
+                                    <i class="fa-solid fa-download"></i> Unduh Gambar
+                                </a>
+                            </div>
+                            <img src="${doc.fileDataUrl}" alt="Lampiran" class="max-h-[450px] mx-auto rounded-2xl border border-slate-200 shadow-md">
+                        </div>
+                    `;
+                } else {
+                    filePreviewHtml = `
+                        <div class="mt-6 pt-6 border-t border-slate-200">
+                            <div class="p-4 bg-gradient-to-r from-pink-50 to-purple-50 rounded-2xl border border-pink-100 flex items-center justify-between gap-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-xl bg-pink-100 text-pink-600 flex items-center justify-center font-bold shrink-0">
+                                        <i class="fa-solid fa-file-pdf text-lg"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-xs text-slate-800">${doc.fileAttachment}</h4>
+                                        <p class="text-[10px] text-slate-400">Berkas Dokumen Terlampir (Siap diunduh / dicetak)</p>
+                                    </div>
+                                </div>
+                                <button onclick="downloadMockDocument('${doc.fileAttachment}', '${doc.title}')" class="px-3.5 py-2 bg-pink-500 hover:bg-pink-600 text-white font-bold text-xs rounded-xl shadow-xs transition-all flex items-center gap-1.5 shrink-0">
+                                    <i class="fa-solid fa-download"></i> Unduh Berkas
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+
+            return detailsHtml + filePreviewHtml;
+        }
+
+        // SIMULATED MOCK DOWNLOAD
+        function downloadMockDocument(filename, title) {
+            const dummyText = `==================================================\n${title.toUpperCase()}\nBERKAS PERANGKAT PEMBELAJARAN BALANCEAA\n==================================================\nFilename: ${filename}\nTanggal: ${new Date().toLocaleDateString('id-ID')}\nStatus: Terverifikasi Sistem Balanceaa SMK AKL\n==================================================`;
+            const blob = new Blob([dummyText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename.endsWith('.txt') ? filename : filename + '.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
         // PREVIEW CURRENT FORM CONTENT
         function previewCurrentForm() {
             const title = document.getElementById('fJudul').value || 'Dokumen Perangkat';
             const type = currentFormType;
             const kelas = document.getElementById('formContextKelas').innerText;
             const mapel = document.getElementById('formContextMapel').innerText;
+
+            const tempDoc = {
+                title: title,
+                type: type,
+                kelas: kelas,
+                mapel: mapel,
+                fileAttachment: uploadedFileMeta,
+                fileDataUrl: uploadedFileDataUrl,
+                content: {
+                    alokasiWaktu: document.getElementById('fAlokasiWaktu')?.value,
+                    metodePembelajaran: document.getElementById('fMetode')?.value,
+                    tujuanPembelajaran: document.getElementById('fTujuan')?.value,
+                    langkahAktivitas: document.getElementById('fLangkah')?.value,
+                    penilaian: document.getElementById('fPenilaian')?.value,
+                    kompetensiAwal: document.getElementById('fKompetensiAwal')?.value,
+                    profilPancasila: document.getElementById('fProfilPancasila')?.value,
+                    pemahamanBermakna: document.getElementById('fPemahamanBermakna')?.value,
+                    pertanyaanPemantik: document.getElementById('fPertanyaanPemantik')?.value,
+                    materiMedia: document.getElementById('fMateriMedia')?.value,
+                    asesmen: document.getElementById('fAsesmen')?.value,
+                    elemen: document.getElementById('fElemen')?.value,
+                    cpText: document.getElementById('fCPText')?.value,
+                    atpList: document.getElementById('fATPList')?.value,
+                    uraianMateri: document.getElementById('fUraianMateri')?.value,
+                    contohKasus: document.getElementById('fContohKasus')?.value,
+                    jenisTeknik: document.getElementById('fJenisTeknik')?.value,
+                    skorKKM: document.getElementById('fSkorKKM')?.value,
+                    rubrikPenilaian: document.getElementById('fRubrikPenilaian')?.value
+                }
+            };
 
             let html = `
                 <div class="text-center border-b-2 border-slate-800 pb-4 mb-6">
@@ -1614,26 +1848,15 @@
                     <p class="text-[11px] text-slate-500 mt-0.5">SMK Negeri 1 Akuntansi & Keuangan Lembaga</p>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200 mb-6 font-semibold">
-                    <div><b>Judul:</b> ${title}</div>
-                    <div><b>Jenis Perangkat:</b> ${type}</div>
-                    <div><b>Kelas:</b> ${kelas}</div>
-                    <div><b>Mata Pelajaran:</b> ${mapel}</div>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-4 rounded-xl border border-slate-200 mb-6 font-semibold">
+                    <div><span class="block text-slate-400 font-normal">Judul:</span> ${title}</div>
+                    <div><span class="block text-slate-400 font-normal">Kelas:</span> ${kelas}</div>
+                    <div><span class="block text-slate-400 font-normal">Mapel:</span> ${mapel}</div>
+                    <div><span class="block text-slate-400 font-normal">Jenis:</span> ${type}</div>
                 </div>
-            `;
 
-            if (type === 'RPP') {
-                html += `
-                    <div class="space-y-4">
-                        <div><b>Alokasi Waktu:</b> ${document.getElementById('fAlokasiWaktu')?.value || '-'}</div>
-                        <div><b>Model Pembelajaran:</b> ${document.getElementById('fMetode')?.value || '-'}</div>
-                        <div><b>Tujuan Pembelajaran:</b><p class="p-2.5 bg-slate-50 rounded-lg mt-1">${document.getElementById('fTujuan')?.value || '-'}</p></div>
-                        <div><b>Langkah Pembelajaran:</b><pre class="p-2.5 bg-slate-50 rounded-lg mt-1 whitespace-pre-wrap font-sans">${document.getElementById('fLangkah')?.value || '-'}</pre></div>
-                    </div>
-                `;
-            } else {
-                html += `<p class="p-4 bg-slate-50 rounded-xl italic">Pratinjau konten dokumen siap dicetak sesuai data yang diinputkan.</p>`;
-            }
+                ${renderFormattedContent(tempDoc)}
+            `;
 
             document.getElementById('previewModalContent').innerHTML = html;
             document.getElementById('perangkatPreviewModal').classList.remove('hidden');
@@ -1658,10 +1881,7 @@
                     <div><span class="block text-slate-400 font-normal">Status:</span> ${doc.status}</div>
                 </div>
 
-                <div class="space-y-4">
-                    <h4 class="font-bold border-b border-slate-200 pb-1 text-slate-700">Rincian Dokumen:</h4>
-                    <pre class="p-4 bg-slate-50 rounded-xl whitespace-pre-wrap font-sans text-xs text-slate-700 leading-relaxed">${JSON.stringify(doc.content, null, 2)}</pre>
-                </div>
+                ${renderFormattedContent(doc)}
             `;
 
             document.getElementById('previewModalContent').innerHTML = html;
