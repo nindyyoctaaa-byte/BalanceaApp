@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Balanceaa - Platform Pembelajaran Akuntansi SMK AKL</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        pastel: {
+                            pink: '#fce7f3',
+                            pinkDark: '#db2777',
+                            pinkSoft: '#fdf2f8',
+                            green: '#dcfce7',
+                            greenDark: '#16a34a',
+                            greenSoft: '#f0fdf4',
+                            purple: '#f3e8ff',
+                            purpleDark: '#9333ea',
+                            purpleSoft: '#faf5ff',
+                            orange: '#ffedd5',
+                            orangeDark: '#ea580c',
+                            orangeSoft: '#fff7ed',
+                            blue: '#e0f2fe',
+                            blueDark: '#0284c7',
+                            slate: '#f8fafc',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f8fafc;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #fbcfe8;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-[#FFF0F5] via-[#F8F0FF] to-[#F0FDF4] min-h-screen text-slate-700 flex flex-col font-sans">
+
+    <!-- OVERLAY FOR MOBILE SIDEBAR -->
+    <div id="sidebarOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-30 hidden lg:hidden"></div>
+
+    <div class="flex flex-1 overflow-hidden h-screen">
+        <!-- SIDEBAR NAVIGASI -->
+        <aside id="mainSidebar" class="fixed lg:static inset-y-0 left-0 z-40 w-64 bg-white/80 backdrop-blur-md border-r border-pink-100/80 flex flex-col justify-between transition-transform duration-300 transform -translate-x-full lg:translate-x-0 shadow-sm">
+            <div>
+                <!-- BRAND LOGO -->
+                <div class="p-5 border-b border-pink-50 flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-pink-400 to-purple-400 flex items-center justify-center text-white shadow-md shadow-pink-200">
+                            <i class="fa-solid fa-scale-balanced text-lg"></i>
+                        </div>
+                        <div>
+                            <h1 class="font-extrabold text-xl tracking-tight text-slate-800">Balanceaa<span class="text-pink-500">.</span></h1>
+                            <p class="text-[10px] font-semibold tracking-wider text-pink-400 uppercase">Akuntansi SMK AKL</p>
+                        </div>
+                    </div>
+                    <button onclick="toggleSidebar()" class="lg:hidden text-slate-400 hover:text-slate-600 p-1">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+
+                <!-- SWITCH ROLE TOGGLE -->
+                <div class="p-4">
+                    <div class="bg-purple-50/60 p-2 rounded-2xl border border-purple-100/60 flex items-center justify-between">
+                        <span class="text-xs font-semibold text-purple-700 px-2 flex items-center gap-1.5">
+                            <i class="fa-solid fa-user-gear text-purple-500"></i> Peran:
+                        </span>
+                        <select id="roleSelect" onchange="changeRole(this.value)" class="bg-white text-xs font-bold text-slate-700 px-2.5 py-1.5 rounded-xl border border-purple-200/80 focus:outline-none focus:ring-2 focus:ring-pink-300 shadow-sm cursor-pointer">
+                            <option value="guru">Guru AKL</option>
+                            <option value="siswa">Siswa AKL</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- MENU ITEMS -->
+                <nav class="px-3 space-y-1">
+                    <a href="#" onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-item flex items-center gap-3 px-4 py-3 text-sm font-semibold rounded-2xl transition-all duration-200 bg-gradient-to-r from-pink-100/80 to-purple-100/50 text-pink-700 shadow-sm">
+                        <i class="fa-solid fa-house w-5 text-center text-pink-500"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="#" onclick="switchTab('perangkat')" id="nav-perangkat" class="nav-item flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-2xl text-slate-600 hover:bg-pink-50/60 hover:text-pink-600 transition-all duration-200">
+                        <i class="fa-solid fa-folder-open w-5 text-center text-purple-400"></i>
+                        <span>Perangkat Guru</span>
+                    </a>
+                    <a href="#" onclick="switchTab('lms')" id="nav-lms" class="nav-item flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-2xl text-slate-600 hover:bg-pink-50/60 hover:text-pink-600 transition-all duration-200">
+                        <i class="fa-solid fa-book-open-reader w-5 text-center text-blue-400"></i>
+                        <span>LMS Akuntansi</span>
+                    </a>
+                    <a href="#" onclick="switchTab('evaluasi')" id="nav-evaluasi" class="nav-item flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-2xl text-slate-600 hover:bg-pink-50/60 hover:text-pink-600 transition-all duration-200">
+                        <i class="fa-solid fa-file-pen w-5 text-center text-emerald-400"></i>
+                        <span>Evaluasi & Ujian</span>
+                    </a>
+                    <a href="#" onclick="switchTab('analisis')" id="nav-analisis" class="nav-item flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-2xl text-slate-600 hover:bg-pink-50/60 hover:text-pink-600 transition-all duration-200">
+                        <i class="fa-solid fa-chart-line w-5 text-center text-amber-400"></i>
+                        <span>Analisis Nilai</span>
+                    </a>
+                    <a href="#" onclick="switchTab('pengaturan')" id="nav-pengaturan" class="nav-item flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-2xl text-slate-600 hover:bg-pink-50/60 hover:text-pink-600 transition-all duration-200">
+                        <i class="fa-solid fa-sliders w-5 text-center text-slate-400"></i>
+                        <span>Pengaturan</span>
+                    </a>
+                </nav>
+            </div>
+
+            <!-- FOOTER PROFILE CARD -->
+            <div class="p-4 border-t border-pink-50">
+                <div class="flex items-center gap-3 bg-white/60 p-2.5 rounded-2xl border border-slate-100">
+                    <img id="userAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="Avatar" class="w-9 h-9 rounded-xl object-cover ring-2 ring-pink-200">
+                    <div class="overflow-hidden">
+                        <h4 id="userNameSidebar" class="text-xs font-bold text-slate-800 truncate">Nindy Octavia, S.Pd.</h4>
+                        <p id="userRoleSidebar" class="text-[10px] text-pink-500 font-semibold truncate">Guru Pengampu AKL</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="flex-1 flex flex-col overflow-y-auto custom-scrollbar">
+            <!-- HEADER -->
+            <header class="sticky top-0 z-20 bg-white/70 backdrop-blur-md border-b border-pink-100/60 px-4 sm:px-8 py-3.5 flex items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <button onclick="toggleSidebar()" class="lg:hidden text-slate-500 p-2 hover:bg-pink-50 rounded-xl">
+                        <i class="fa-solid fa-bars text-lg"></i>
+                    </button>
+                    <div>
+                        <h2 id="pageTitle" class="text-base sm:text-lg font-bold text-slate-800">Dashboard Utama</h2>
+                        <p id="pageSubtitle" class="text-xs text-slate-400 hidden sm:block">Ringkasan aktivitas pembelajaran akuntansi</p>
+                    </div>
+                </div>
+
+                <!-- SELECTOR KELAS & MATPEL -->
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <!-- CLASS SELECTOR (SAMPAL KELAS 11 SAJA) -->
+                    <div class="relative">
+                        <select id="classSelect" onchange="updateClassContext(this.value)" class="appearance-none bg-pink-50/80 hover:bg-pink-100/80 text-pink-700 text-xs font-bold py-2 pl-3 pr-8 rounded-xl border border-pink-200 focus:outline-none cursor-pointer transition-all">
+                            <option value="10 AKL 1">10 AKL 1</option>
+                            <option value="10 AKL 2">10 AKL 2</option>
+                            <option value="11 AKL 1" selected>11 AKL 1</option>
+                            <option value="11 AKL 2">11 AKL 2</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down absolute right-2.5 top-1/2 -translate-y-1/2 text-pink-400 pointer-events-none text-[10px]"></i>
+                    </div>
+
+                    <!-- SUBJECT SELECTOR -->
+                    <div class="relative hidden sm:block">
+                        <select id="subjectSelect" class="appearance-none bg-purple-50/80 hover:bg-purple-100/80 text-purple-700 text-xs font-bold py-2 pl-3 pr-8 rounded-xl border border-purple-200 focus:outline-none cursor-pointer transition-all">
+                            <option value="Dasar-Dasar Akuntansi">Dasar-Dasar Akuntansi</option>
+                            <option value="Akuntansi Keuangan" selected>Akuntansi Keuangan</option>
+                            <option value="Komputer Akuntansi">Komputer Akuntansi</option>
+                            <option value="Praktikum Akuntansi Perusahaan Jasa">Praktikum AKL Jasa</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down absolute right-2.5 top-1/2 -translate-y-1/2 text-purple-400 pointer-events-none text-[10px]"></i>
+                    </div>
+
+                    <!-- NOTIFICATION BUTTON -->
+                    <button class="relative p-2 rounded-xl bg-slate-100/80 text-slate-500 hover:bg-pink-100 hover:text-pink-600 transition-all">
+                        <i class="fa-regular fa-bell text-sm"></i>
+                        <span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-pink-500 ring-2 ring-white"></span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- CONTENT BODY CONTAINER -->
+            <div class="p-4 sm:p-8 space-y-6 max-w-7xl mx-auto w-full">
+
+                <!-- VIEW 1: DASHBOARD -->
+                <div id="view-dashboard" class="space-y-6">
+                    <!-- BANNER GREETING -->
+                    <div class="bg-gradient-to-r from-pink-200/60 via-purple-200/50 to-emerald-200/40 rounded-3xl p-6 sm:p-8 border border-white/80 shadow-sm relative overflow-hidden">
+                        <div class="relative z-10 max-w-2xl space-y-2">
+                            <span id="roleBadge" class="inline-block px-3 py-1 bg-white/80 text-pink-600 font-bold text-[11px] rounded-full shadow-xs">
+                                <i class="fa-solid fa-chalkboard-user mr-1"></i> Mode Pengajar (Guru)
+                            </span>
+                            <h2 id="greetingText" class="text-xl sm:text-2xl font-extrabold text-slate-800 tracking-tight">
+                                Selamat Datang Kembali, Ibu Nindy! 👋
+                            </h2>
+                            <p id="greetingSub" class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                                Siap melanjutkan materi <span class="font-bold text-pink-600">Akuntansi Keuangan</span> untuk kelas <span id="currentClassBadge" class="font-bold text-purple-600">11 AKL 1</span> hari ini.
+                            </p>
+                        </div>
+                        <i class="fa-solid fa-calculator absolute -right-4 -bottom-6 text-9xl text-pink-300/30 transform -rotate-12 pointer-events-none"></i>
+                    </div>
+
+                    <!-- 4 STATS CARDS -->
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                        <!-- STAT 1 -->
+                        <div class="bg-white/80 backdrop-blur-md p-5 rounded-2xl border border-pink-100 shadow-sm hover:shadow-md transition-all">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="w-10 h-10 rounded-xl bg-pink-100 text-pink-600 flex items-center justify-center font-bold">
+                                    <i class="fa-solid fa-users text-sm"></i>
+                                </div>
+                                <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md">Aktif</span>
+                            </div>
+                            <p id="statLabel1" class="text-xs text-slate-400 font-medium">Total Kelas AKL</p>
+                            <h3 id="statValue1" class="text-xl font-extrabold text-slate-800 mt-1">4 Kelas</h3>
+                            <p class="text-[11px] text-slate-400 mt-1">Kelas 10 & 11 AKL</p>
+                        </div>
+
+                        <!-- STAT 2 -->
+                        <div class="bg-white/80 backdrop-blur-md p-5 rounded-2xl border border-purple-100 shadow-sm hover:shadow-md transition-all">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center font-bold">
+                                    <i class="fa-solid fa-book text-sm"></i>
+                                </div>
+                                <span class="text-[10px] font-bold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-md">Kurikulum</span>
+                            </div>
+                            <p id="statLabel2" class="text-xs text-slate-400 font-medium">Mata Pelajaran</p>
+                            <h3 id="statValue2" class="text-xl font-extrabold text-slate-800 mt-1">4 Modul</h3>
+                            <p class="text-[11px] text-slate-400 mt-1">Spesialisasi AKL</p>
+                        </div>
+
+                        <!-- STAT 3 -->
+                        <div class="bg-white/80 backdrop-blur-md p-5 rounded-2xl border border-emerald-100 shadow-sm hover:shadow-md transition-all">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold">
+                                    <i class="fa-solid fa-file-signature text-sm"></i>
+                                </div>
+                                <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md">12 Selesai</span>
+                            </div>
+                            <p id="statLabel3" class="text-xs text-slate-400 font-medium">Evaluasi Pembelajaran</p>
+                            <h3 id="statValue3" class="text-xl font-extrabold text-slate-800 mt-1">16 Kuis/Tugas</h3>
+                            <p class="text-[11px] text-slate-400 mt-1">Semester Berjalan</p>
+                        </div>
+
+                        <!-- STAT 4 -->
+                        <div class="bg-white/80 backdrop-blur-md p-5 rounded-2xl border border-amber-100 shadow-sm hover:shadow-md transition-all">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center font-bold">
+                                    <i class="fa-solid fa-graduation-cap text-sm"></i>
+                                </div>
+                                <span class="text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md">Rata-rata</span>
+                            </div>
+                            <p id="statLabel4" class="text-xs text-slate-400 font-medium">Ketuntasan Nilai</p>
+                            <h3 id="statValue4" class="text-xl font-extrabold text-slate-800 mt-1">86.4 %</h3>
+                            <p class="text-[11px] text-slate-400 mt-1">Diatas KKM (75)</p>
+                        </div>
+                    </div>
+
+                    <!-- INTERACTIVE WIDGET: JURNAL BALANCE CHECKER -->
+                    <div class="bg-white/80 backdrop-blur-md p-6 rounded-3xl border border-emerald-100 shadow-sm space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold">
+                                    <i class="fa-solid fa-scale-balanced text-xs"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-sm text-slate-800">Simulasi Cepat: Jurnal Umum Balance Checker</h3>
+                                    <p class="text-[11px] text-slate-400">Latihan mandiri pengecekan keseimbangan Debet & Kredit</p>
+                                </div>
+                            </div>
+                            <span id="balanceStatus" class="text-xs font-extrabold px-3 py-1 rounded-full bg-emerald-100 text-emerald-700">
+                                <i class="fa-solid fa-circle-check mr-1"></i> Balance
+                            </span>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-50/60 p-4 rounded-2xl border border-slate-100">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Total Pos Debet (Rp)</label>
+                                <input type="number" id="debitInput" value="5000000" oninput="checkBalance()" class="w-full bg-white text-xs font-bold px-3 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-pink-300 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Total Pos Kredit (Rp)</label>
+                                <input type="number" id="kreditInput" value="5000000" oninput="checkBalance()" class="w-full bg-white text-xs font-bold px-3 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-pink-300 focus:outline-none">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4 MODUL QUICK ACCESS -->
+                    <div class="space-y-3">
+                        <h3 class="font-extrabold text-sm text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-cubes text-pink-400"></i> Modul Pembelajaran Utama
+                        </h3>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <!-- MODUL 1 -->
+                            <div onclick="switchTab('perangkat')" class="group bg-white/80 backdrop-blur-md p-5 rounded-2xl border border-pink-100/80 hover:border-pink-300 shadow-sm hover:shadow-md transition-all cursor-pointer">
+                                <div class="w-10 h-10 rounded-2xl bg-pink-100 text-pink-600 flex items-center justify-center font-bold mb-3 group-hover:scale-110 transition-transform">
+                                    <i class="fa-solid fa-folder-open"></i>
+                                </div>
+                                <h4 class="font-bold text-sm text-slate-800 group-hover:text-pink-600 transition-colors">1. Perangkat Guru</h4>
+                                <p class="text-xs text-slate-400 mt-1">Rencana pembelajaran, CP/TP, Modul Ajar, dan Bahan Ajar AKL.</p>
+                                <div class="mt-4 flex items-center text-xs font-bold text-pink-500 group-hover:translate-x-1 transition-transform">
+                                    Buka Perangkat <i class="fa-solid fa-arrow-right ml-1"></i>
+                                </div>
+                            </div>
+
+                            <!-- MODUL 2 -->
+                            <div onclick="switchTab('lms')" class="group bg-white/80 backdrop-blur-md p-5 rounded-2xl border border-purple-100/80 hover:border-purple-300 shadow-sm hover:shadow-md transition-all cursor-pointer">
+                                <div class="w-10 h-10 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center font-bold mb-3 group-hover:scale-110 transition-transform">
+                                    <i class="fa-solid fa-book-open-reader"></i>
+                                </div>
+                                <h4 class="font-bold text-sm text-slate-800 group-hover:text-purple-600 transition-colors">2. LMS Akuntansi</h4>
+                                <p class="text-xs text-slate-400 mt-1">Materi interaktif Jurnal, Buku Besar, dan Neraca Saldo.</p>
+                                <div class="mt-4 flex items-center text-xs font-bold text-purple-500 group-hover:translate-x-1 transition-transform">
+                                    Akses Ruang Belajar <i class="fa-solid fa-arrow-right ml-1"></i>
+                                </div>
+                            </div>
+
+                            <!-- MODUL 3 -->
+                            <div onclick="switchTab('evaluasi')" class="group bg-white/80 backdrop-blur-md p-5 rounded-2xl border border-emerald-100/80 hover:border-emerald-300 shadow-sm hover:shadow-md transition-all cursor-pointer">
+                                <div class="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold mb-3 group-hover:scale-110 transition-transform">
+                                    <i class="fa-solid fa-file-pen"></i>
+                                </div>
+                                <h4 class="font-bold text-sm text-slate-800 group-hover:text-emerald-600 transition-colors">3. Evaluasi & Ujian</h4>
+                                <p class="text-xs text-slate-400 mt-1">Kuis pilihan ganda, studi kasus transaksi, dan Penilaian Harian.</p>
+                                <div class="mt-4 flex items-center text-xs font-bold text-emerald-500 group-hover:translate-x-1 transition-transform">
+                                    Lihat Evaluasi <i class="fa-solid fa-arrow-right ml-1"></i>
+                                </div>
+                            </div>
+
+                            <!-- MODUL 4 -->
+                            <div onclick="switchTab('analisis')" class="group bg-white/80 backdrop-blur-md p-5 rounded-2xl border border-amber-100/80 hover:border-amber-300 shadow-sm hover:shadow-md transition-all cursor-pointer">
+                                <div class="w-10 h-10 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center font-bold mb-3 group-hover:scale-110 transition-transform">
+                                    <i class="fa-solid fa-chart-line"></i>
+                                </div>
+                                <h4 class="font-bold text-sm text-slate-800 group-hover:text-amber-600 transition-colors">4. Analisis Nilai</h4>
+                                <p class="text-xs text-slate-400 mt-1">Visualisasi grafik ketuntasan, analisis kognitif, dan laporan kelas.</p>
+                                <div class="mt-4 flex items-center text-xs font-bold text-amber-500 group-hover:translate-x-1 transition-transform">
+                                    Lihat Grafik <i class="fa-solid fa-arrow-right ml-1"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- GRID RECENT ACTIVITIES & PREVIEW CHART -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- CHART PREVIEW -->
+                        <div class="lg:col-span-2 bg-white/80 backdrop-blur-md p-6 rounded-3xl border border-pink-100/80 shadow-sm space-y-4">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h3 class="font-bold text-sm text-slate-800">Ringkasan Nilai Rata-rata Per Kelas</h3>
+                                    <p class="text-xs text-slate-400">Kelas 10 & 11 AKL Semester Ganjil</p>
+                                </div>
+                                <span class="text-xs font-semibold px-2.5 py-1 rounded-lg bg-pink-50 text-pink-600">Terbaru</span>
+                            </div>
+                            <div class="h-60 w-full relative">
+                                <canvas id="dashboardChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- RECENT ACTIVITIES FEED -->
+                        <div class="bg-white/80 backdrop-blur-md p-6 rounded-3xl border border-purple-100/80 shadow-sm space-y-4">
+                            <h3 class="font-bold text-sm text-slate-800 flex items-center justify-between">
+                                <span>Aktivitas Terbaru</span>
+                                <i class="fa-solid fa-clock-rotate-left text-xs text-purple-400"></i>
+                            </h3>
+
+                            <div class="space-y-3.5">
+                                <div class="flex items-start gap-3 p-2.5 rounded-2xl hover:bg-slate-50 transition-colors">
+                                    <div class="w-8 h-8 rounded-xl bg-pink-100 text-pink-600 flex items-center justify-center text-xs shrink-0 mt-0.5">
+                                        <i class="fa-solid fa-upload"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-bold text-slate-700">Materi Baru Diunggah</p>
+                                        <p class="text-[11px] text-slate-400">Jurnal Penyesuaian Perusahaan Jasa</p>
+                                        <span class="text-[10px] text-pink-400 font-semibold">10 menit lalu</span>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-start gap-3 p-2.5 rounded-2xl hover:bg-slate-50 transition-colors">
+                                    <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs shrink-0 mt-0.5">
+                                        <i class="fa-solid fa-check"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-bold text-slate-700">32 Siswa Mengumpulkan</p>
+                                        <p class="text-[11px] text-slate-400">Kuis Keseimbangan Neraca - 11 AKL 1</p>
+                                        <span class="text-[10px] text-emerald-500 font-semibold">1 jam lalu</span>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-start gap-3 p-2.5 rounded-2xl hover:bg-slate-50 transition-colors">
+                                    <div class="w-8 h-8 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center text-xs shrink-0 mt-0.5">
+                                        <i class="fa-solid fa-bullhorn"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-bold text-slate-700">Pengumuman Baru</p>
+                                        <p class="text-[11px] text-slate-400">Jadwal Ujian Praktikum Komputer Akuntansi</p>
+                                        <span class="text-[10px] text-purple-400 font-semibold">Kemarin</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW 2: PERANGKAT GURU (PLACEHOLDER) -->
+                <div id="view-perangkat" class="hidden space-y-6">
+                    <div class="bg-white/80 backdrop-blur-md p-8 rounded-3xl border border-pink-100 shadow-sm text-center space-y-4">
+                        <div class="w-16 h-16 bg-pink-100 text-pink-600 rounded-2xl flex items-center justify-center text-2xl mx-auto">
+                            <i class="fa-solid fa-folder-open"></i>
+                        </div>
+                        <h3 class="text-lg font-extrabold text-slate-800">Modul 1: Perangkat Guru</h3>
+                        <p class="text-xs text-slate-500 max-w-md mx-auto">
+                            Halaman ini siap diintegrasikan dengan penyimpanan RPP, Capaian Pembelajaran (CP), Tujuan Pembelajaran (TP), dan Alur Tujuan Pembelajaran (ATP) Akuntansi.
+                        </p>
+                        <div class="pt-4 flex justify-center gap-3">
+                            <button class="px-4 py-2 bg-pink-500 text-white font-bold text-xs rounded-xl shadow-sm hover:bg-pink-600 transition-all">
+                                <i class="fa-solid fa-plus mr-1"></i> Tambah Perangkat Baru
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW 3: LMS (PLACEHOLDER) -->
+                <div id="view-lms" class="hidden space-y-6">
+                    <div class="bg-white/80 backdrop-blur-md p-8 rounded-3xl border border-purple-100 shadow-sm text-center space-y-4">
+                        <div class="w-16 h-16 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center text-2xl mx-auto">
+                            <i class="fa-solid fa-book-open-reader"></i>
+                        </div>
+                        <h3 class="text-lg font-extrabold text-slate-800">Modul 2: Learning Management System (LMS)</h3>
+                        <p class="text-xs text-slate-500 max-w-md mx-auto">
+                            Modul ini disiapkan untuk ruang belajar interaktif siswa: Ruang Baca, Simulasi Pencatatan Transaksi, Video Pembelajaran, dan Diskusi Kelompok.
+                        </p>
+                        <div class="pt-4 flex justify-center gap-3">
+                            <button class="px-4 py-2 bg-purple-500 text-white font-bold text-xs rounded-xl shadow-sm hover:bg-purple-600 transition-all">
+                                <i class="fa-solid fa-plus mr-1"></i> Buat Topik Pembelajaran
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW 4: EVALUASI (PLACEHOLDER) -->
+                <div id="view-evaluasi" class="hidden space-y-6">
+                    <div class="bg-white/80 backdrop-blur-md p-8 rounded-3xl border border-emerald-100 shadow-sm text-center space-y-4">
+                        <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center text-2xl mx-auto">
+                            <i class="fa-solid fa-file-pen"></i>
+                        </div>
+                        <h3 class="text-lg font-extrabold text-slate-800">Modul 3: Evaluasi & Penilaian Pembelajaran</h3>
+                        <p class="text-xs text-slate-500 max-w-md mx-auto">
+                            Modul untuk membuat Lembar Kerja Siswa (LKS), Kuis Online, Simulasi Soal Kasus Akuntansi Jasa & Dagang, serta Penilaian Harian.
+                        </p>
+                        <div class="pt-4 flex justify-center gap-3">
+                            <button class="px-4 py-2 bg-emerald-500 text-white font-bold text-xs rounded-xl shadow-sm hover:bg-emerald-600 transition-all">
+                                <i class="fa-solid fa-plus mr-1"></i> Buat Kuis / Ujian Baru
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW 5: ANALISIS (PLACEHOLDER) -->
+                <div id="view-analisis" class="hidden space-y-6">
+                    <div class="bg-white/80 backdrop-blur-md p-8 rounded-3xl border border-amber-100 shadow-sm text-center space-y-4">
+                        <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center text-2xl mx-auto">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </div>
+                        <h3 class="text-lg font-extrabold text-slate-800">Modul 4: Analisis & Visualisasi Data Nilai</h3>
+                        <p class="text-xs text-slate-500 max-w-md mx-auto">
+                            Modul visualisasi otomatis untuk analisis ketuntasan belajar siswa, grafik distribusi nilai per KD, serta laporan otomatis perkembangan kelas.
+                        </p>
+                        <div class="pt-4 flex justify-center gap-3">
+                            <button class="px-4 py-2 bg-amber-500 text-white font-bold text-xs rounded-xl shadow-sm hover:bg-amber-600 transition-all">
+                                <i class="fa-solid fa-download mr-1"></i> Ekspor Laporan Nilai
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW 6: PENGATURAN (PLACEHOLDER) -->
+                <div id="view-pengaturan" class="hidden space-y-6">
+                    <div class="bg-white/80 backdrop-blur-md p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4 max-w-xl mx-auto">
+                        <h3 class="text-base font-extrabold text-slate-800 border-b border-slate-100 pb-3">Pengaturan Profil & Sistem</h3>
+                        
+                        <div class="space-y-3 text-xs">
+                            <div>
+                                <label class="block font-semibold text-slate-600 mb-1">Nama Pengguna</label>
+                                <input type="text" id="settingNameInput" value="Nindy Octavia, S.Pd." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 font-medium focus:ring-2 focus:ring-pink-300 focus:outline-none">
+                            </div>
+
+                            <div>
+                                <label class="block font-semibold text-slate-600 mb-1">Jurusan</label>
+                                <input type="text" value="Akuntansi dan Keuangan Lembaga (AKL)" disabled class="w-full bg-slate-100 border border-slate-200 rounded-xl px-3 py-2 text-slate-500 cursor-not-allowed">
+                            </div>
+
+                            <button onclick="saveSettings()" class="w-full py-2.5 bg-pink-500 hover:bg-pink-600 text-white font-bold rounded-xl transition-all shadow-sm mt-2">
+                                Simpan Perubahan
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- JAVASCRIPT SYSTEM LOGIC -->
+    <script>
+        // TOGGLE MOBILE SIDEBAR
+        function toggleSidebar() {
+            const sidebar = document.getElementById('mainSidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        // SWITCH TAB NAVIGATION
+        function switchTab(tabName) {
+            const views = ['dashboard', 'perangkat', 'lms', 'evaluasi', 'analisis', 'pengaturan'];
+            const titles = {
+                'dashboard': 'Dashboard Utama',
+                'perangkat': 'Perangkat Guru AKL',
+                'lms': 'LMS Akuntansi & Keuangan',
+                'evaluasi': 'Evaluasi & Penilaian Pembelajaran',
+                'analisis': 'Analisis & Visualisasi Nilai Siswa',
+                'pengaturan': 'Pengaturan Platform Balanceaa'
+            };
+
+            views.forEach(v => {
+                const viewEl = document.getElementById(`view-${v}`);
+                const navEl = document.getElementById(`nav-${v}`);
+                if (v === tabName) {
+                    viewEl.classList.remove('hidden');
+                    if (navEl) {
+                        navEl.classList.add('bg-gradient-to-r', 'from-pink-100/80', 'to-purple-100/50', 'text-pink-700', 'shadow-sm', 'font-semibold');
+                        navEl.classList.remove('text-slate-600');
+                    }
+                } else {
+                    viewEl.classList.add('hidden');
+                    if (navEl) {
+                        navEl.classList.remove('bg-gradient-to-r', 'from-pink-100/80', 'to-purple-100/50', 'text-pink-700', 'shadow-sm', 'font-semibold');
+                        navEl.classList.add('text-slate-600');
+                    }
+                }
+            });
+
+            document.getElementById('pageTitle').innerText = titles[tabName] || 'Balanceaa';
+
+            // Close mobile sidebar if open
+            if (window.innerWidth < 1024) {
+                document.getElementById('mainSidebar').classList.add('-translate-x-full');
+                document.getElementById('sidebarOverlay').classList.add('hidden');
+            }
+        }
+
+        // ROLE SWITCHER (GURU VS SISWA)
+        function changeRole(role) {
+            const isGuru = role === 'guru';
+            
+            // Sidebar info
+            document.getElementById('userNameSidebar').innerText = isGuru ? 'Nindy Octavia, S.Pd.' : 'Ahmad Rizky (Siswa)';
+            document.getElementById('userRoleSidebar').innerText = isGuru ? 'Guru Pengampu AKL' : 'Siswa 11 AKL 1';
+            document.getElementById('userAvatar').src = isGuru 
+                ? 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80'
+                : 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=100&auto=format&fit=crop&q=80';
+
+            // Greeting
+            document.getElementById('roleBadge').innerHTML = isGuru 
+                ? '<i class="fa-solid fa-chalkboard-user mr-1"></i> Mode Pengajar (Guru)'
+                : '<i class="fa-solid fa-user-graduate mr-1"></i> Mode Pelajar (Siswa)';
+            document.getElementById('greetingText').innerText = isGuru 
+                ? 'Selamat Datang Kembali, Ibu Nindy! 👋' 
+                : 'Semangat Belajar, Ahmad Rizky! 📚';
+            
+            // Stats updates
+            document.getElementById('statLabel1').innerText = isGuru ? 'Total Kelas AKL' : 'Mata Pelajaran Diikuti';
+            document.getElementById('statValue1').innerText = isGuru ? '4 Kelas' : '4 Matpel';
+
+            document.getElementById('statLabel2').innerText = isGuru ? 'Mata Pelajaran' : 'Materi Selesai';
+            document.getElementById('statValue2').innerText = isGuru ? '4 Modul' : '18 / 24';
+
+            document.getElementById('statLabel3').innerText = isGuru ? 'Evaluasi Pembelajaran' : 'Tugas Diselesaikan';
+            document.getElementById('statValue3').innerText = isGuru ? '16 Kuis/Tugas' : '12 Kuis';
+
+            document.getElementById('statLabel4').innerText = isGuru ? 'Ketuntasan Nilai' : 'Nilai Rata-rata Kamu';
+            document.getElementById('statValue4').innerText = isGuru ? '86.4 %' : '88.5';
+        }
+
+        // CLASS SELECTOR UPDATER
+        function updateClassContext(className) {
+            document.getElementById('currentClassBadge').innerText = className;
+        }
+
+        // BALANCE CHECKER LOGIC
+        function checkBalance() {
+            const debet = parseFloat(document.getElementById('debitInput').value) || 0;
+            const kredit = parseFloat(document.getElementById('kreditInput').value) || 0;
+            const statusEl = document.getElementById('balanceStatus');
+
+            if (debet === kredit && debet > 0) {
+                statusEl.className = 'text-xs font-extrabold px-3 py-1 rounded-full bg-emerald-100 text-emerald-700';
+                statusEl.innerHTML = '<i class="fa-solid fa-circle-check mr-1"></i> Balance';
+            } else {
+                statusEl.className = 'text-xs font-extrabold px-3 py-1 rounded-full bg-rose-100 text-rose-700';
+                statusEl.innerHTML = '<i class="fa-solid fa-circle-xmark mr-1"></i> Tidak Balance (Selisih: Rp ' + Math.abs(debet - kredit).toLocaleString('id-ID') + ')';
+            }
+        }
+
+        // SAVE SETTINGS
+        function saveSettings() {
+            const newName = document.getElementById('settingNameInput').value;
+            if (newName.trim() !== '') {
+                document.getElementById('userNameSidebar').innerText = newName;
+                document.getElementById('greetingText').innerText = 'Selamat Datang Kembali, ' + newName + '! 👋';
+                alert('Pengaturan profil berhasil diperbarui!');
+            }
+        }
+
+        // CHART JS INITIALIZATION (FOR CLASSES 10 & 11)
+        window.addEventListener('DOMContentLoaded', () => {
+            const ctx = document.getElementById('dashboardChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['10 AKL 1', '10 AKL 2', '11 AKL 1', '11 AKL 2'],
+                    datasets: [{
+                        label: 'Rata-Rata Nilai Akuntansi',
+                        data: [84, 82, 88, 85],
+                        backgroundColor: [
+                            'rgba(251, 207, 232, 0.85)', // Soft Pink
+                            'rgba(233, 213, 255, 0.85)', // Soft Lavender
+                            'rgba(187, 247, 208, 0.85)', // Soft Sage
+                            'rgba(254, 215, 170, 0.85)' // Soft Peach
+                        ],
+                        borderColor: [
+                            '#db2777',
+                            '#9333ea',
+                            '#16a34a',
+                            '#ea580c'
+                        ],
+                        borderWidth: 1.5,
+                        borderRadius: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            min: 60,
+                            max: 100,
+                            grid: { color: 'rgba(241, 245, 249, 0.8)' }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
