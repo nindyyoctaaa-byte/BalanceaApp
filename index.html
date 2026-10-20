@@ -291,7 +291,7 @@
 
                         <!-- SUBJECT SELECTOR -->
                         <div id="headerSubjectContainer" class="relative hidden sm:block">
-                            <select id="globalSubjectSelect" class="appearance-none bg-purple-50/80 hover:bg-purple-100/80 text-purple-700 text-xs font-bold py-2 pl-3 pr-8 rounded-xl border border-purple-200 focus:outline-none cursor-pointer transition-all">
+                            <select id="globalSubjectSelect" onchange="onGlobalSubjectChange(this.value)" class="appearance-none bg-purple-50/80 hover:bg-purple-100/80 text-purple-700 text-xs font-bold py-2 pl-3 pr-8 rounded-xl border border-purple-200 focus:outline-none cursor-pointer transition-all">
                                 <!-- Populated dynamically by JS -->
                             </select>
                             <i class="fa-solid fa-chevron-down absolute right-2.5 top-1/2 -translate-y-1/2 text-purple-400 pointer-events-none text-[10px]"></i>
@@ -320,7 +320,7 @@
                                     Selamat Datang Kembali, Ibu Nindy! 👋
                                 </h2>
                                 <p id="greetingSub" class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                                    Siap melanjutkan materi <span class="font-bold text-pink-600">Akuntansi Keuangan</span> untuk kelas <span id="currentClassBadge" class="font-bold text-purple-600">11 AKL 1</span> hari ini.
+                                    Siap melanjutkan materi <span id="currentSubjectText" class="font-bold text-pink-600">Akuntansi Keuangan</span> untuk kelas <span id="currentClassBadge" class="font-bold text-purple-600">11 AKL 1</span> hari ini.
                                 </p>
                             </div>
                             <i class="fa-solid fa-calculator absolute -right-4 -bottom-6 text-9xl text-pink-300/30 transform -rotate-12 pointer-events-none"></i>
@@ -511,7 +511,7 @@
                         </div>
                     </div>
 
-                    <!-- VIEW 2: BERANDA SISWA (NEW STUDENT HOME) -->
+                    <!-- VIEW 2: BERANDA SISWA -->
                     <div id="view-dashboard-siswa" class="hidden space-y-6">
                         <!-- BANNER SISWA -->
                         <div class="bg-gradient-to-r from-purple-200/60 via-pink-200/50 to-blue-200/40 rounded-3xl p-6 sm:p-8 border border-white/80 shadow-sm relative overflow-hidden">
@@ -991,6 +991,70 @@
             '12 AKL 2': []
         };
 
+        // DEFAULT TEMPLATES BERDASARKAN MATA PELAJARAN
+        const MAPEL_DEFAULT_TEMPLATES = {
+            'Akuntansi Keuangan': {
+                cp: 'Peserta didik mampu menganalisis, mencatat, dan menyusun laporan keuangan terkait pos-pos aset, kewajiban, serta ekuitas perusahaan.',
+                atp: '1. Menganalisis piutang dagang dan persediaan barang.\n2. Pencatatan aset tetap dan perhitungan depresiasi penyusutan.\n3. Penyusunan laporan posisi keuangan dan laba rugi.',
+                kompetensi: 'Siswa memahami saldo normal akun, jurnal umum, dan laporan posisi keuangan.',
+                pemahaman: 'Pencatatan aset dan kewajiban yang presisi menjamin keakuratan laporan posisi keuangan.',
+                pertanyaan: 'Bagaimana jika penyusutan aset tetap tidak disesuaikan pada akhir periode?',
+                materi: 'Buku Akuntansi Keuangan, Slide PPT, Lembar Kerja Piutang & Aset Tetap',
+                uraian: 'Materi mencakup pengakuan, pengukuran, dan pencatatan pos aset lancar, aset tidak lancar, kewajiban, dan ekuitas.',
+                contoh: 'Kasus: PT Mulia mencatat penyusutan mesin seharga Rp 50.000.000 dengan metode garis lurus selama 5 tahun.'
+            },
+            'Praktikum Akuntansi Perusahaan Jasa': {
+                cp: 'Peserta didik mampu menerapkan siklus akuntansi perusahaan jasa mulai dari analisis dokumen transaksi hingga laporan keuangan.',
+                atp: '1. Menganalisis bukti transaksi penerimaan dan pengeluaran kas.\n2. Mencatat ke dalam Jurnal Umum dan Posting Buku Besar.\n3. Menyusun Jurnal Penyesuaian, Kertas Kerja, dan Laporan Keuangan.',
+                kompetensi: 'Siswa memahami pengelompokan akun debet-kredit pada transaksi perusahaan jasa.',
+                pemahaman: 'Siklus akuntansi jasa memberikan gambaran riil kinerja operasional entitas penyedia jasa.',
+                pertanyaan: 'Mengapa akun pendapatan diterima di muka perlu disesuaikan di akhir periode?',
+                materi: 'Bukti Transaksi Jasa, Kertas Kerja (Worksheet), Software Spreadsheet',
+                uraian: 'Materi mencakup karakteristik perusahaan jasa, jurnal penyesuaian, neraca lajur, dan penyusunan laporan keuangan.',
+                contoh: 'Kasus: Bengkel Mobil Sejahtera menerima pembayaran tunai servis kendaraan sebesar Rp 2.500.000.'
+            },
+            'Praktikum Akuntansi Perusahaan Dagang': {
+                cp: 'Peserta didik mampu mengelola siklus akuntansi perusahaan dagang dengan sistem persediaan fisik (periodik) maupun perpetual.',
+                atp: '1. Mencatat transaksi ke dalam Jurnal Khusus (Pembelian, Penjualan, Penerimaan Kas, Pengeluaran Kas).\n2. Posting ke Buku Besar Pembantu Utang & Piutang.\n3. Perhitungan HPP dan penyusunan Laporan Keuangan Perusahaan Dagang.',
+                kompetensi: 'Siswa memahami perbedaan karakteristik operasional perusahaan jasa dan perusahaan dagang.',
+                pemahaman: 'Pengelolaan persediaan barang dagang secara rinci mencegah kerugian dan selisih persediaan.',
+                pertanyaan: 'Apa perbedaan mendasar syarat penyerahan FOB Shipping Point dan FOB Destination Point?',
+                materi: 'Modul Jurnal Khusus, Kartu Persediaan, Lembar Kerja HPP',
+                uraian: 'Materi mencakup transaksi pembelian/penjualan barang dagang, syarat pembayaran (2/10, n/30), retur, dan HPP.',
+                contoh: 'Kasus: Toko Utama menjual barang dagang Rp 10.000.000 syarat 2/10, n/30 dengan HPP Rp 7.500.000.'
+            },
+            'Komputer Akuntansi': {
+                cp: 'Peserta didik mampu mengoperasikan aplikasi komputer akuntansi (MYOB / Accurate / Spreadsheet) untuk pencatatan transaksi terintegrasi.',
+                atp: '1. Membuat data perusahaan baru dan mengkonfigurasi daftar akun.\n2. Mengentri saldo awal dan mencatat transaksi bisnis harian.\n3. Mencetak laporan keuangan dan melakukan backup data.',
+                kompetensi: 'Siswa memahami logika alur akuntansi manual dan pengoperasian perangkat komputer.',
+                pemahaman: 'Penggunaan komputer akuntansi meningkatkan efisiensi, pemrosesan cepat, dan keakuratan data.',
+                pertanyaan: 'Mengapa pengaturan Linked Accounts sangat penting sebelum mengentri transaksi pada MYOB?',
+                materi: 'Software MYOB/Accurate, Komputer Lab, Modul Kasus Komputer Akuntansi',
+                uraian: 'Materi meliputi setup awal profil bisnis, setup tax codes, card list, entry jurnal transaksi, dan pencetakan laporan.',
+                contoh: 'Kasus: Mengentri transaksi pembayaran gaji karyawan sebesar Rp 15.000.000 pada menu Banking / Spend Money.'
+            },
+            'Perpajakan': {
+                cp: 'Peserta didik mampu memahami ketentuan umum perpajakan, menghitung PPh, PPN, serta melakukan simulasi pengisian e-SPT.',
+                atp: '1. Memahami Ketentuan Umum Perpajakan (KUP), NPWP, dan NIK.\n2. Perhitungan PPh Pasal 21, PPh Pasal 22/23/25, dan PPN.\n3. Pengisian formulir SPT dan e-Filing perpajakan.',
+                kompetensi: 'Siswa memahami jenis-jenis pajak di Indonesia serta perhitungan PTKP.',
+                pemahaman: 'Kepatuhan perpajakan merupakan bentuk tanggung jawab moral dan hukum bagi wajib pajak.',
+                pertanyaan: 'Bagaimana pengaruh perubahan status PTKP terhadap besaran pemotongan PPh 21 pegawai?',
+                materi: 'Undang-Undang Perpajakan Terbaru, Formulir SPT, Simulator e-SPT',
+                uraian: 'Materi mencakup KUP, tata cara perhitungan PPh Pasal 21, PPN & PPnBM, serta prosedur pelaporan pajak.',
+                contoh: 'Kasus: Pak Budi (Status K/1) memiliki penghasilan bruto Rp 10.000.000/bulan, hitung PPh 21 terutang.'
+            },
+            'Dasar-Dasar Akuntansi dan Keuangan Lembaga': {
+                cp: 'Peserta didik mampu memahami konsep dasar akuntansi, etika profesi, perkembangan teknologi, dan persamaan dasar akuntansi.',
+                atp: '1. Memahami profesi dan etika akuntan.\n2. Menganalisis transaksi keuangan pada Persamaan Dasar Akuntansi.\n3. Menyusun Laporan Keuangan Sederhana.',
+                kompetensi: 'Siswa memahami perbedaan konsep Harta, Utang, Modal, Pendapatan, dan Beban.',
+                pemahaman: 'Persamaan Dasar Akuntansi (Aset = Kewajiban + Ekuitas) adalah fondasi awal pencatatan akuntansi.',
+                pertanyaan: 'Mengapa setiap transaksi bisnis selalu memengaruhi minimal dua akun pada persamaan dasar?',
+                materi: 'Buku Paket Dasar Akuntansi, Video Pembelajaran, Worksheet Persamaan Dasar',
+                uraian: 'Materi mencakup ruang lingkup akuntansi, etika bisnis, bukti transaksi, dan logika debet-kredit.',
+                contoh: 'Kasus: Pemilik menyetorkan modal awal uang tunai sebesar Rp 50.000.000 ke rekening perusahaan.'
+            }
+        };
+
         // MOCK USER DATABASE (PROTOTYPE CLIENT-SIDE)
         const MOCK_USERS = {
             guru: {
@@ -1086,67 +1150,98 @@
             }
         }
 
-        // CASCADING SELECTOR LOGIC
+        // CASCADING SELECTOR LOGIC (SYNCED BOTH HEADER & PERANGKAT)
         function initHeaderClassMapel() {
             onGlobalClassChange('11 AKL 1');
-            onPerangkatClassChange('11 AKL 1');
         }
 
-        function onGlobalClassChange(selectedClass) {
-            const subjectSelect = document.getElementById('globalSubjectSelect');
-            if (!subjectSelect) return;
+        function updateSubjectDropdowns(selectedClass) {
+            const globalSub = document.getElementById('globalSubjectSelect');
+            const pMapel = document.getElementById('pMapelSelect');
+            const noticeEl = document.getElementById('kelas12Notice');
 
-            subjectSelect.innerHTML = '';
+            if (!globalSub || !pMapel) return;
+
+            globalSub.innerHTML = '';
+            pMapel.innerHTML = '';
+
             const mapelList = MAPPING_KELAS_MAPEL[selectedClass] || [];
 
             if (mapelList.length === 0) {
-                const opt = document.createElement('option');
-                opt.value = '';
-                opt.innerText = 'Mapel Belum Dikonfigurasi';
-                subjectSelect.appendChild(opt);
-            } else {
-                mapelList.forEach(mapel => {
-                    const opt = document.createElement('option');
-                    opt.value = mapel;
-                    opt.innerText = mapel;
-                    subjectSelect.appendChild(opt);
-                });
-            }
-
-            // Sync with page title context badge
-            const badge = document.getElementById('currentClassBadge');
-            if (badge) badge.innerText = selectedClass;
-        }
-
-        function onPerangkatClassChange(selectedClass) {
-            const mapelSelect = document.getElementById('pMapelSelect');
-            const noticeEl = document.getElementById('kelas12Notice');
-
-            if (!mapelSelect) return;
-            mapelSelect.innerHTML = '';
-
-            const mapelList = MAPPING_KELAS_MAPEL[selectedClass] || [];
-
-            if (selectedClass.startsWith('12')) {
                 if (noticeEl) noticeEl.classList.remove('hidden');
-                const opt = document.createElement('option');
-                opt.value = '';
-                opt.innerText = '-- Mapel XII Perlu Dikonfigurasi --';
-                mapelSelect.appendChild(opt);
+                
+                const opt1 = document.createElement('option');
+                opt1.value = '';
+                opt1.innerText = 'Mapel Belum Dikonfigurasi';
+                globalSub.appendChild(opt1);
+
+                const opt2 = document.createElement('option');
+                opt2.value = '';
+                opt2.innerText = '-- Mapel XII Perlu Dikonfigurasi --';
+                pMapel.appendChild(opt2);
             } else {
                 if (noticeEl) noticeEl.classList.add('hidden');
                 mapelList.forEach(mapel => {
-                    const opt = document.createElement('option');
-                    opt.value = mapel;
-                    opt.innerText = mapel;
-                    mapelSelect.appendChild(opt);
+                    const opt1 = document.createElement('option');
+                    opt1.value = mapel;
+                    opt1.innerText = mapel;
+                    globalSub.appendChild(opt1);
+
+                    const opt2 = document.createElement('option');
+                    opt2.value = mapel;
+                    opt2.innerText = mapel;
+                    pMapel.appendChild(opt2);
                 });
             }
+
+            // Sync Header text info
+            const currentSubText = document.getElementById('currentSubjectText');
+            if (currentSubText && mapelList.length > 0) {
+                currentSubText.innerText = mapelList[0];
+            }
+        }
+
+        function onGlobalClassChange(selectedClass) {
+            const pKelas = document.getElementById('pKelasSelect');
+            if (pKelas) pKelas.value = selectedClass;
+
+            updateSubjectDropdowns(selectedClass);
+
+            const badge = document.getElementById('currentClassBadge');
+            if (badge) badge.innerText = selectedClass;
 
             renderPerangkatTable();
         }
 
-        function onPerangkatMapelChange(mapel) {
+        function onGlobalSubjectChange(selectedSubject) {
+            const pMapel = document.getElementById('pMapelSelect');
+            if (pMapel) pMapel.value = selectedSubject;
+
+            const currentSubText = document.getElementById('currentSubjectText');
+            if (currentSubText) currentSubText.innerText = selectedSubject;
+
+            renderPerangkatTable();
+        }
+
+        function onPerangkatClassChange(selectedClass) {
+            const gKelas = document.getElementById('globalClassSelect');
+            if (gKelas) gKelas.value = selectedClass;
+
+            updateSubjectDropdowns(selectedClass);
+
+            const badge = document.getElementById('currentClassBadge');
+            if (badge) badge.innerText = selectedClass;
+
+            renderPerangkatTable();
+        }
+
+        function onPerangkatMapelChange(selectedMapel) {
+            const gMapel = document.getElementById('globalSubjectSelect');
+            if (gMapel) gMapel.value = selectedMapel;
+
+            const currentSubText = document.getElementById('currentSubjectText');
+            if (currentSubText) currentSubText.innerText = selectedMapel;
+
             renderPerangkatTable();
         }
 
@@ -1162,9 +1257,10 @@
 
             let filtered = currentPerangkatList.filter(item => {
                 const matchClass = item.kelas === selectedClass;
+                const matchMapel = !selectedMapel || item.mapel === selectedMapel;
                 const matchSearch = item.title.toLowerCase().includes(searchText) || item.type.toLowerCase().includes(searchText);
                 const matchStatus = (statusFilter === 'Semua') || (item.status === statusFilter);
-                return matchClass && matchSearch && matchStatus;
+                return matchClass && matchMapel && matchSearch && matchStatus;
             });
 
             if (filtered.length === 0) {
@@ -1172,7 +1268,7 @@
                     <tr>
                         <td colspan="6" class="p-8 text-center text-slate-400 font-medium">
                             <i class="fa-solid fa-folder-open text-2xl text-slate-300 block mb-2"></i>
-                            Belum ada dokumen perangkat untuk kelas <b>${selectedClass}</b>. Klik <b>Buat Perangkat Baru</b> di atas untuk menambahkan.
+                            Belum ada dokumen perangkat untuk kelas <b>${selectedClass}</b> ${selectedMapel ? `(${selectedMapel})` : ''}. Klik <b>Buat Perangkat Baru</b> di atas untuk menambahkan.
                         </td>
                     </tr>
                 `;
@@ -1238,9 +1334,9 @@
             document.getElementById('modalFormTypeBadge').innerText = type;
             document.getElementById('modalFormTitle').innerText = 'Buat ' + type + ' Baru';
 
-            // Sync context info
+            // Sync context info from active selections
             const kelas = document.getElementById('pKelasSelect').value;
-            const mapel = document.getElementById('pMapelSelect').value || 'Dasar Akuntansi';
+            const mapel = document.getElementById('pMapelSelect').value || 'Akuntansi Keuangan';
             const semester = document.getElementById('pSemesterSelect').value;
             const ta = document.getElementById('pTahunAjaranSelect').value;
 
@@ -1253,15 +1349,20 @@
             uploadedFileMeta = null;
             document.getElementById('uploadedFileName').innerText = 'Belum ada file dipilih (Maks. 10MB)';
 
-            renderDynamicFields(type, {});
+            // Fetch defaults based on mapel
+            const mapelDefaults = MAPEL_DEFAULT_TEMPLATES[mapel] || MAPEL_DEFAULT_TEMPLATES['Akuntansi Keuangan'];
+
+            renderDynamicFields(type, {}, mapelDefaults);
 
             document.getElementById('perangkatFormModal').classList.remove('hidden');
         }
 
-        // RENDER DYNAMIC FIELDS BASED ON TYPE
-        function renderDynamicFields(type, data) {
+        // RENDER DYNAMIC FIELDS BASED ON TYPE AND MAPEL DEFAULTS
+        function renderDynamicFields(type, data, defaults) {
             const container = document.getElementById('dynamicFormFields');
             if (!container) return;
+
+            const mapelDef = defaults || MAPEL_DEFAULT_TEMPLATES['Akuntansi Keuangan'];
 
             if (type === 'RPP') {
                 container.innerHTML = `
@@ -1277,15 +1378,15 @@
                     </div>
                     <div>
                         <label class="block font-bold text-slate-600 mb-1">Tujuan Pembelajaran</label>
-                        <textarea id="fTujuan" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5">${data.tujuanPembelajaran || 'Siswa dapat menjelaskan konsep dasar transaksi dan mencatat jurnal secara cermat.'}</textarea>
+                        <textarea id="fTujuan" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5">${data.tujuanPembelajaran || mapelDef.cp}</textarea>
                     </div>
                     <div>
                         <label class="block font-bold text-slate-600 mb-1">Langkah-Langkah Kegiatan (Pendahuluan, Inti, Penutup)</label>
-                        <textarea id="fLangkah" rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5">${data.langkahAktivitas || '1. Pendahuluan: Salam & Apersepsi (15 menit)\n2. Inti: Orientasi masalah & Diskusi kelompok (60 menit)\n3. Penutup: Kesimpulan & Refleksi (15 menit)'}</textarea>
+                        <textarea id="fLangkah" rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5">${data.langkahAktivitas || '1. Pendahuluan: Salam, Doa & Apersepsi materi (15 menit)\n2. Inti: Orientasi masalah studi kasus & Diskusi kelompok (60 menit)\n3. Penutup: Kesimpulan, Evaluasi & Refleksi (15 menit)'}</textarea>
                     </div>
                     <div>
                         <label class="block font-bold text-slate-600 mb-1">Penilaian / Asesmen & Refleksi</label>
-                        <textarea id="fPenilaian" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5">${data.penilaian || 'Penilaian Sikap (Observasi), Penilaian Pengetahuan (Kuis), Penilaian Keterampilan (Praktik).'}</textarea>
+                        <textarea id="fPenilaian" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5">${data.penilaian || 'Penilaian Sikap (Observasi), Penilaian Pengetahuan (Tes Kuis), Penilaian Keterampilan (Praktik Studi Kasus).'}</textarea>
                     </div>
                 `;
             } else if (type === 'Modul Ajar') {
@@ -1293,7 +1394,7 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
                             <label class="block font-bold text-slate-600 mb-1">Kompetensi Awal</label>
-                            <input type="text" id="fKompetensiAwal" value="${data.kompetensiAwal || 'Memahami konsep jurnal umum'}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2">
+                            <input type="text" id="fKompetensiAwal" value="${data.kompetensiAwal || mapelDef.kompetensi}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2">
                         </div>
                         <div>
                             <label class="block font-bold text-slate-600 mb-1">Profil Pelajar Pancasila</label>
@@ -1303,16 +1404,16 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
                             <label class="block font-bold text-slate-600 mb-1">Pemahaman Bermakna</label>
-                            <input type="text" id="fPemahamanBermakna" value="${data.pemahamanBermakna || 'Penyesuaian menjamin keakuratan laporan keuangan'}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2">
+                            <input type="text" id="fPemahamanBermakna" value="${data.pemahamanBermakna || mapelDef.pemahaman}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2">
                         </div>
                         <div>
                             <label class="block font-bold text-slate-600 mb-1">Pertanyaan Pemantik</label>
-                            <input type="text" id="fPertanyaanPemantik" value="${data.pertanyaanPemantik || 'Apa yang terjadi jika saldo perlengkapan tidak dihitung ulang?'}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2">
+                            <input type="text" id="fPertanyaanPemantik" value="${data.pertanyaanPemantik || mapelDef.pertanyaan}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2">
                         </div>
                     </div>
                     <div>
                         <label class="block font-bold text-slate-600 mb-1">Materi & Media Pembelajaran</label>
-                        <textarea id="fMateriMedia" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5">${data.materiMedia || 'Slide PPT, Lembar Kerja Kasus Akuntansi, Modul Cetak'}</textarea>
+                        <textarea id="fMateriMedia" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5">${data.materiMedia || mapelDef.materi}</textarea>
                     </div>
                     <div>
                         <label class="block font-bold text-slate-600 mb-1">Asesmen (Diagnostik, Formatif, Sumatif)</label>
@@ -1327,22 +1428,22 @@
                     </div>
                     <div>
                         <label class="block font-bold text-slate-600 mb-1">Capaian Pembelajaran (CP) / Ringkasan</label>
-                        <textarea id="fCPText" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5">${data.cpText || 'Peserta didik mampu melakukan pencatatan transaksi akuntansi keuangan hingga menyusun laporan keuangan sederhana.'}</textarea>
+                        <textarea id="fCPText" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5">${data.cpText || mapelDef.cp}</textarea>
                     </div>
                     <div>
                         <label class="block font-bold text-slate-600 mb-1">Daftar Urutan Tujuan Pembelajaran (ATP / TP)</label>
-                        <textarea id="fATPList" rows="3" placeholder="Masukkan 1 TP per baris..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5">${data.atpList || '1. Menganalisis dokumen transaksi persediaan.\n2. Mencatat transaksi jurnal khusus dan buku besar pembantu.\n3. Menyusun neraca saldo sebelum penyesuaian.'}</textarea>
+                        <textarea id="fATPList" rows="3" placeholder="Masukkan 1 TP per baris..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5">${data.atpList || mapelDef.atp}</textarea>
                     </div>
                 `;
             } else if (type === 'Bahan Ajar') {
                 container.innerHTML = `
                     <div>
                         <label class="block font-bold text-slate-600 mb-1">Uraian Ringkas Materi</label>
-                        <textarea id="fUraianMateri" rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5">${data.uraianMateri || 'Materi mencakup definisi akun persediaan, metode perpetual vs periodik, serta analisis bukti transaksi faktur dan nota retur.'}</textarea>
+                        <textarea id="fUraianMateri" rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5">${data.uraianMateri || mapelDef.uraian}</textarea>
                     </div>
                     <div>
                         <label class="block font-bold text-slate-600 mb-1">Contoh Kasus / Studi Transaksi Akuntansi</label>
-                        <textarea id="fContohKasus" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5">${data.contohKasus || 'Kasus: PT Maju Jaya membeli barang dagang Rp 10.000.000 dengan syarat 2/10, n/30.'}</textarea>
+                        <textarea id="fContohKasus" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5">${data.contohKasus || mapelDef.contoh}</textarea>
                     </div>
                 `;
             } else {
@@ -1484,7 +1585,9 @@
             uploadedFileMeta = doc.fileAttachment;
             document.getElementById('uploadedFileName').innerText = doc.fileAttachment ? ('File terlampir: ' + doc.fileAttachment) : 'Belum ada file dipilih';
 
-            renderDynamicFields(doc.type, doc.content || {});
+            const mapelDefaults = MAPEL_DEFAULT_TEMPLATES[doc.mapel] || MAPEL_DEFAULT_TEMPLATES['Akuntansi Keuangan'];
+
+            renderDynamicFields(doc.type, doc.content || {}, mapelDefaults);
             document.getElementById('perangkatFormModal').classList.remove('hidden');
         }
 
@@ -1519,7 +1622,6 @@
                 </div>
             `;
 
-            // Append details
             if (type === 'RPP') {
                 html += `
                     <div class="space-y-4">
@@ -1800,12 +1902,6 @@
                 if (sidebar) sidebar.classList.add('-translate-x-full');
                 if (overlay) overlay.classList.add('hidden');
             }
-        }
-
-        // CLASS SELECTOR CONTEXT
-        function updateClassContext(className) {
-            const el = document.getElementById('currentClassBadge');
-            if (el) el.innerText = className;
         }
 
         // BALANCE CHECKER LOGIC
