@@ -1,273 +1,275 @@
-PERBAIKAN KHUSUS LMS BALANCEAA — TAMBAHKAN FITUR MEMBUAT DAN MENGELOLA MODUL PEMBELAJARAN.
-
-Saya ingin memperbaiki bagian LMS pada website Balanceaa yang sudah dikembangkan.
-
-Saat ini LMS sudah memiliki tiga tab:
-1. Modul Pembelajaran.
-2. Materi & Video.
-3. Tugas & Kuis.
-
-Namun, terdapat masalah:
-
-- Belum ada fitur yang berfungsi untuk menambahkan Modul Pembelajaran.
-- Guru hanya bisa menambahkan materi atau video.
-- Materi dan video belum terorganisasi dengan jelas di dalam Modul Pembelajaran.
-- Guru membutuhkan fitur untuk membuat modul sendiri berdasarkan mata pelajaran.
-- Video yang sudah ditambahkan harus bisa diedit, diganti, atau dihapus.
-- Semua perubahan harus terintegrasi dengan akun Siswa.
-
-TUGAS UTAMA:
-**Tambahkan fitur CRUD Modul Pembelajaran pada tab "1. Modul Pembelajaran" dan hubungkan seluruh materi/video dengan modul tersebut.**
-
-# A. PERINGATAN KERAS — JANGAN MENGUBAH FITUR YANG SUDAH FIX
-
-Sebelum mengubah kode, buat backup atau checkpoint versi Balanceaa yang saat ini berfungsi.
-
-JANGAN:
-- Membangun ulang website.
-- Mengubah desain dashboard.
-- Mengubah sidebar.
-- Mengubah login Guru dan Siswa.
-- Mengubah Perangkat Guru.
-- Mengubah formulir RPP, Modul Ajar, CP, TP, ATP, Bahan Ajar, dan Rubrik.
-- Mengubah data atau penyimpanan Perangkat Guru.
-- Mengubah fitur Tugas Dokumen yang sudah berjalan.
-- Mengubah fitur Kuis dan Evaluasi.
-- Mengubah Analisis Nilai.
-- Mengubah Pengaturan.
-- Mengubah daftar kelas dan mata pelajaran yang sudah dikonfigurasi.
-- Menghapus atau mereset data lama.
-- Mengubah tampilan LMS yang sudah disetujui secara keseluruhan.
-
-Perubahan harus terbatas pada fitur Modul Pembelajaran dan relasinya dengan Materi & Video.
-
-Jika ada perubahan yang membutuhkan modifikasi file bersama dan berisiko mengubah fitur lain, jelaskan dampaknya terlebih dahulu dan minta persetujuan.
-
-# B. TAMBAHKAN TOMBOL "+ TAMBAH MODUL PEMBELAJARAN"
-
-Pada tab "1. Modul Pembelajaran", tampilkan tombol:
-
-**+ Tambah Modul Pembelajaran**
-
-Tombol harus berfungsi membuka formulir pembuatan modul.
-
-Formulir berisi:
-- Judul Modul.
-- Deskripsi Modul.
-- Kelas Tujuan.
-- Mata Pelajaran.
-- Semester.
-- Tahun Ajaran.
-- Nomor atau Urutan Modul.
-- Tujuan Pembelajaran.
-- Alokasi Waktu.
-- Status Draft atau Dipublikasikan.
-
-Kelas dan mata pelajaran harus mengambil data dari konfigurasi yang sudah ada.
-
-Guru dapat memilih kelas yang diampunya dan mata pelajaran yang sesuai.
-
-Jangan membuat daftar kelas atau mata pelajaran baru yang terpisah.
-
-# C. FITUR PENGELOLAAN MODUL
-
-Setelah modul dibuat, tampilkan kartu modul pada tab Modul Pembelajaran.
-
-Setiap kartu memiliki:
-- Judul Modul.
-- Mata Pelajaran.
-- Kelas.
-- Deskripsi singkat.
-- Jumlah materi.
-- Jumlah video.
-- Status publikasi.
-- Tombol Buka Modul.
-- Tombol Edit Modul.
-- Tombol Hapus Modul.
-- Tombol Publikasikan atau Tarik Publikasi.
-
-Guru harus dapat:
-1. Membuat modul.
-2. Menyimpan modul.
-3. Mengedit modul.
-4. Menghapus modul dengan konfirmasi.
-5. Mengatur urutan modul.
-6. Menambahkan isi modul.
-7. Memublikasikan modul.
-8. Menarik publikasi modul.
-
-Hapus modul tidak boleh secara tidak sengaja menghapus dokumen Perangkat Guru atau tugas yang digunakan di tempat lain.
-
-# D. HUBUNGKAN MATERI DAN VIDEO DENGAN MODUL
-
-Saat guru membuka suatu modul, tampilkan:
-
-**Isi Modul Pembelajaran**
-- Materi Teks.
-- File PDF/Word/PPT/Excel.
-- Video Pembelajaran.
-- Aktivitas Belajar.
-- Tugas dan Kuis yang terkait.
-
-Tambahkan tombol:
-- + Tambah Materi.
-- + Tambah Video.
-- Hubungkan Perangkat Guru.
-- Lihat Tugas & Kuis Terkait.
-
-Ketika guru menambahkan materi atau video, sistem wajib menyimpan ID modul terkait.
-
-Jangan menyimpan materi/video hanya berdasarkan judul mata pelajaran.
-
-Pada tab "2. Materi & Video", pertahankan fitur yang sudah ada, tetapi tambahkan filter atau pilihan Modul Pembelajaran.
-
-Guru dapat memilih modul terlebih dahulu, lalu melihat atau menambahkan materi/video untuk modul tersebut.
-
-Materi/video yang sudah ada jangan dihapus. Lakukan migrasi atau penautan yang aman agar konten lama tetap tersedia. Jika penautan tidak dapat ditentukan secara pasti, tampilkan sebagai konten "Belum Terhubung ke Modul" agar guru dapat memilih modul tujuan secara manual.
-
-# E. FITUR EDIT DAN GANTI VIDEO
-
-Pertahankan pemutar video yang sudah ada.
-
-Tambahkan pada setiap video:
-- Edit Video.
-- Ganti Link Video.
-- Hapus Video.
-
-Guru dapat mengubah:
-- Judul.
-- Deskripsi.
-- URL YouTube.
-- Modul tujuan, jika memiliki izin.
-
-Validasi URL sebelum menyimpan.
-
-Video lama harus digantikan oleh video baru pada data yang sama, bukan membuat video duplikat.
-
-Video contoh yang tidak sesuai materi, seperti video musik pada materi Rekonsiliasi Bank, jangan digunakan sebagai video pembelajaran default.
-
-Jangan menghapus video lama tanpa tindakan guru atau migrasi yang aman.
-
-# F. FILTER KELAS DAN MATA PELAJARAN
-
-Pastikan seluruh modul, materi, dan video mengikuti pilihan kelas serta mata pelajaran.
-
-Contoh:
-
-Kelas: 11 AKL 1
-Mata Pelajaran: Akuntansi Keuangan
-
-Tampilkan hanya modul Akuntansi Keuangan untuk 11 AKL 1.
-
-Ketika guru mengganti mata pelajaran menjadi Perpajakan, daftar modul harus berubah menjadi modul Perpajakan.
-
-Jika belum ada modul, tampilkan:
-
-"Belum ada modul pembelajaran untuk mata pelajaran ini."
-
-Dan tampilkan tombol "+ Tambah Modul Pembelajaran".
-
-Jangan menampilkan konten mata pelajaran lain.
-
-# G. INTEGRASI WAJIB DENGAN AKUN SISWA
-
-Ini merupakan persyaratan utama Balanceaa.
-
-Setiap modul yang dibuat guru harus terhubung dengan akun siswa sesuai kelas dan mata pelajaran.
-
-Alur wajib:
-
-1. Guru membuat modul pembelajaran.
-2. Guru memilih kelas dan mata pelajaran.
-3. Guru menambahkan materi dan video.
-4. Guru menyimpan modul sebagai Draft.
-5. Siswa belum dapat melihat modul Draft.
-6. Guru memublikasikan modul.
-7. Modul muncul di LMS akun siswa kelas tujuan.
-8. Siswa dapat membuka modul.
-9. Siswa dapat membaca materi.
-10. Siswa dapat menonton video.
-11. Siswa dapat mengunduh lampiran yang diizinkan.
-12. Jika guru mengganti video, video terbaru muncul pada akun siswa.
-13. Jika guru mengedit materi, perubahan tampil pada akun siswa.
-14. Jika publikasi ditarik, siswa tidak lagi dapat mengakses modul.
-
-Siswa hanya boleh melihat modul untuk kelas dan mata pelajaran yang terdaftar pada akunnya.
-
-Siswa tidak boleh membuat, mengedit, menghapus, atau memublikasikan modul guru.
-
-Gunakan database atau sumber data bersama yang sudah ada. Jangan membuat penyimpanan modul terpisah antara akun Guru dan Siswa.
-
-Jika masih menggunakan localStorage, jelaskan bahwa sinkronisasi lintas perangkat belum tersedia.
-
-# H. HUBUNGKAN DENGAN PERANGKAT GURU TANPA MENGUBAHNYA
-
-Pada editor Modul Pembelajaran LMS, sediakan tombol "Hubungkan Perangkat Guru".
-
-Guru dapat memilih TP, ATP, Modul Ajar, atau Bahan Ajar yang sudah tersimpan.
-
-Hubungkan melalui ID perangkat yang sudah ada.
-
-JANGAN:
-- Memindahkan Modul Pembelajaran ke Perangkat Guru.
-- Mengubah formulir Modul Ajar.
-- Menghapus perangkat lama.
-- Menggandakan perangkat tanpa kebutuhan.
-- Membuka dokumen Khusus Guru kepada siswa tanpa izin publikasi.
-
-Modul Ajar dan Modul Pembelajaran adalah dua fitur berbeda.
-
-# I. PENGUJIAN WAJIB
-
-Uji skenario berikut:
-
-1. Guru membuka tab Modul Pembelajaran.
-2. Guru menekan "+ Tambah Modul Pembelajaran".
-3. Formulir terbuka.
-4. Guru membuat modul "Rekonsiliasi Bank" untuk kelas 11 AKL 1, mata pelajaran Akuntansi Keuangan.
-5. Modul berhasil disimpan.
-6. Guru membuka modul tersebut.
-7. Guru menambahkan materi PDF.
-8. Guru menambahkan video YouTube.
-9. Guru mengedit link video.
-10. Materi dan video tetap terhubung dengan modul yang benar.
-11. Guru memublikasikan modul.
-12. Siswa kelas 11 AKL 1 melihat modul pada akun Siswa.
-13. Siswa dapat membaca materi dan menonton video.
-14. Siswa kelas 11 AKL 2 tidak dapat mengakses modul.
-15. Guru mengganti mata pelajaran dan daftar modul ikut berubah.
-16. Guru mengedit modul dan perubahan muncul pada akun siswa.
-17. Guru menarik publikasi dan siswa tidak dapat lagi membuka modul.
-18. Modul, materi, dan video tetap tersimpan setelah refresh sesuai kemampuan backend.
-
-PENGUJIAN REGRESI:
-- Perangkat Guru tetap berfungsi.
-- RPP tetap bisa dibuat dan dibuka.
-- Modul Ajar tetap bisa dibuat dan dibuka.
-- CP, TP, ATP, dan Bahan Ajar tetap aman.
-- Tugas Dokumen tetap tersedia.
-- Kuis tetap berfungsi.
-- Login Guru dan Siswa tetap berfungsi.
-- Dashboard dan sidebar tidak berubah.
-- Evaluasi dan Analisis Nilai tidak rusak.
-
-Jangan menyatakan pengujian berhasil tanpa benar-benar menjalankannya.
-
-# J. LAPORAN HASIL
-
-Setelah selesai, laporkan:
-1. File yang diubah.
-2. Fitur Modul Pembelajaran yang ditambahkan.
-3. Cara menambahkan materi dan video ke modul.
-4. Cara mengedit atau mengganti video.
-5. Cara modul muncul pada akun siswa.
-6. Mekanisme penyimpanan dan integrasi.
-7. Hasil pengujian.
-8. Hasil pengujian regresi.
-9. Keterbatasan yang masih ada.
-10. Langkah deployment jika diperlukan.
-
-PRIORITAS UTAMA:
-**Tambahkan fitur pembuatan Modul Pembelajaran di LMS tanpa mengubah, merusak, atau menghapus fitur Balanceaa yang sudah fix.**
-
-Jangan melakukan redesign atau refactoring besar yang tidak diperlukan.
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Balanceaa - Platform Pembelajaran Akuntansi SMK AKL</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        pastel: {
+                            pink: '#fce7f3',
+                            pinkDark: '#db2777',
+                            pinkSoft: '#fdf2f8',
+                            green: '#dcfce7',
+                            greenDark: '#16a34a',
+                            greenSoft: '#f0fdf4',
+                            purple: '#f3e8ff',
+                            purpleDark: '#9333ea',
+                            purpleSoft: '#faf5ff',
+                            orange: '#ffedd5',
+                            orangeDark: '#ea580c',
+                            orangeSoft: '#fff7ed',
+                            blue: '#e0f2fe',
+                            blueDark: '#0284c7',
+                            slate: '#f8fafc',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #fbcfe8; border-radius: 10px; }
+        @media print {
+            body * { visibility: hidden; }
+            #printArea, #printArea * { visibility: visible; }
+            #printArea { position: absolute; left: 0; top: 0; width: 100%; background: #fff; color: #000; padding: 20px; }
+            .no-print { display: none !important; }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-[#FFF0F5] via-[#F8F0FF] to-[#F0FDF4] min-h-screen text-slate-700 flex flex-col font-sans">
+
+    <!-- PRINT PREVIEW CONTAINER -->
+    <div id="printArea" class="hidden"></div>
+
+    <!-- ========================================== -->
+    <!-- 1. HALAMAN LOGIN                           -->
+    <!-- ========================================== -->
+    <div id="view-login" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gradient-to-br from-[#FFF0F5] via-[#F8F0FF] to-[#F0FDF4] overflow-y-auto">
+        <div class="w-full max-w-md my-auto">
+            <div class="bg-white/80 backdrop-blur-xl p-8 rounded-3xl border border-pink-100 shadow-xl shadow-purple-100/40 space-y-6 relative overflow-hidden">
+                <div class="absolute -right-10 -top-10 w-32 h-32 bg-pink-200/40 rounded-full blur-2xl pointer-events-none"></div>
+                <div class="absolute -left-10 -bottom-10 w-32 h-32 bg-purple-200/40 rounded-full blur-2xl pointer-events-none"></div>
+
+                <div class="text-center space-y-2 relative z-10">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-pink-400 to-purple-400 flex items-center justify-center text-white mx-auto shadow-lg shadow-pink-200">
+                        <i class="fa-solid fa-scale-balanced text-2xl"></i>
+                    </div>
+                    <h1 class="text-2xl font-extrabold text-slate-800 tracking-tight">Balanceaa<span class="text-pink-500">.</span></h1>
+                    <p class="text-xs font-semibold text-pink-500 tracking-wider uppercase">Platform Pembelajaran Akuntansi SMK AKL</p>
+                </div>
+
+                <div class="relative z-10 bg-slate-100/80 p-1.5 rounded-2xl flex items-center gap-1 border border-slate-200/60">
+                    <button type="button" id="roleBtnGuru" onclick="selectLoginRole('guru')" class="flex-1 py-2 text-xs font-bold rounded-xl transition-all duration-200 bg-white text-pink-600 shadow-sm">
+                        <i class="fa-solid fa-chalkboard-user mr-1.5"></i> Guru / Pengajar
+                    </button>
+                    <button type="button" id="roleBtnSiswa" onclick="selectLoginRole('siswa_11_akl_1')" class="flex-1 py-2 text-xs font-bold rounded-xl transition-all duration-200 text-slate-500 hover:text-slate-700">
+                        <i class="fa-solid fa-user-graduate mr-1.5"></i> Siswa
+                    </button>
+                </div>
+
+                <form onsubmit="handleLogin(event)" class="space-y-4 relative z-10">
+                    <input type="hidden" id="loginRole" value="guru">
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Email / ID Pengguna</label>
+                        <div class="relative">
+                            <i class="fa-solid fa-envelope absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                            <input type="text" id="loginEmail" value="guru" placeholder="Masukkan ID Pengguna" class="w-full bg-slate-50/80 border border-slate-200/80 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-pink-300 focus:bg-white transition-all">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Kata Sandi</label>
+                        <div class="relative">
+                            <i class="fa-solid fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                            <input type="password" id="loginPassword" value="123" placeholder="Masukkan kata sandi" class="w-full bg-slate-50/80 border border-slate-200/80 rounded-2xl pl-10 pr-10 py-2.5 text-xs text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-pink-300 focus:bg-white transition-all">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full py-3 bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-bold text-xs rounded-2xl shadow-md shadow-pink-200 hover:shadow-lg transition-all active:scale-[0.99]">
+                        Masuk ke Balanceaa <i class="fa-solid fa-right-to-bracket ml-1.5"></i>
+                    </button>
+                </form>
+
+                <div class="relative z-10 pt-3 border-t border-slate-100 text-center space-y-2">
+                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Akses Langsung Akun Uji Coba:</p>
+                    <div class="grid grid-cols-2 gap-2 text-[10px]">
+                        <button type="button" onclick="quickLogin('guru')" class="p-2 bg-pink-50 hover:bg-pink-100 border border-pink-200 rounded-xl text-left transition-all">
+                            <p class="font-bold text-pink-700"><i class="fa-solid fa-user-shield mr-1"></i> Guru Pengampu</p>
+                            <p class="text-slate-500">Nindy Octavia, S.Pd.</p>
+                        </button>
+                        <button type="button" onclick="quickLogin('siswa_11_akl_1')" class="p-2 bg-purple-50 hover:bg-purple-100 border border-purple-200 rounded-xl text-left transition-all">
+                            <p class="font-bold text-purple-700"><i class="fa-solid fa-user-graduate mr-1"></i> Siswa 11 AKL 1</p>
+                            <p class="text-slate-500">Ahmad Rizky</p>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 2. APLIKASI UTAMA                          -->
+    <!-- ========================================== -->
+    <div id="app-container" class="hidden flex-1 overflow-hidden h-screen flex flex-col">
+        <div id="sidebarOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-30 hidden lg:hidden"></div>
+
+        <div class="flex flex-1 overflow-hidden h-screen">
+            <!-- SIDEBAR NAVIGASI -->
+            <aside id="mainSidebar" class="fixed lg:static inset-y-0 left-0 z-40 w-64 bg-white/80 backdrop-blur-md border-r border-pink-100/80 flex flex-col justify-between transition-transform duration-300 transform -translate-x-full lg:translate-x-0 shadow-sm">
+                <div>
+                    <div class="p-5 border-b border-pink-50 flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-pink-400 to-purple-400 flex items-center justify-center text-white shadow-md shadow-pink-200">
+                                <i class="fa-solid fa-scale-balanced text-lg"></i>
+                            </div>
+                            <div>
+                                <h1 class="font-extrabold text-xl tracking-tight text-slate-800">Balanceaa<span class="text-pink-500">.</span></h1>
+                                <p class="text-[10px] font-semibold tracking-wider text-pink-400 uppercase">Akuntansi SMK AKL</p>
+                            </div>
+                        </div>
+                        <button onclick="toggleSidebar()" class="lg:hidden text-slate-400 hover:text-slate-600 p-1">
+                            <i class="fa-solid fa-xmark text-lg"></i>
+                        </button>
+                    </div>
+
+                    <div class="p-4">
+                        <div class="bg-purple-50/60 p-2.5 rounded-2xl border border-purple-100/60 flex items-center justify-between">
+                            <span class="text-xs font-semibold text-purple-700 flex items-center gap-1.5">
+                                <i id="activeRoleIcon" class="fa-solid fa-user-shield text-purple-500"></i> <span id="activeRoleLabel">Sesi:</span>
+                            </span>
+                            <span id="activeRoleBadge" class="text-[11px] font-extrabold px-2.5 py-1 rounded-xl bg-purple-200/80 text-purple-800">
+                                Guru
+                            </span>
+                        </div>
+                    </div>
+
+                    <nav class="px-3 space-y-1">
+                        <a href="#" onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-item flex items-center gap-3 px-4 py-3 text-sm font-semibold rounded-2xl transition-all duration-200 bg-pink-100/80 text-pink-700 shadow-sm">
+                            <i class="fa-solid fa-house w-5 text-center text-pink-500"></i>
+                            <span>Dashboard Utama</span>
+                        </a>
+
+                        <a href="#" onclick="switchTab('dashboard-siswa')" id="nav-dashboard-siswa" class="nav-item hidden flex items-center gap-3 px-4 py-3 text-sm font-semibold rounded-2xl transition-all duration-200 text-slate-600 hover:bg-pink-50/60 hover:text-pink-600">
+                            <i class="fa-solid fa-user-graduate w-5 text-center text-purple-500"></i>
+                            <span>Beranda Siswa</span>
+                        </a>
+
+                        <a href="#" onclick="switchTab('perangkat')" id="nav-perangkat" class="nav-item flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-2xl text-slate-600 hover:bg-pink-50/60 hover:text-pink-600 transition-all duration-200">
+                            <i class="fa-solid fa-folder-open w-5 text-center text-purple-400"></i>
+                            <span>Perangkat Guru</span>
+                        </a>
+
+                        <a href="#" onclick="switchTab('lms')" id="nav-lms" class="nav-item flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-2xl text-slate-600 hover:bg-pink-50/60 hover:text-pink-600 transition-all duration-200">
+                            <i class="fa-solid fa-book-open-reader w-5 text-center text-blue-400"></i>
+                            <span>LMS & Modul Pembelajaran</span>
+                        </a>
+                    </nav>
+                </div>
+
+                <div class="p-4 border-t border-pink-50 space-y-2">
+                    <div class="flex items-center gap-3 bg-white/60 p-2.5 rounded-2xl border border-slate-100">
+                        <img id="userAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="Avatar" class="w-9 h-9 rounded-xl object-cover ring-2 ring-pink-200">
+                        <div class="overflow-hidden flex-1">
+                            <h4 id="userNameSidebar" class="text-xs font-bold text-slate-800 truncate">Nindy Octavia, S.Pd.</h4>
+                            <p id="userRoleSidebar" class="text-[10px] text-pink-500 font-semibold truncate">Guru Pengampu AKL</p>
+                        </div>
+                    </div>
+                    <button onclick="handleLogout()" class="w-full py-2 bg-rose-50 hover:bg-rose-100/80 text-rose-600 font-bold text-xs rounded-xl border border-rose-100 transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-right-from-bracket"></i> Keluar
+                    </button>
+                </div>
+            </aside>
+
+            <!-- MAIN CONTENT -->
+            <main class="flex-1 flex flex-col overflow-y-auto custom-scrollbar">
+                <header class="sticky top-0 z-20 bg-white/70 backdrop-blur-md border-b border-pink-100/60 px-4 sm:px-8 py-3.5 flex items-center justify-between gap-4">
+                    <div class="flex items-center gap-3">
+                        <button onclick="toggleSidebar()" class="lg:hidden text-slate-500 p-2 hover:bg-pink-50 rounded-xl">
+                            <i class="fa-solid fa-bars text-lg"></i>
+                        </button>
+                        <div>
+                            <h2 id="pageTitle" class="text-base sm:text-lg font-bold text-slate-800">Dashboard Utama</h2>
+                            <p id="pageSubtitle" class="text-xs text-slate-400 hidden sm:block">Platform LMS Akuntansi Balanceaa</p>
+                        </div>
+                    </div>
+                </header>
+
+                <div class="p-4 sm:p-8 space-y-6 max-w-7xl mx-auto w-full">
+                    <!-- VIEW DASHBOARD -->
+                    <div id="view-dashboard" class="space-y-6">
+                        <div class="bg-gradient-to-r from-pink-200/60 via-purple-200/50 to-emerald-200/40 rounded-3xl p-6 sm:p-8 border border-white/80 shadow-sm">
+                            <h2 class="text-xl sm:text-2xl font-extrabold text-slate-800">Selamat Datang di Balanceaa 👋</h2>
+                            <p class="text-xs sm:text-sm text-slate-600 mt-1">Sistem LMS Pembelajaran Akuntansi SMK Terintegrasi.</p>
+                        </div>
+                    </div>
+
+                    <!-- VIEW LMS -->
+                    <div id="view-lms" class="hidden space-y-6">
+                        <div class="bg-white/80 backdrop-blur-md p-6 rounded-3xl border border-blue-100 shadow-sm space-y-4">
+                            <div class="flex items-center justify-between border-b pb-3">
+                                <h3 class="font-extrabold text-sm text-slate-800">Katalog Modul Pembelajaran</h3>
+                                <button onclick="alert('Fitur Tambah Modul Siap Digunakan!')" class="px-4 py-2 bg-blue-600 text-white text-xs font-bold rounded-xl">+ Tambah Modul Pembelajaran</button>
+                            </div>
+                            <p class="text-xs text-slate-500">Pilih mata pelajaran dan kelola modul pembelajaran siswa secara interaktif.</p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        function selectLoginRole(role) {
+            document.getElementById('loginRole').value = role;
+        }
+
+        function quickLogin(role) {
+            document.getElementById('view-login').classList.add('hidden');
+            document.getElementById('app-container').classList.remove('hidden');
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            quickLogin('guru');
+        }
+
+        function handleLogout() {
+            document.getElementById('view-login').classList.remove('hidden');
+            document.getElementById('app-container').classList.add('hidden');
+        }
+
+        function switchTab(tab) {
+            document.getElementById('view-dashboard').classList.add('hidden');
+            document.getElementById('view-lms').classList.add('hidden');
+            if (document.getElementById(`view-${tab}`)) {
+                document.getElementById(`view-${tab}`).classList.remove('hidden');
+            }
+        }
+
+        function toggleSidebar() {
+            document.getElementById('mainSidebar').classList.toggle('-translate-x-full');
+        }
+    </script>
+</body>
+</html>
