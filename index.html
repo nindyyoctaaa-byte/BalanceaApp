@@ -70,7 +70,6 @@
                 <div class="absolute -right-10 -top-10 w-32 h-32 bg-pink-200/40 rounded-full blur-2xl pointer-events-none"></div>
                 <div class="absolute -left-10 -bottom-10 w-32 h-32 bg-purple-200/40 rounded-full blur-2xl pointer-events-none"></div>
 
-                <!-- HEADER LOGO -->
                 <div class="text-center space-y-2 relative z-10">
                     <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-pink-400 to-purple-400 flex items-center justify-center text-white mx-auto shadow-lg shadow-pink-200">
                         <i class="fa-solid fa-scale-balanced text-2xl"></i>
@@ -79,7 +78,6 @@
                     <p class="text-xs font-semibold text-pink-500 tracking-wider uppercase">Platform Pembelajaran Akuntansi SMK AKL</p>
                 </div>
 
-                <!-- ROLE SELECTION TAB -->
                 <div class="relative z-10 bg-slate-100/80 p-1.5 rounded-2xl flex items-center gap-1 border border-slate-200/60">
                     <button type="button" id="roleBtnGuru" onclick="selectLoginRole('guru')" class="flex-1 py-2 text-xs font-bold rounded-xl transition-all duration-200 bg-white text-pink-600 shadow-sm">
                         <i class="fa-solid fa-chalkboard-user mr-1.5"></i> Guru / Pengajar
@@ -89,7 +87,6 @@
                     </button>
                 </div>
 
-                <!-- FORM LOGIN -->
                 <form onsubmit="handleLogin(event)" class="space-y-4 relative z-10">
                     <input type="hidden" id="loginRole" value="guru">
 
@@ -114,7 +111,6 @@
                     </button>
                 </form>
 
-                <!-- DEMO ACCOUNTS SELECTION -->
                 <div class="relative z-10 pt-3 border-t border-slate-100 text-center space-y-2">
                     <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Akses Langsung Akun Uji Coba:</p>
                     <div class="grid grid-cols-2 gap-2 text-[10px]">
@@ -165,7 +161,6 @@
                         </button>
                     </div>
 
-                    <!-- ACTIVE USER BADGE -->
                     <div class="p-4">
                         <div class="bg-purple-50/60 p-2.5 rounded-2xl border border-purple-100/60 flex items-center justify-between">
                             <span class="text-xs font-semibold text-purple-700 flex items-center gap-1.5">
@@ -177,45 +172,37 @@
                         </div>
                     </div>
 
-                    <!-- MENU ITEMS -->
                     <nav class="px-3 space-y-1">
-                        <!-- MENU GURU -->
                         <a href="#" onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-item flex items-center gap-3 px-4 py-3 text-sm font-semibold rounded-2xl transition-all duration-200 bg-pink-100/80 text-pink-700 shadow-sm">
                             <i class="fa-solid fa-house w-5 text-center text-pink-500"></i>
                             <span>Dashboard Utama</span>
                         </a>
 
-                        <!-- MENU SISWA -->
                         <a href="#" onclick="switchTab('dashboard-siswa')" id="nav-dashboard-siswa" class="nav-item hidden flex items-center gap-3 px-4 py-3 text-sm font-semibold rounded-2xl transition-all duration-200 text-slate-600 hover:bg-pink-50/60 hover:text-pink-600">
                             <i class="fa-solid fa-user-graduate w-5 text-center text-purple-500"></i>
                             <span>Beranda Siswa</span>
                         </a>
 
-                        <!-- PERANGKAT GURU (Khusus Guru) -->
                         <a href="#" onclick="switchTab('perangkat')" id="nav-perangkat" class="nav-item flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-2xl text-slate-600 hover:bg-pink-50/60 hover:text-pink-600 transition-all duration-200">
                             <i class="fa-solid fa-folder-open w-5 text-center text-purple-400"></i>
                             <span>Perangkat Guru</span>
                         </a>
 
-                        <!-- PERANGKAT PEMBELAJARAN (Khusus Siswa) -->
                         <a href="#" onclick="switchTab('perangkat-siswa')" id="nav-perangkat-siswa" class="nav-item hidden flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-2xl text-slate-600 hover:bg-pink-50/60 hover:text-pink-600 transition-all duration-200">
                             <i class="fa-solid fa-book-bookmark w-5 text-center text-pink-500"></i>
                             <span>Perangkat Pembelajaran</span>
                         </a>
 
-                        <!-- LMS AKUNTANSI -->
                         <a href="#" onclick="switchTab('lms')" id="nav-lms" class="nav-item flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-2xl text-slate-600 hover:bg-pink-50/60 hover:text-pink-600 transition-all duration-200">
                             <i class="fa-solid fa-book-open-reader w-5 text-center text-blue-400"></i>
                             <span>LMS & Tugas Saya</span>
                         </a>
 
-                        <!-- EVALUASI & KUIS ONLINE -->
                         <a href="#" onclick="switchTab('evaluasi')" id="nav-evaluasi" class="nav-item flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-2xl text-slate-600 hover:bg-pink-50/60 hover:text-pink-600 transition-all duration-200">
                             <i class="fa-solid fa-file-pen w-5 text-center text-emerald-400"></i>
                             <span>Evaluasi & Penilaian</span>
                         </a>
 
-                        <!-- ANALISIS NILAI -->
                         <a href="#" onclick="switchTab('analisis')" id="nav-analisis" class="nav-item flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-2xl text-slate-600 hover:bg-pink-50/60 hover:text-pink-600 transition-all duration-200">
                             <i class="fa-solid fa-chart-line w-5 text-center text-amber-400"></i>
                             <span>Analisis Nilai</span>
@@ -227,7 +214,6 @@
                     </nav>
                 </div>
 
-                <!-- FOOTER PROFILE -->
                 <div class="p-4 border-t border-pink-50 space-y-2">
                     <div class="flex items-center gap-3 bg-white/60 p-2.5 rounded-2xl border border-slate-100">
                         <img id="userAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="Avatar" class="w-9 h-9 rounded-xl object-cover ring-2 ring-pink-200">
@@ -256,7 +242,7 @@
                         </div>
                     </div>
 
-                    <!-- SELECTOR KELAS & MAPEL (HANYA UNTUK GURU) -->
+                    <!-- SELECTOR KELAS & MAPEL (GURU) -->
                     <div id="teacherHeaderSelectors" class="flex items-center gap-2 sm:gap-3">
                         <div id="headerClassContainer" class="relative">
                             <select id="globalClassSelect" onchange="onGlobalClassChange(this.value)" class="appearance-none bg-pink-50/80 hover:bg-pink-100/80 text-pink-700 text-xs font-bold py-2 pl-3 pr-8 rounded-xl border border-pink-200 focus:outline-none cursor-pointer transition-all">
@@ -277,7 +263,7 @@
                         </div>
                     </div>
 
-                    <!-- STUDENT CLASS BADGE (HANYA UNTUK SISWA) -->
+                    <!-- STUDENT CLASS BADGE (SISWA) -->
                     <div id="studentHeaderBadge" class="hidden flex items-center gap-2">
                         <span class="px-3 py-1.5 rounded-xl bg-purple-100 text-purple-700 text-xs font-extrabold flex items-center gap-1.5 border border-purple-200">
                             <i class="fa-solid fa-graduation-cap"></i> Kelas Terdaftar: <span id="studentHeaderClass">11 AKL 1</span>
@@ -305,7 +291,6 @@
                             <i class="fa-solid fa-calculator absolute -right-4 -bottom-6 text-9xl text-pink-300/30 transform -rotate-12 pointer-events-none"></i>
                         </div>
 
-                        <!-- STATS CARDS REALTIME NOTIFICATIONS GURU -->
                         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
                             <div class="bg-white/80 backdrop-blur-md p-5 rounded-2xl border border-pink-100 shadow-sm">
                                 <p class="text-xs text-slate-400 font-medium">Tugas Dokumen Aktif</p>
@@ -318,7 +303,7 @@
                                 <p class="text-[10px] text-purple-500 font-semibold mt-0.5">Kuis / Ujian</p>
                             </div>
                             <div class="bg-white/80 backdrop-blur-md p-5 rounded-2xl border border-emerald-100 shadow-sm">
-                                <p class="text-xs text-slate-400 font-medium">Total Pengumpulan Siswa</p>
+                                <p class="text-xs text-slate-400 font-medium">Total Pengumpulkan Siswa</p>
                                 <h3 id="statPengumpulan" class="text-xl font-extrabold text-slate-800 mt-1">0</h3>
                                 <p class="text-[10px] text-emerald-600 font-semibold mt-0.5">Sudah Terkumpul</p>
                             </div>
@@ -329,7 +314,6 @@
                             </div>
                         </div>
 
-                        <!-- RINGKASAN TUGAS TERDEKAT (NOTIFIKASI REALTIME) -->
                         <div class="bg-white/80 backdrop-blur-md p-6 rounded-3xl border border-purple-100 shadow-sm space-y-4">
                             <div class="flex items-center justify-between">
                                 <h3 class="font-extrabold text-sm text-slate-800 flex items-center gap-2">
@@ -341,7 +325,6 @@
                             </div>
                         </div>
 
-                        <!-- BALANCE CHECKER WIDGET -->
                         <div class="bg-white/80 backdrop-blur-md p-6 rounded-3xl border border-emerald-100 shadow-sm space-y-4">
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center gap-2.5">
@@ -386,7 +369,6 @@
                             </div>
                         </div>
 
-                        <!-- STATS & NOTIFIKASI TUGAS SISWA -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="bg-white/80 backdrop-blur-md p-6 rounded-3xl border border-purple-100 shadow-sm space-y-4">
                                 <h3 class="font-extrabold text-sm text-slate-800 flex items-center gap-2">
@@ -406,9 +388,7 @@
                         </div>
                     </div>
 
-                    <!-- ======================================================= -->
-                    <!-- VIEW 3: PERANGKAT GURU (DASHBOARD LENGKAP DIPERBAIKI)   -->
-                    <!-- ======================================================= -->
+                    <!-- VIEW 3: PERANGKAT GURU -->
                     <div id="view-perangkat" class="hidden space-y-6">
                         <div class="bg-gradient-to-r from-pink-200/60 via-purple-200/50 to-blue-200/40 rounded-3xl p-6 border border-white/80 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
                             <div class="space-y-1">
@@ -423,7 +403,6 @@
                             </button>
                         </div>
 
-                        <!-- CASCADING SELECTOR BAR -->
                         <div class="bg-white/80 backdrop-blur-md p-5 rounded-3xl border border-pink-100 shadow-sm space-y-3">
                             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
                                 <div>
@@ -459,7 +438,6 @@
                             </div>
                         </div>
 
-                        <!-- CARDS JENIS PERANGKAT LENGKAP -->
                         <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
                             <div onclick="openFormForType('RPP')" class="p-3 bg-white hover:bg-pink-50 border border-pink-100 rounded-2xl text-center cursor-pointer transition-all">
                                 <i class="fa-solid fa-file-lines text-pink-500 text-lg mb-1"></i>
@@ -491,7 +469,6 @@
                             </div>
                         </div>
 
-                        <!-- TABLE DAFTAR PERANGKAT LENGKAP -->
                         <div class="bg-white/80 backdrop-blur-md p-6 rounded-3xl border border-pink-100 shadow-sm space-y-4">
                             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
                                 <div>
@@ -537,31 +514,92 @@
                         </div>
                     </div>
 
-                    <!-- VIEW 5: LMS AKUNTANSI & TUGAS PEMBELAJARAN -->
+                    <!-- ======================================================= -->
+                    <!-- VIEW 5: LMS & KATALOG MODUL PEMBELAJARAN (DIPERBAIKI)   -->
+                    <!-- ======================================================= -->
                     <div id="view-lms" class="hidden space-y-6">
+                        <!-- HEADER LMS -->
                         <div class="bg-gradient-to-r from-blue-200/60 via-purple-200/50 to-pink-200/40 rounded-3xl p-6 border border-white/80 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
                             <div>
                                 <span class="px-3 py-1 bg-white/80 text-blue-600 font-bold text-[11px] rounded-full shadow-xs inline-block">
                                     <i class="fa-solid fa-book-open-reader mr-1"></i> Learning Management System
                                 </span>
-                                <h2 class="text-xl font-extrabold text-slate-800 mt-1">LMS & Pengelolaan Tugas Akuntansi</h2>
-                                <p class="text-xs text-slate-600">Materi interaktif, modul digital, serta penugasan lembar kerja siswa.</p>
+                                <h2 class="text-xl font-extrabold text-slate-800 mt-1">LMS Pembelajaran Akuntansi</h2>
+                                <p class="text-xs text-slate-600">Katalog modul interaktif, materi teks, video YouTube, dan penugasan per mata pelajaran.</p>
                             </div>
-                            <div id="lmsTeacherAction" class="hidden flex items-center gap-2">
-                                <button onclick="openCreateTugasModal()" class="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center gap-2">
-                                    <i class="fa-solid fa-plus"></i> + Buat Tugas Dokumen
+                            <div id="lmsTeacherTopAction" class="hidden flex items-center gap-2">
+                                <button onclick="openLmsModuleModal()" class="px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center gap-2">
+                                    <i class="fa-solid fa-plus"></i> + Tambah Modul Pembelajaran
                                 </button>
                             </div>
                         </div>
 
-                        <!-- DAFTAR TUGAS DOKUMEN DALAM LMS -->
-                        <div class="bg-white/80 backdrop-blur-md p-6 rounded-3xl border border-blue-100 shadow-sm space-y-4">
-                            <div class="flex items-center justify-between border-b border-slate-100 pb-4">
-                                <h3 class="font-extrabold text-sm text-slate-800">Daftar Tugas Dokumen & Praktik</h3>
-                                <span class="text-xs font-semibold text-slate-400">Modul Terintegrasi</span>
-                            </div>
+                        <!-- SUB-NAVIGASI LMS TAB -->
+                        <div class="bg-white/80 backdrop-blur-md p-2 rounded-2xl border border-blue-100 shadow-sm flex items-center gap-2 text-xs font-bold">
+                            <button id="lmsSubTabModul" onclick="switchLmsSubTab('modul')" class="flex-1 py-2.5 rounded-xl bg-blue-600 text-white transition-all text-center">
+                                <i class="fa-solid fa-cubes mr-1.5"></i> 1. Modul Pembelajaran
+                            </button>
+                            <button id="lmsSubTabMateri" onclick="switchLmsSubTab('materi')" class="flex-1 py-2.5 rounded-xl text-slate-500 hover:bg-slate-100 transition-all text-center">
+                                <i class="fa-solid fa-photo-film mr-1.5"></i> 2. Materi & Video
+                            </button>
+                            <button id="lmsSubTabTugas" onclick="switchLmsSubTab('tugas')" class="flex-1 py-2.5 rounded-xl text-slate-500 hover:bg-slate-100 transition-all text-center">
+                                <i class="fa-solid fa-list-check mr-1.5"></i> 3. Tugas & Kuis
+                            </button>
+                        </div>
 
-                            <div id="lmsTaskList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
+                        <!-- TAB 1: MODUL PEMBELAJARAN (KATALOG) -->
+                        <div id="lmsContentModul" class="space-y-4">
+                            <div class="bg-white/80 backdrop-blur-md p-6 rounded-3xl border border-blue-100 shadow-sm space-y-4">
+                                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                                    <div>
+                                        <h3 class="font-extrabold text-sm text-slate-800">Katalog Modul Pembelajaran</h3>
+                                        <p class="text-xs text-slate-400">Mapel: <span id="lmsModulMapelTitle" class="font-bold text-blue-600">-</span></p>
+                                    </div>
+                                    <span class="text-xs font-bold text-slate-400" id="lmsModulCountBadge">0 Modul</span>
+                                </div>
+
+                                <div id="lmsModuleCatalogGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TAB 2: MATERI & VIDEO PEMBELAJARAN -->
+                        <div id="lmsContentMateri" class="hidden space-y-4">
+                            <div class="bg-white/80 backdrop-blur-md p-6 rounded-3xl border border-purple-100 shadow-sm space-y-4">
+                                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                                    <div>
+                                        <h3 class="font-extrabold text-sm text-slate-800">Materi Teks, Berkas & Video Pembelajaran</h3>
+                                        <p class="text-xs text-slate-400">Materi khusus untuk mata pelajaran terpilih</p>
+                                    </div>
+                                    <div id="lmsAddMaterialAction" class="hidden">
+                                        <button onclick="openLmsMaterialModal()" class="px-3.5 py-2 bg-purple-600 text-white font-bold text-xs rounded-xl shadow-sm flex items-center gap-1.5">
+                                            <i class="fa-solid fa-video"></i> + Tambah Materi / Video
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div id="lmsMaterialsContainer" class="space-y-6 text-xs">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TAB 3: TUGAS DOKUMEN & KUIS (FITUR LAMA TETAP DIPERTAHANKAN) -->
+                        <div id="lmsContentTugas" class="hidden space-y-4">
+                            <div class="bg-white/80 backdrop-blur-md p-6 rounded-3xl border border-blue-100 shadow-sm space-y-4">
+                                <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                                    <div>
+                                        <h3 class="font-extrabold text-sm text-slate-800">Daftar Tugas Dokumen & Praktik</h3>
+                                        <p class="text-xs text-slate-400">Tugas yang ditugaskan untuk mata pelajaran terpilih</p>
+                                    </div>
+                                    <div id="lmsTeacherAction" class="hidden flex items-center gap-2">
+                                        <button onclick="openCreateTugasModal()" class="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center gap-2">
+                                            <i class="fa-solid fa-plus"></i> + Buat Tugas Dokumen
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div id="lmsTaskList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -583,14 +621,12 @@
                             </div>
                         </div>
 
-                        <!-- DAFTAR KUIS ONLINE -->
                         <div class="bg-white/80 backdrop-blur-md p-6 rounded-3xl border border-emerald-100 shadow-sm space-y-4">
                             <h3 class="font-extrabold text-sm text-slate-800 border-b border-slate-100 pb-3">Daftar Kuis & Evaluasi Aktif</h3>
                             <div id="evalQuizList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
                             </div>
                         </div>
 
-                        <!-- TABEL PENILAIAN & PENGUMPULAN SISWA (KHUSUS GURU) -->
                         <div id="teacherGradingSection" class="hidden bg-white/80 backdrop-blur-md p-6 rounded-3xl border border-emerald-100 shadow-sm space-y-4">
                             <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                                 <h3 class="font-extrabold text-sm text-slate-800">Rekap Pengumpulan & Penilaian Siswa</h3>
@@ -634,8 +670,82 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- MODAL FORM PERANGKAT PEMBELAJARAN GURU     -->
+    <!-- MODAL KHUSUS LMS                           -->
     <!-- ========================================== -->
+
+    <!-- MODAL TAMBAH/EDIT MODUL LMS -->
+    <div id="lmsModuleModal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl border border-purple-100 overflow-hidden my-auto">
+            <div class="p-5 border-b bg-purple-50/50 flex items-center justify-between">
+                <h3 class="font-extrabold text-sm text-slate-800"><i class="fa-solid fa-cubes text-purple-600 mr-2"></i> Kelola Modul Pembelajaran LMS</h3>
+                <button onclick="closeModal('lmsModuleModal')" class="text-slate-400 p-1"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form onsubmit="saveLmsModule(event)" class="p-6 space-y-4 text-xs">
+                <input type="hidden" id="editLmsModuleId" value="">
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Judul Modul Pembelajaran <span class="text-rose-500">*</span></label>
+                    <input type="text" id="fLmsModuleTitle" required placeholder="Contoh: Rekonsiliasi Bank" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none">
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Deskripsi Singkat Modul</label>
+                    <textarea id="fLmsModuleDesc" rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 outline-none" placeholder="Deskripsi materi dan capaian modul..."></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Status Publikasi</label>
+                        <select id="fLmsModuleStatus" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none font-bold text-purple-700">
+                            <option value="Dipublikasikan">Dipublikasikan</option>
+                            <option value="Draft">Draft</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Urutan Tampil</label>
+                        <input type="number" id="fLmsModuleOrder" value="1" min="1" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none">
+                    </div>
+                </div>
+                <div class="pt-3 border-t flex justify-end gap-2">
+                    <button type="button" onclick="closeModal('lmsModuleModal')" class="px-4 py-2 bg-slate-200 text-slate-700 font-bold rounded-xl">Batal</button>
+                    <button type="submit" class="px-4 py-2 bg-purple-600 text-white font-bold rounded-xl shadow-sm">Simpan Modul</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL TAMBAH/EDIT MATERI & VIDEO LMS -->
+    <div id="lmsMaterialModal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-xl w-full shadow-2xl border border-purple-100 overflow-hidden my-auto">
+            <div class="p-5 border-b bg-purple-50/50 flex items-center justify-between">
+                <h3 class="font-extrabold text-sm text-slate-800"><i class="fa-solid fa-photo-film text-purple-600 mr-2"></i> Tambah Materi & Video Pembelajaran</h3>
+                <button onclick="closeModal('lmsMaterialModal')" class="text-slate-400 p-1"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form onsubmit="saveLmsMaterial(event)" class="p-6 space-y-4 text-xs">
+                <input type="hidden" id="editLmsMaterialId" value="">
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Pilih Modul Pembelajaran <span class="text-rose-500">*</span></label>
+                    <select id="fLmsMaterialModuleSelect" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none font-bold">
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Judul Materi / Topik <span class="text-rose-500">*</span></label>
+                    <input type="text" id="fLmsMaterialTitle" required placeholder="Contoh: Video Penjelasan Rekonsiliasi Bank" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none">
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Teks / Penjelasan Pembelajaran</label>
+                    <textarea id="fLmsMaterialText" rows="4" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 outline-none" placeholder="Tuliskan ulasan ringkas materi atau contoh jurnal..."></textarea>
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">URL / Link Video YouTube (Opsional)</label>
+                    <input type="url" id="fLmsMaterialVideoUrl" placeholder="https://www.youtube.com/watch?v=..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none">
+                </div>
+                <div class="pt-3 border-t flex justify-end gap-2">
+                    <button type="button" onclick="closeModal('lmsMaterialModal')" class="px-4 py-2 bg-slate-200 text-slate-700 font-bold rounded-xl">Batal</button>
+                    <button type="submit" class="px-4 py-2 bg-purple-600 text-white font-bold rounded-xl shadow-sm">Simpan Materi</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL EKSISTING PERANGKAT PEMBELAJARAN GURU -->
     <div id="perangkatFormModal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white rounded-3xl max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-pink-100 overflow-hidden my-auto">
             <div class="p-5 border-b border-pink-50 bg-gradient-to-r from-pink-50 to-purple-50 flex items-center justify-between">
@@ -663,7 +773,6 @@
                     <input type="text" id="fJudul" required placeholder="Contoh: Modul Ajar Jurnal Penyesuaian Perusahaan Jasa" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-800 font-medium outline-none">
                 </div>
 
-                <!-- PENGATURAN STATUS & VISIBILITAS -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 p-4 bg-purple-50/50 rounded-2xl border border-purple-100">
                     <div>
                         <label class="block font-bold text-slate-700 mb-1">Status Publikasi</label>
@@ -931,7 +1040,7 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- JAVASCRIPT LOGIC LENGKAP                   -->
+    <!-- JAVASCRIPT LOGIC LENGKAP & TERINTEGRASI    -->
     <!-- ========================================== -->
     <script>
         const MAPPING_KELAS_MAPEL = {
@@ -939,8 +1048,37 @@
             '10 AKL 2': ['Dasar-Dasar Akuntansi dan Keuangan Lembaga'],
             '11 AKL 1': ['Akuntansi Keuangan', 'Praktikum Akuntansi Perusahaan Jasa', 'Praktikum Akuntansi Perusahaan Dagang', 'Komputer Akuntansi', 'Perpajakan'],
             '11 AKL 2': ['Akuntansi Keuangan', 'Praktikum Akuntansi Perusahaan Jasa', 'Praktikum Akuntansi Perusahaan Dagang', 'Komputer Akuntansi', 'Perpajakan'],
-            '12 AKL 1': [],
-            '12 AKL 2': []
+            '12 AKL 1': ['Akuntansi Keuangan', 'Praktikum Akuntansi Perusahaan Jasa', 'Praktikum Akuntansi Perusahaan Dagang', 'Komputer Akuntansi', 'Perpajakan'],
+            '12 AKL 2': ['Akuntansi Keuangan', 'Praktikum Akuntansi Perusahaan Jasa', 'Praktikum Akuntansi Perusahaan Dagang', 'Komputer Akuntansi', 'Perpajakan']
+        };
+
+        const INITIAL_LMS_SUBJECT_MODULES = {
+            'Dasar-Dasar Akuntansi dan Keuangan Lembaga': [
+                'Pengenalan Akuntansi', 'Konsep Dasar Akuntansi', 'Persamaan Dasar Akuntansi', 'Dokumen Transaksi',
+                'Mekanisme Debit dan Kredit', 'Jurnal Umum', 'Buku Besar', 'Neraca Saldo', 'Laporan Keuangan'
+            ],
+            'Akuntansi Keuangan': [
+                'Akuntansi Kas', 'Rekonsiliasi Bank', 'Akuntansi Piutang', 'Akuntansi Persediaan',
+                'Aset Tetap', 'Penyusutan', 'Akuntansi Utang', 'Ekuitas', 'Laporan Keuangan'
+            ],
+            'Praktikum Akuntansi Perusahaan Jasa': [
+                'Karakteristik Perusahaan Jasa', 'Bukti Transaksi', 'Jurnal Umum', 'Buku Besar',
+                'Neraca Saldo', 'Jurnal Penyesuaian', 'Neraca Lajur', 'Laporan Keuangan', 'Jurnal Penutup'
+            ],
+            'Praktikum Akuntansi Perusahaan Dagang': [
+                'Karakteristik Perusahaan Dagang', 'Pembelian dan Penjualan', 'Retur dan Potongan',
+                'Persediaan', 'Jurnal Khusus', 'Buku Besar Pembantu', 'Neraca Saldo', 'Jurnal Penyesuaian', 'Laporan Keuangan'
+            ],
+            'Komputer Akuntansi': [
+                'Pengenalan Komputer Akuntansi', 'Membuat Data Perusahaan', 'Pengaturan Daftar Akun',
+                'Saldo Awal', 'Data Pelanggan dan Pemasok', 'Transaksi Pembelian', 'Transaksi Penjualan',
+                'Transaksi Kas dan Bank', 'Laporan Keuangan Digital'
+            ],
+            'Perpajakan': [
+                'Pengantar Perpajakan', 'Jenis dan Fungsi Pajak', 'Administrasi Perpajakan',
+                'Pajak Penghasilan', 'PPh Pasal 21', 'PPh Pasal 23', 'Pajak Pertambahan Nilai',
+                'Dokumen Perpajakan', 'Studi Kasus Perpajakan'
+            ]
         };
 
         const MOCK_USERS = {
@@ -951,6 +1089,8 @@
         };
 
         let currentPerangkatList = [];
+        let currentLmsModulesList = [];
+        let currentLmsMaterialsList = [];
         let currentTugasKuisList = [];
         let currentSubmissionsList = [];
 
@@ -969,7 +1109,7 @@
         });
 
         function initDataStores() {
-            // 1. PERANGKAT GURU STORE
+            // 1. PERANGKAT GURU STORE (EKSISTING)
             const existingPerangkat = localStorage.getItem('balanceaa_perangkat_guru');
             if (!existingPerangkat) {
                 const samplePerangkat = [
@@ -987,30 +1127,6 @@
                             materiMedia: 'Buku Akuntansi Keuangan, Slide PPT, Lembar Kerja',
                             asesmen: 'Formative: Kuis singkat; Summative: Tes Praktik Jurnal'
                         }
-                    },
-                    {
-                        id: 'DOC-002', authorId: 'G-001', author: 'Nindy Octavia, S.Pd.',
-                        title: 'Tujuan Pembelajaran (TP) Dasar Akuntansi Lembaga',
-                        type: 'Tujuan Pembelajaran (TP)', kelas: '10 AKL 1', mapel: 'Dasar-Dasar Akuntansi dan Keuangan Lembaga',
-                        semester: 'Ganjil', tahunAjaran: '2025/2026', createdAt: '2026-03-10', updatedAt: '2026-03-10',
-                        status: 'Dipublikasikan', visibility: 'Siswa', fileAttachment: null, fileDataUrl: null,
-                        content: {
-                            elemen: 'Persamaan Dasar Akuntansi',
-                            cpText: 'Peserta didik mampu memahami logika debet-kredit pada transaksi perusahaan.',
-                            atpList: '1. Mengidentifikasi transaksi keuangan\n2. Mencatat transaksi dalam persamaan dasar'
-                        }
-                    },
-                    {
-                        id: 'DOC-003', authorId: 'G-001', author: 'Nindy Octavia, S.Pd.',
-                        title: 'RPP - Kerangka Konseptual Akuntansi (Draft Privat)',
-                        type: 'RPP', kelas: '11 AKL 1', mapel: 'Akuntansi Keuangan',
-                        semester: 'Ganjil', tahunAjaran: '2025/2026', createdAt: '2026-03-12', updatedAt: '2026-03-12',
-                        status: 'Draft', visibility: 'Guru', fileAttachment: null, fileDataUrl: null,
-                        content: {
-                            alokasiWaktu: '2 JP x 45 Menit', metodePembelajaran: 'Problem Based Learning',
-                            tujuanPembelajaran: 'Memahami prinsip penandingan pendapatan dan beban.',
-                            langkahAktivitas: '1. Diskusi awal\n2. Penyelesaian studi kasus'
-                        }
                     }
                 ];
                 localStorage.setItem('balanceaa_perangkat_guru', JSON.stringify(samplePerangkat));
@@ -1019,7 +1135,57 @@
                 try { currentPerangkatList = JSON.parse(existingPerangkat); } catch(e) { currentPerangkatList = []; }
             }
 
-            // 2. TUGAS & KUIS STORE
+            // 2. LMS MODULES STORE
+            const existingLmsModules = localStorage.getItem('balanceaa_lms_modules');
+            if (!existingLmsModules) {
+                let initialModules = [];
+                let counter = 100;
+                Object.keys(INITIAL_LMS_SUBJECT_MODULES).forEach(mapelName => {
+                    const titles = INITIAL_LMS_SUBJECT_MODULES[mapelName];
+                    titles.forEach((title, idx) => {
+                        counter++;
+                        initialModules.push({
+                            id: 'LMOD-' + counter,
+                            title: title,
+                            desc: `Modul dasar pembelajaran untuk topik ${title}`,
+                            mapel: mapelName,
+                            kelas: mapelName.includes('Dasar') ? '10 AKL 1' : '11 AKL 1',
+                            authorId: 'G-001',
+                            order: idx + 1,
+                            status: 'Dipublikasikan',
+                            updatedAt: '2026-03-15'
+                        });
+                    });
+                });
+                localStorage.setItem('balanceaa_lms_modules', JSON.stringify(initialModules));
+                currentLmsModulesList = initialModules;
+            } else {
+                try { currentLmsModulesList = JSON.parse(existingLmsModules); } catch(e) { currentLmsModulesList = []; }
+            }
+
+            // 3. LMS MATERIALS & VIDEOS STORE
+            const existingLmsMaterials = localStorage.getItem('balanceaa_lms_materials');
+            if (!existingLmsMaterials) {
+                const sampleMaterials = [
+                    {
+                        id: 'LMAT-001',
+                        moduleId: 'LMOD-110', // Rekonsiliasi Bank
+                        mapel: 'Akuntansi Keuangan',
+                        kelas: '11 AKL 1',
+                        title: 'Video Pembelajaran Rekonsiliasi Bank & Penyebab Perbedaan Saldo',
+                        text: 'Silakan pelajari video rekonsiliasi bank berikut untuk memahami penyesuaian saldo kas menurut bank dan catatan perusahaan.',
+                        videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+                        status: 'Dipublikasikan',
+                        updatedAt: '2026-03-16'
+                    }
+                ];
+                localStorage.setItem('balanceaa_lms_materials', JSON.stringify(sampleMaterials));
+                currentLmsMaterialsList = sampleMaterials;
+            } else {
+                try { currentLmsMaterialsList = JSON.parse(existingLmsMaterials); } catch(e) { currentLmsMaterialsList = []; }
+            }
+
+            // 4. TUGAS & KUIS STORE
             const existingTugasKuis = localStorage.getItem('balanceaa_tugas_kuis');
             if (!existingTugasKuis) {
                 const sampleTugasKuis = [
@@ -1048,7 +1214,7 @@
                 try { currentTugasKuisList = JSON.parse(existingTugasKuis); } catch(e) { currentTugasKuisList = []; }
             }
 
-            // 3. SUBMISSIONS STORE
+            // 5. SUBMISSIONS STORE
             const existingSubmissions = localStorage.getItem('balanceaa_submissions');
             if (!existingSubmissions) {
                 const sampleSubmissions = [
@@ -1110,14 +1276,208 @@
         function renderAllViewsData() {
             renderPerangkatTable();
             renderStudentPerangkatGrid();
-            renderLmsTaskList();
+            renderLmsAll();
             renderEvalQuizList();
             renderTeacherGradingTable();
             renderDashboardGuruStats();
             renderDashboardSiswaStats();
         }
 
-        // PERANGKAT GURU: TABEL & KELOLA PUBLIKASI
+        // PERBAIKAN LENGKAP PADA INTEGRASI LMS & DYNAMIC FILTER MAPEL
+        function switchLmsSubTab(subTab) {
+            const tabs = ['modul', 'materi', 'tugas'];
+            tabs.forEach(t => {
+                const contentEl = document.getElementById(`lmsContent${t.charAt(0).toUpperCase() + t.slice(1)}`);
+                const btnEl = document.getElementById(`lmsSubTab${t.charAt(0).toUpperCase() + t.slice(1)}`);
+                if (t === subTab) {
+                    if (contentEl) contentEl.classList.remove('hidden');
+                    if (btnEl) {
+                        btnEl.className = 'flex-1 py-2.5 rounded-xl bg-blue-600 text-white transition-all text-center';
+                    }
+                } else {
+                    if (contentEl) contentEl.classList.add('hidden');
+                    if (btnEl) {
+                        btnEl.className = 'flex-1 py-2.5 rounded-xl text-slate-500 hover:bg-slate-100 transition-all text-center';
+                    }
+                }
+            });
+        }
+
+        function renderLmsAll() {
+            let session = {};
+            try { session = JSON.parse(localStorage.getItem('balanceaa_session') || '{}'); } catch(e){}
+            const isGuru = session.role === 'guru';
+            const selectedClass = isGuru ? (document.getElementById('globalClassSelect')?.value || '11 AKL 1') : (session.kelas || '11 AKL 1');
+            const selectedMapel = isGuru ? (document.getElementById('globalSubjectSelect')?.value || MAPPING_KELAS_MAPEL[selectedClass]?.[0] || 'Akuntansi Keuangan') : (MAPPING_KELAS_MAPEL[selectedClass]?.[0] || 'Akuntansi Keuangan');
+
+            const titleEl = document.getElementById('lmsModulMapelTitle');
+            if (titleEl) titleEl.innerText = `${selectedMapel} (${selectedClass})`;
+
+            // 1. RENDER MODUL PEMBELAJARAN
+            const catalogGrid = document.getElementById('lmsModuleCatalogGrid');
+            if (catalogGrid) {
+                let modules = currentLmsModulesList.filter(m => m.mapel === selectedMapel);
+                if (!isGuru) modules = modules.filter(m => m.status === 'Dipublikasikan');
+
+                const countBadge = document.getElementById('lmsModulCountBadge');
+                if (countBadge) countBadge.innerText = `${modules.length} Modul`;
+
+                if (modules.length === 0) {
+                    catalogGrid.innerHTML = `<div class="col-span-full p-8 bg-slate-50 border border-dashed rounded-3xl text-center text-slate-400">Belum ada modul pembelajaran untuk mata pelajaran <b>${selectedMapel}</b> (${selectedClass}).</div>`;
+                } else {
+                    catalogGrid.innerHTML = modules.map(m => `
+                        <div class="bg-white p-5 rounded-3xl border border-blue-100/80 shadow-sm space-y-3 flex flex-col justify-between">
+                            <div class="space-y-1.5">
+                                <div class="flex items-center justify-between">
+                                    <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-blue-100 text-blue-700">Modul #${m.order || 1}</span>
+                                    <span class="text-[10px] font-extrabold ${m.status === 'Dipublikasikan' ? 'text-emerald-600' : 'text-amber-600'}">${m.status}</span>
+                                </div>
+                                <h4 class="font-bold text-sm text-slate-800">${m.title}</h4>
+                                <p class="text-slate-500 text-[11px] leading-snug">${m.desc || 'Materi inti modul pembelajaran akuntansi.'}</p>
+                            </div>
+                            <div class="pt-3 border-t flex items-center justify-between gap-2">
+                                <button onclick="openLmsMaterialForModule('${m.id}')" class="flex-1 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold rounded-xl text-xs"><i class="fa-solid fa-book-open mr-1"></i> Buka Materi</button>
+                                ${isGuru ? `
+                                    <button onclick="deleteLmsModule('${m.id}')" class="p-2 bg-rose-50 text-rose-600 rounded-xl" title="Hapus Modul"><i class="fa-solid fa-trash-can"></i></button>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            }
+
+            // 2. RENDER MATERI & VIDEO
+            const materialsContainer = document.getElementById('lmsMaterialsContainer');
+            if (materialsContainer) {
+                let materials = currentLmsMaterialsList.filter(m => m.mapel === selectedMapel);
+                if (!isGuru) materials = materials.filter(m => m.status === 'Dipublikasikan');
+
+                if (materials.length === 0) {
+                    materialsContainer.innerHTML = `<div class="p-8 bg-slate-50 border border-dashed rounded-3xl text-center text-slate-400">Belum ada materi atau video pembelajaran untuk mata pelajaran <b>${selectedMapel}</b>.</div>`;
+                } else {
+                    materialsContainer.innerHTML = materials.map(m => {
+                        const videoEmbed = getYoutubeEmbedUrl(m.videoUrl);
+                        return `
+                            <div class="bg-white p-5 rounded-3xl border border-purple-100 shadow-sm space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <h4 class="font-extrabold text-sm text-slate-800">${m.title}</h4>
+                                    <span class="text-[10px] text-slate-400 font-semibold">${m.updatedAt}</span>
+                                </div>
+                                ${m.text ? `<p class="text-xs text-slate-600 leading-relaxed">${m.text}</p>` : ''}
+                                ${videoEmbed ? `
+                                    <div class="aspect-video w-full rounded-2xl overflow-hidden border border-slate-200">
+                                        <iframe class="w-full h-full" src="${videoEmbed}" title="${m.title}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `;
+                    }).join('');
+                }
+            }
+
+            // 3. RENDER TUGAS DOKUMEN & KUIS (TETAP TERINTEGRASI KONTROL KELAS & MAPEL)
+            renderLmsTaskList();
+        }
+
+        function getYoutubeEmbedUrl(url) {
+            if (!url) return null;
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? `https://www.youtube.com/embed/${match[2]}` : null;
+        }
+
+        // AKSI KELOLA MODUL LMS (GURU)
+        function openLmsModuleModal() {
+            document.getElementById('editLmsModuleId').value = '';
+            document.getElementById('fLmsModuleTitle').value = '';
+            document.getElementById('fLmsModuleDesc').value = '';
+            openModal('lmsModuleModal');
+        }
+
+        function saveLmsModule(e) {
+            e.preventDefault();
+            const editId = document.getElementById('editLmsModuleId').value;
+            const title = document.getElementById('fLmsModuleTitle').value;
+            const desc = document.getElementById('fLmsModuleDesc').value;
+            const status = document.getElementById('fLmsModuleStatus').value;
+            const order = parseInt(document.getElementById('fLmsModuleOrder').value) || 1;
+
+            const selectedClass = document.getElementById('globalClassSelect')?.value || '11 AKL 1';
+            const selectedMapel = document.getElementById('globalSubjectSelect')?.value || 'Akuntansi Keuangan';
+
+            const newModule = {
+                id: editId || ('LMOD-' + Date.now().toString().slice(-4)),
+                title, desc, mapel: selectedMapel, kelas: selectedClass,
+                authorId: 'G-001', order, status, updatedAt: new Date().toISOString().split('T')[0]
+            };
+
+            if (editId) {
+                const idx = currentLmsModulesList.findIndex(m => m.id === editId);
+                if (idx >= 0) currentLmsModulesList[idx] = newModule;
+            } else {
+                currentLmsModulesList.push(newModule);
+            }
+
+            localStorage.setItem('balanceaa_lms_modules', JSON.stringify(currentLmsModulesList));
+            closeModal('lmsModuleModal');
+            renderLmsAll();
+            alert('Modul Pembelajaran LMS berhasil disimpan!');
+        }
+
+        function deleteLmsModule(id) {
+            if (confirm('Apakah Anda yakin ingin menghapus modul LMS ini?')) {
+                currentLmsModulesList = currentLmsModulesList.filter(m => m.id !== id);
+                localStorage.setItem('balanceaa_lms_modules', JSON.stringify(currentLmsModulesList));
+                renderLmsAll();
+            }
+        }
+
+        // AKSI KELOLA MATERI & VIDEO LMS (GURU)
+        function openLmsMaterialModal() {
+            const selectedMapel = document.getElementById('globalSubjectSelect')?.value || 'Akuntansi Keuangan';
+            const selectEl = document.getElementById('fLmsMaterialModuleSelect');
+            const availableModules = currentLmsModulesList.filter(m => m.mapel === selectedMapel);
+
+            if (selectEl) {
+                selectEl.innerHTML = availableModules.map(m => `<option value="${m.id}">${m.title}</option>`).join('');
+            }
+
+            document.getElementById('editLmsMaterialId').value = '';
+            document.getElementById('fLmsMaterialTitle').value = '';
+            document.getElementById('fLmsMaterialText').value = '';
+            document.getElementById('fLmsMaterialVideoUrl').value = '';
+            openModal('lmsMaterialModal');
+        }
+
+        function saveLmsMaterial(e) {
+            e.preventDefault();
+            const moduleId = document.getElementById('fLmsMaterialModuleSelect').value;
+            const title = document.getElementById('fLmsMaterialTitle').value;
+            const text = document.getElementById('fLmsMaterialText').value;
+            const videoUrl = document.getElementById('fLmsMaterialVideoUrl').value;
+
+            const selectedClass = document.getElementById('globalClassSelect')?.value || '11 AKL 1';
+            const selectedMapel = document.getElementById('globalSubjectSelect')?.value || 'Akuntansi Keuangan';
+
+            const newMat = {
+                id: 'LMAT-' + Date.now().toString().slice(-4),
+                moduleId, mapel: selectedMapel, kelas: selectedClass, title, text, videoUrl,
+                status: 'Dipublikasikan', updatedAt: new Date().toISOString().split('T')[0]
+            };
+
+            currentLmsMaterialsList.unshift(newMat);
+            localStorage.setItem('balanceaa_lms_materials', JSON.stringify(currentLmsMaterialsList));
+            closeModal('lmsMaterialModal');
+            switchLmsSubTab('materi');
+            renderLmsAll();
+            alert('Materi & Video Pembelajaran berhasil ditambahkan!');
+        }
+
+        function openLmsMaterialForModule(moduleId) {
+            switchLmsSubTab('materi');
+        }
+
+        // PERANGKAT GURU TABLE & EKSISTING LOGIC (TETAP UTUH)
         function renderPerangkatTable() {
             const tbody = document.getElementById('perangkatTableBody');
             if (!tbody) return;
@@ -1195,7 +1555,6 @@
             alert(publishToStudent ? `Perangkat "${doc.title}" berhasil dipublikasikan ke siswa kelas ${doc.kelas}!` : `Publikasi perangkat "${doc.title}" telah ditarik.`);
         }
 
-        // PERANGKAT GURU FORM & DYNAMIC FIELDS
         function openCreatePerangkatModal() { openFormForType('RPP'); }
 
         function openFormForType(type) {
@@ -1395,7 +1754,6 @@
             document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
         }
 
-        // SISWA PERANGKAT GRID
         function renderStudentPerangkatGrid() {
             const grid = document.getElementById('studentPerangkatGrid');
             if (!grid) return;
@@ -1418,7 +1776,6 @@
             `).join('');
         }
 
-        // DASHBOARD GURU & SISWA NOTIFICATIONS
         function renderDashboardGuruStats() {
             const currentClass = document.getElementById('globalClassSelect')?.value || '11 AKL 1';
             const dashClass = document.getElementById('dashClassText');
@@ -1514,7 +1871,6 @@
             }
         }
 
-        // LMS & KUIS FUNGSIONAL
         function renderLmsTaskList() {
             const container = document.getElementById('lmsTaskList');
             if (!container) return;
@@ -1522,12 +1878,13 @@
             try { session = JSON.parse(localStorage.getItem('balanceaa_session') || '{}'); } catch(e){}
             const isGuru = session.role === 'guru';
             const userClass = isGuru ? (document.getElementById('globalClassSelect')?.value || '11 AKL 1') : (session.kelas || '11 AKL 1');
+            const userMapel = isGuru ? (document.getElementById('globalSubjectSelect')?.value || 'Akuntansi Keuangan') : (MAPPING_KELAS_MAPEL[userClass]?.[0] || 'Akuntansi Keuangan');
 
-            let tasks = currentTugasKuisList.filter(t => t.category === 'Tugas' && t.kelas === userClass);
+            let tasks = currentTugasKuisList.filter(t => t.category === 'Tugas' && t.kelas === userClass && t.mapel === userMapel);
             if (!isGuru) tasks = tasks.filter(t => t.status === 'Dipublikasikan');
 
             if (tasks.length === 0) {
-                container.innerHTML = `<div class="col-span-full p-6 text-center text-slate-400">Belum ada tugas dokumen untuk kelas ${userClass}.</div>`;
+                container.innerHTML = `<div class="col-span-full p-6 text-center text-slate-400">Belum ada tugas dokumen untuk mata pelajaran <b>${userMapel}</b> (${userClass}).</div>`;
                 return;
             }
 
@@ -1629,7 +1986,6 @@
             }).join('');
         }
 
-        // BUAT TUGAS & KUIS
         function openCreateTugasModal() {
             document.getElementById('editTaskId').value = '';
             document.getElementById('fTaskTitle').value = '';
@@ -1742,7 +2098,6 @@
             alert('Kuis Online berhasil disimpan!');
         }
 
-        // SISWA AKSI TUGAS & KUIS
         function openSubmitTaskModal(taskId) {
             const task = currentTugasKuisList.find(t => t.id === taskId);
             if (!task) return;
@@ -1843,7 +2198,6 @@
             alert(`Kuis selesai dikirim! Skor awal Pilihan Ganda: ${autoScore}`);
         }
 
-        // PENILAIAN GURU
         function openGradeSubmissionModal(subId) {
             const sub = currentSubmissionsList.find(s => s.id === subId);
             if (!sub) return;
@@ -1879,7 +2233,6 @@
             alert('Penilaian berhasil disimpan!');
         }
 
-        // HELPER FUNCTIONS
         function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
@@ -1935,6 +2288,8 @@
             const navDashboardSiswa = document.getElementById('nav-dashboard-siswa');
             const navPerangkat = document.getElementById('nav-perangkat');
             const navPerangkatSiswa = document.getElementById('nav-perangkat-siswa');
+            const lmsTeacherTopAction = document.getElementById('lmsTeacherTopAction');
+            const lmsAddMaterialAction = document.getElementById('lmsAddMaterialAction');
             const lmsTeacherAction = document.getElementById('lmsTeacherAction');
             const evalTeacherAction = document.getElementById('evalTeacherAction');
             const teacherGradingSection = document.getElementById('teacherGradingSection');
@@ -1949,6 +2304,8 @@
                 if (navPerangkat) navPerangkat.classList.remove('hidden');
                 if (navPerangkatSiswa) navPerangkatSiswa.classList.add('hidden');
 
+                if (lmsTeacherTopAction) lmsTeacherTopAction.classList.remove('hidden');
+                if (lmsAddMaterialAction) lmsAddMaterialAction.classList.remove('hidden');
                 if (lmsTeacherAction) lmsTeacherAction.classList.remove('hidden');
                 if (evalTeacherAction) evalTeacherAction.classList.remove('hidden');
                 if (teacherGradingSection) teacherGradingSection.classList.remove('hidden');
@@ -1969,6 +2326,8 @@
                 if (navPerangkat) navPerangkat.classList.add('hidden');
                 if (navPerangkatSiswa) navPerangkatSiswa.classList.remove('hidden');
 
+                if (lmsTeacherTopAction) lmsTeacherTopAction.classList.add('hidden');
+                if (lmsAddMaterialAction) lmsAddMaterialAction.classList.add('hidden');
                 if (lmsTeacherAction) lmsTeacherAction.classList.add('hidden');
                 if (evalTeacherAction) evalTeacherAction.classList.add('hidden');
                 if (teacherGradingSection) teacherGradingSection.classList.add('hidden');
