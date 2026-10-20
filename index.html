@@ -1,2396 +1,273 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Balanceaa - Platform Pembelajaran Akuntansi SMK AKL</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts Plus Jakarta Sans -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Chart.js CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-                    },
-                    colors: {
-                        pastel: {
-                            pink: '#fce7f3',
-                            pinkDark: '#db2777',
-                            pinkSoft: '#fdf2f8',
-                            green: '#dcfce7',
-                            greenDark: '#16a34a',
-                            greenSoft: '#f0fdf4',
-                            purple: '#f3e8ff',
-                            purpleDark: '#9333ea',
-                            purpleSoft: '#faf5ff',
-                            orange: '#ffedd5',
-                            orangeDark: '#ea580c',
-                            orangeSoft: '#fff7ed',
-                            blue: '#e0f2fe',
-                            blueDark: '#0284c7',
-                            slate: '#f8fafc',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #fbcfe8; border-radius: 10px; }
-        @media print {
-            body * { visibility: hidden; }
-            #printArea, #printArea * { visibility: visible; }
-            #printArea { position: absolute; left: 0; top: 0; width: 100%; background: #fff; color: #000; padding: 20px; }
-            .no-print { display: none !important; }
-        }
-    </style>
-</head>
-<body class="bg-gradient-to-br from-[#FFF0F5] via-[#F8F0FF] to-[#F0FDF4] min-h-screen text-slate-700 flex flex-col font-sans">
-
-    <!-- PRINT PREVIEW CONTAINER -->
-    <div id="printArea" class="hidden"></div>
-
-    <!-- ========================================== -->
-    <!-- 1. HALAMAN LOGIN (AUTHENTICATION VIEW)     -->
-    <!-- ========================================== -->
-    <div id="view-login" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gradient-to-br from-[#FFF0F5] via-[#F8F0FF] to-[#F0FDF4] overflow-y-auto">
-        <div class="w-full max-w-md my-auto">
-            <div class="bg-white/80 backdrop-blur-xl p-8 rounded-3xl border border-pink-100 shadow-xl shadow-purple-100/40 space-y-6 relative overflow-hidden">
-                <div class="absolute -right-10 -top-10 w-32 h-32 bg-pink-200/40 rounded-full blur-2xl pointer-events-none"></div>
-                <div class="absolute -left-10 -bottom-10 w-32 h-32 bg-purple-200/40 rounded-full blur-2xl pointer-events-none"></div>
-
-                <div class="text-center space-y-2 relative z-10">
-                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-pink-400 to-purple-400 flex items-center justify-center text-white mx-auto shadow-lg shadow-pink-200">
-                        <i class="fa-solid fa-scale-balanced text-2xl"></i>
-                    </div>
-                    <h1 class="text-2xl font-extrabold text-slate-800 tracking-tight">Balanceaa<span class="text-pink-500">.</span></h1>
-                    <p class="text-xs font-semibold text-pink-500 tracking-wider uppercase">Platform Pembelajaran Akuntansi SMK AKL</p>
-                </div>
-
-                <div class="relative z-10 bg-slate-100/80 p-1.5 rounded-2xl flex items-center gap-1 border border-slate-200/60">
-                    <button type="button" id="roleBtnGuru" onclick="selectLoginRole('guru')" class="flex-1 py-2 text-xs font-bold rounded-xl transition-all duration-200 bg-white text-pink-600 shadow-sm">
-                        <i class="fa-solid fa-chalkboard-user mr-1.5"></i> Guru / Pengajar
-                    </button>
-                    <button type="button" id="roleBtnSiswa" onclick="selectLoginRole('siswa_11_akl_1')" class="flex-1 py-2 text-xs font-bold rounded-xl transition-all duration-200 text-slate-500 hover:text-slate-700">
-                        <i class="fa-solid fa-user-graduate mr-1.5"></i> Siswa
-                    </button>
-                </div>
-
-                <form onsubmit="handleLogin(event)" class="space-y-4 relative z-10">
-                    <input type="hidden" id="loginRole" value="guru">
-
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Email / ID Pengguna</label>
-                        <div class="relative">
-                            <i class="fa-solid fa-envelope absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                            <input type="text" id="loginEmail" value="guru" placeholder="Masukkan ID Pengguna" class="w-full bg-slate-50/80 border border-slate-200/80 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-pink-300 focus:bg-white transition-all">
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Kata Sandi</label>
-                        <div class="relative">
-                            <i class="fa-solid fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                            <input type="password" id="loginPassword" value="123" placeholder="Masukkan kata sandi" class="w-full bg-slate-50/80 border border-slate-200/80 rounded-2xl pl-10 pr-10 py-2.5 text-xs text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-pink-300 focus:bg-white transition-all">
-                        </div>
-                    </div>
-
-                    <button type="submit" class="w-full py-3 bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-bold text-xs rounded-2xl shadow-md shadow-pink-200 hover:shadow-lg transition-all active:scale-[0.99]">
-                        Masuk ke Balanceaa <i class="fa-solid fa-right-to-bracket ml-1.5"></i>
-                    </button>
-                </form>
-
-                <div class="relative z-10 pt-3 border-t border-slate-100 text-center space-y-2">
-                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Akses Langsung Akun Uji Coba:</p>
-                    <div class="grid grid-cols-2 gap-2 text-[10px]">
-                        <button type="button" onclick="quickLogin('guru')" class="p-2 bg-pink-50 hover:bg-pink-100 border border-pink-200 rounded-xl text-left transition-all">
-                            <p class="font-bold text-pink-700"><i class="fa-solid fa-user-shield mr-1"></i> Guru Pengampu</p>
-                            <p class="text-slate-500">Nindy Octavia, S.Pd.</p>
-                        </button>
-                        <button type="button" onclick="quickLogin('siswa_11_akl_1')" class="p-2 bg-purple-50 hover:bg-purple-100 border border-purple-200 rounded-xl text-left transition-all">
-                            <p class="font-bold text-purple-700"><i class="fa-solid fa-user-graduate mr-1"></i> Siswa 11 AKL 1</p>
-                            <p class="text-slate-500">Ahmad Rizky</p>
-                        </button>
-                        <button type="button" onclick="quickLogin('siswa_10_akl_1')" class="p-2 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-xl text-left transition-all">
-                            <p class="font-bold text-blue-700"><i class="fa-solid fa-user-graduate mr-1"></i> Siswa 10 AKL 1</p>
-                            <p class="text-slate-500">Budi Santoso</p>
-                        </button>
-                        <button type="button" onclick="quickLogin('siswa_10_akl_2')" class="p-2 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-xl text-left transition-all">
-                            <p class="font-bold text-emerald-700"><i class="fa-solid fa-user-graduate mr-1"></i> Siswa 10 AKL 2</p>
-                            <p class="text-slate-500">Citra Dewi</p>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ========================================== -->
-    <!-- 2. APLIKASI UTAMA (APP CONTAINER)          -->
-    <!-- ========================================== -->
-    <div id="app-container" class="hidden flex-1 overflow-hidden h-screen flex flex-col">
-        <div id="sidebarOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-30 hidden lg:hidden"></div>
-
-        <div class="flex flex-1 overflow-hidden h-screen">
-            <!-- SIDEBAR NAVIGASI -->
-            <aside id="mainSidebar" class="fixed lg:static inset-y-0 left-0 z-40 w-64 bg-white/80 backdrop-blur-md border-r border-pink-100/80 flex flex-col justify-between transition-transform duration-300 transform -translate-x-full lg:translate-x-0 shadow-sm">
-                <div>
-                    <div class="p-5 border-b border-pink-50 flex items-center justify-between">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-pink-400 to-purple-400 flex items-center justify-center text-white shadow-md shadow-pink-200">
-                                <i class="fa-solid fa-scale-balanced text-lg"></i>
-                            </div>
-                            <div>
-                                <h1 class="font-extrabold text-xl tracking-tight text-slate-800">Balanceaa<span class="text-pink-500">.</span></h1>
-                                <p class="text-[10px] font-semibold tracking-wider text-pink-400 uppercase">Akuntansi SMK AKL</p>
-                            </div>
-                        </div>
-                        <button onclick="toggleSidebar()" class="lg:hidden text-slate-400 hover:text-slate-600 p-1">
-                            <i class="fa-solid fa-xmark text-lg"></i>
-                        </button>
-                    </div>
-
-                    <div class="p-4">
-                        <div class="bg-purple-50/60 p-2.5 rounded-2xl border border-purple-100/60 flex items-center justify-between">
-                            <span class="text-xs font-semibold text-purple-700 flex items-center gap-1.5">
-                                <i id="activeRoleIcon" class="fa-solid fa-user-shield text-purple-500"></i> <span id="activeRoleLabel">Sesi:</span>
-                            </span>
-                            <span id="activeRoleBadge" class="text-[11px] font-extrabold px-2.5 py-1 rounded-xl bg-purple-200/80 text-purple-800">
-                                Guru
-                            </span>
-                        </div>
-                    </div>
-
-                    <nav class="px-3 space-y-1">
-                        <a href="#" onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-item flex items-center gap-3 px-4 py-3 text-sm font-semibold rounded-2xl transition-all duration-200 bg-pink-100/80 text-pink-700 shadow-sm">
-                            <i class="fa-solid fa-house w-5 text-center text-pink-500"></i>
-                            <span>Dashboard Utama</span>
-                        </a>
-
-                        <a href="#" onclick="switchTab('dashboard-siswa')" id="nav-dashboard-siswa" class="nav-item hidden flex items-center gap-3 px-4 py-3 text-sm font-semibold rounded-2xl transition-all duration-200 text-slate-600 hover:bg-pink-50/60 hover:text-pink-600">
-                            <i class="fa-solid fa-user-graduate w-5 text-center text-purple-500"></i>
-                            <span>Beranda Siswa</span>
-                        </a>
-
-                        <a href="#" onclick="switchTab('perangkat')" id="nav-perangkat" class="nav-item flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-2xl text-slate-600 hover:bg-pink-50/60 hover:text-pink-600 transition-all duration-200">
-                            <i class="fa-solid fa-folder-open w-5 text-center text-purple-400"></i>
-                            <span>Perangkat Guru</span>
-                        </a>
-
-                        <a href="#" onclick="switchTab('perangkat-siswa')" id="nav-perangkat-siswa" class="nav-item hidden flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-2xl text-slate-600 hover:bg-pink-50/60 hover:text-pink-600 transition-all duration-200">
-                            <i class="fa-solid fa-book-bookmark w-5 text-center text-pink-500"></i>
-                            <span>Perangkat Pembelajaran</span>
-                        </a>
-
-                        <a href="#" onclick="switchTab('lms')" id="nav-lms" class="nav-item flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-2xl text-slate-600 hover:bg-pink-50/60 hover:text-pink-600 transition-all duration-200">
-                            <i class="fa-solid fa-book-open-reader w-5 text-center text-blue-400"></i>
-                            <span>LMS & Tugas Saya</span>
-                        </a>
-
-                        <a href="#" onclick="switchTab('evaluasi')" id="nav-evaluasi" class="nav-item flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-2xl text-slate-600 hover:bg-pink-50/60 hover:text-pink-600 transition-all duration-200">
-                            <i class="fa-solid fa-file-pen w-5 text-center text-emerald-400"></i>
-                            <span>Evaluasi & Penilaian</span>
-                        </a>
-
-                        <a href="#" onclick="switchTab('analisis')" id="nav-analisis" class="nav-item flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-2xl text-slate-600 hover:bg-pink-50/60 hover:text-pink-600 transition-all duration-200">
-                            <i class="fa-solid fa-chart-line w-5 text-center text-amber-400"></i>
-                            <span>Analisis Nilai</span>
-                        </a>
-                        <a href="#" onclick="switchTab('pengaturan')" id="nav-pengaturan" class="nav-item flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-2xl text-slate-600 hover:bg-pink-50/60 hover:text-pink-600 transition-all duration-200">
-                            <i class="fa-solid fa-sliders w-5 text-center text-slate-400"></i>
-                            <span>Pengaturan</span>
-                        </a>
-                    </nav>
-                </div>
-
-                <div class="p-4 border-t border-pink-50 space-y-2">
-                    <div class="flex items-center gap-3 bg-white/60 p-2.5 rounded-2xl border border-slate-100">
-                        <img id="userAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="Avatar" class="w-9 h-9 rounded-xl object-cover ring-2 ring-pink-200">
-                        <div class="overflow-hidden flex-1">
-                            <h4 id="userNameSidebar" class="text-xs font-bold text-slate-800 truncate">Nindy Octavia, S.Pd.</h4>
-                            <p id="userRoleSidebar" class="text-[10px] text-pink-500 font-semibold truncate">Guru Pengampu AKL</p>
-                        </div>
-                    </div>
-                    <button onclick="handleLogout()" class="w-full py-2 bg-rose-50 hover:bg-rose-100/80 text-rose-600 font-bold text-xs rounded-xl border border-rose-100 transition-all flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-right-from-bracket"></i> Keluar
-                    </button>
-                </div>
-            </aside>
-
-            <!-- MAIN CONTENT -->
-            <main class="flex-1 flex flex-col overflow-y-auto custom-scrollbar">
-                <!-- HEADER -->
-                <header class="sticky top-0 z-20 bg-white/70 backdrop-blur-md border-b border-pink-100/60 px-4 sm:px-8 py-3.5 flex items-center justify-between gap-4">
-                    <div class="flex items-center gap-3">
-                        <button onclick="toggleSidebar()" class="lg:hidden text-slate-500 p-2 hover:bg-pink-50 rounded-xl">
-                            <i class="fa-solid fa-bars text-lg"></i>
-                        </button>
-                        <div>
-                            <h2 id="pageTitle" class="text-base sm:text-lg font-bold text-slate-800">Dashboard Utama</h2>
-                            <p id="pageSubtitle" class="text-xs text-slate-400 hidden sm:block">Ringkasan aktivitas pembelajaran akuntansi</p>
-                        </div>
-                    </div>
-
-                    <!-- SELECTOR KELAS & MAPEL (GURU) -->
-                    <div id="teacherHeaderSelectors" class="flex items-center gap-2 sm:gap-3">
-                        <div id="headerClassContainer" class="relative">
-                            <select id="globalClassSelect" onchange="onGlobalClassChange(this.value)" class="appearance-none bg-pink-50/80 hover:bg-pink-100/80 text-pink-700 text-xs font-bold py-2 pl-3 pr-8 rounded-xl border border-pink-200 focus:outline-none cursor-pointer transition-all">
-                                <option value="10 AKL 1">10 AKL 1</option>
-                                <option value="10 AKL 2">10 AKL 2</option>
-                                <option value="11 AKL 1" selected>11 AKL 1</option>
-                                <option value="11 AKL 2">11 AKL 2</option>
-                                <option value="12 AKL 1">12 AKL 1</option>
-                                <option value="12 AKL 2">12 AKL 2</option>
-                            </select>
-                            <i class="fa-solid fa-chevron-down absolute right-2.5 top-1/2 -translate-y-1/2 text-pink-400 pointer-events-none text-[10px]"></i>
-                        </div>
-
-                        <div id="headerSubjectContainer" class="relative hidden sm:block">
-                            <select id="globalSubjectSelect" onchange="onGlobalSubjectChange(this.value)" class="appearance-none bg-purple-50/80 hover:bg-purple-100/80 text-purple-700 text-xs font-bold py-2 pl-3 pr-8 rounded-xl border border-purple-200 focus:outline-none cursor-pointer transition-all">
-                            </select>
-                            <i class="fa-solid fa-chevron-down absolute right-2.5 top-1/2 -translate-y-1/2 text-purple-400 pointer-events-none text-[10px]"></i>
-                        </div>
-                    </div>
-
-                    <!-- STUDENT CLASS BADGE (SISWA) -->
-                    <div id="studentHeaderBadge" class="hidden flex items-center gap-2">
-                        <span class="px-3 py-1.5 rounded-xl bg-purple-100 text-purple-700 text-xs font-extrabold flex items-center gap-1.5 border border-purple-200">
-                            <i class="fa-solid fa-graduation-cap"></i> Kelas Terdaftar: <span id="studentHeaderClass">11 AKL 1</span>
-                        </span>
-                    </div>
-                </header>
-
-                <!-- CONTENT BODY -->
-                <div class="p-4 sm:p-8 space-y-6 max-w-7xl mx-auto w-full">
-
-                    <!-- VIEW 1: DASHBOARD GURU -->
-                    <div id="view-dashboard" class="space-y-6">
-                        <div class="bg-gradient-to-r from-pink-200/60 via-purple-200/50 to-emerald-200/40 rounded-3xl p-6 sm:p-8 border border-white/80 shadow-sm relative overflow-hidden">
-                            <div class="relative z-10 max-w-2xl space-y-2">
-                                <span class="inline-block px-3 py-1 bg-white/80 text-pink-600 font-bold text-[11px] rounded-full shadow-xs">
-                                    <i class="fa-solid fa-chalkboard-user mr-1"></i> Mode Pengajar (Guru)
-                                </span>
-                                <h2 id="greetingText" class="text-xl sm:text-2xl font-extrabold text-slate-800 tracking-tight">
-                                    Selamat Datang Kembali, Ibu Nindy! 👋
-                                </h2>
-                                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                                    Siap mengelola pembelajaran dan evaluasi untuk kelas <span id="currentClassBadge" class="font-bold text-purple-600">11 AKL 1</span>.
-                                </p>
-                            </div>
-                            <i class="fa-solid fa-calculator absolute -right-4 -bottom-6 text-9xl text-pink-300/30 transform -rotate-12 pointer-events-none"></i>
-                        </div>
-
-                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                            <div class="bg-white/80 backdrop-blur-md p-5 rounded-2xl border border-pink-100 shadow-sm">
-                                <p class="text-xs text-slate-400 font-medium">Tugas Dokumen Aktif</p>
-                                <h3 id="statTugasAktif" class="text-xl font-extrabold text-slate-800 mt-1">0</h3>
-                                <p class="text-[10px] text-pink-500 font-semibold mt-0.5">Dipublikasikan</p>
-                            </div>
-                            <div class="bg-white/80 backdrop-blur-md p-5 rounded-2xl border border-purple-100 shadow-sm">
-                                <p class="text-xs text-slate-400 font-medium">Kuis Online Aktif</p>
-                                <h3 id="statKuisAktif" class="text-xl font-extrabold text-slate-800 mt-1">0</h3>
-                                <p class="text-[10px] text-purple-500 font-semibold mt-0.5">Kuis / Ujian</p>
-                            </div>
-                            <div class="bg-white/80 backdrop-blur-md p-5 rounded-2xl border border-emerald-100 shadow-sm">
-                                <p class="text-xs text-slate-400 font-medium">Total Pengumpulkan Siswa</p>
-                                <h3 id="statPengumpulan" class="text-xl font-extrabold text-slate-800 mt-1">0</h3>
-                                <p class="text-[10px] text-emerald-600 font-semibold mt-0.5">Sudah Terkumpul</p>
-                            </div>
-                            <div class="bg-white/80 backdrop-blur-md p-5 rounded-2xl border border-amber-100 shadow-sm">
-                                <p class="text-xs text-slate-400 font-medium">Menunggu Penilaian</p>
-                                <h3 id="statPendingPenilaian" class="text-xl font-extrabold text-slate-800 mt-1">0</h3>
-                                <p class="text-[10px] text-amber-600 font-semibold mt-0.5">Perlu Koreksi Guru</p>
-                            </div>
-                        </div>
-
-                        <div class="bg-white/80 backdrop-blur-md p-6 rounded-3xl border border-purple-100 shadow-sm space-y-4">
-                            <div class="flex items-center justify-between">
-                                <h3 class="font-extrabold text-sm text-slate-800 flex items-center gap-2">
-                                    <i class="fa-solid fa-bell text-pink-500"></i> Aktivitas & Pengumpulan Terbaru (Kelas <span id="dashClassText">11 AKL 1</span>)
-                                </h3>
-                                <button onclick="switchTab('evaluasi')" class="text-xs font-bold text-purple-600 hover:text-purple-800">Lihat Semua Evaluasi <i class="fa-solid fa-arrow-right"></i></button>
-                            </div>
-                            <div id="dashTeacherNotificationList" class="space-y-3 text-xs">
-                            </div>
-                        </div>
-
-                        <div class="bg-white/80 backdrop-blur-md p-6 rounded-3xl border border-emerald-100 shadow-sm space-y-4">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-2.5">
-                                    <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold">
-                                        <i class="fa-solid fa-scale-balanced text-xs"></i>
-                                    </div>
-                                    <div>
-                                        <h3 class="font-bold text-sm text-slate-800">Simulasi Cepat: Jurnal Umum Balance Checker</h3>
-                                        <p class="text-[11px] text-slate-400">Pengecekan keseimbangan Debet & Kredit</p>
-                                    </div>
-                                </div>
-                                <span id="balanceStatus" class="text-xs font-extrabold px-3 py-1 rounded-full bg-emerald-100 text-emerald-700">
-                                    <i class="fa-solid fa-circle-check mr-1"></i> Balance
-                                </span>
-                            </div>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-50/60 p-4 rounded-2xl border border-slate-100">
-                                <div>
-                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Total Pos Debet (Rp)</label>
-                                    <input type="number" id="debitInput" value="5000000" oninput="checkBalance()" class="w-full bg-white text-xs font-bold px-3 py-2 rounded-xl border border-slate-200">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Total Pos Kredit (Rp)</label>
-                                    <input type="number" id="kreditInput" value="5000000" oninput="checkBalance()" class="w-full bg-white text-xs font-bold px-3 py-2 rounded-xl border border-slate-200">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- VIEW 2: BERANDA SISWA -->
-                    <div id="view-dashboard-siswa" class="hidden space-y-6">
-                        <div class="bg-gradient-to-r from-purple-200/60 via-pink-200/50 to-blue-200/40 rounded-3xl p-6 sm:p-8 border border-white/80 shadow-sm relative overflow-hidden">
-                            <div class="relative z-10 max-w-2xl space-y-2">
-                                <span class="inline-block px-3 py-1 bg-white/80 text-purple-700 font-bold text-[11px] rounded-full shadow-xs">
-                                    <i class="fa-solid fa-user-graduate mr-1"></i> Ruang Belajar Siswa
-                                </span>
-                                <h2 id="studentGreetingName" class="text-xl sm:text-2xl font-extrabold text-slate-800 tracking-tight">
-                                    Selamat Datang, Ahmad Rizky! 📚
-                                </h2>
-                                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                                    Terdaftar di Kelas <span id="studentGreetingClass" class="font-bold text-purple-600">11 AKL 1</span>. Periksa tugas dan kuis online Anda di bawah ini.
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="bg-white/80 backdrop-blur-md p-6 rounded-3xl border border-purple-100 shadow-sm space-y-4">
-                                <h3 class="font-extrabold text-sm text-slate-800 flex items-center gap-2">
-                                    <i class="fa-solid fa-clock-rotate-left text-purple-500"></i> Tugas & Tenggat Terdekat
-                                </h3>
-                                <div id="dashStudentTaskList" class="space-y-3 text-xs">
-                                </div>
-                            </div>
-
-                            <div class="bg-white/80 backdrop-blur-md p-6 rounded-3xl border border-pink-100 shadow-sm space-y-4">
-                                <h3 class="font-extrabold text-sm text-slate-800 flex items-center gap-2">
-                                    <i class="fa-solid fa-award text-pink-500"></i> Nilai Baru Dirilis
-                                </h3>
-                                <div id="dashStudentGradeList" class="space-y-3 text-xs">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- VIEW 3: PERANGKAT GURU -->
-                    <div id="view-perangkat" class="hidden space-y-6">
-                        <div class="bg-gradient-to-r from-pink-200/60 via-purple-200/50 to-blue-200/40 rounded-3xl p-6 border border-white/80 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
-                            <div class="space-y-1">
-                                <span class="px-3 py-1 bg-white/80 text-pink-600 font-bold text-[11px] rounded-full shadow-xs inline-block">
-                                    <i class="fa-solid fa-folder-open mr-1"></i> Modul Pengelolaan Perangkat
-                                </span>
-                                <h2 class="text-xl font-extrabold text-slate-800">Perangkat Pembelajaran Guru AKL</h2>
-                                <p class="text-xs text-slate-600">Kelola dan bagikan RPP, Modul Ajar, CP, TP, ATP, Bahan Ajar, dan Asesmen kepada siswa.</p>
-                            </div>
-                            <button onclick="openCreatePerangkatModal()" class="px-4 py-2.5 bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2 shrink-0">
-                                <i class="fa-solid fa-plus text-sm"></i> Buat Perangkat Baru
-                            </button>
-                        </div>
-
-                        <div class="bg-white/80 backdrop-blur-md p-5 rounded-3xl border border-pink-100 shadow-sm space-y-3">
-                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
-                                <div>
-                                    <label class="block font-bold text-slate-600 mb-1">Pilih Kelas</label>
-                                    <select id="pKelasSelect" onchange="onPerangkatClassChange(this.value)" class="w-full bg-slate-50 border border-slate-200 font-semibold text-slate-800 rounded-xl px-3 py-2 outline-none">
-                                        <option value="10 AKL 1">10 AKL 1 (Kelas X)</option>
-                                        <option value="10 AKL 2">10 AKL 2 (Kelas X)</option>
-                                        <option value="11 AKL 1" selected>11 AKL 1 (Kelas XI)</option>
-                                        <option value="11 AKL 2">11 AKL 2 (Kelas XI)</option>
-                                        <option value="12 AKL 1">12 AKL 1 (Kelas XII)</option>
-                                        <option value="12 AKL 2">12 AKL 2 (Kelas XII)</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block font-bold text-slate-600 mb-1">Mata Pelajaran</label>
-                                    <select id="pMapelSelect" onchange="onPerangkatMapelChange(this.value)" class="w-full bg-slate-50 border border-slate-200 font-semibold text-slate-800 rounded-xl px-3 py-2 outline-none">
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block font-bold text-slate-600 mb-1">Semester</label>
-                                    <select id="pSemesterSelect" class="w-full bg-slate-50 border border-slate-200 font-semibold text-slate-800 rounded-xl px-3 py-2 outline-none">
-                                        <option value="Ganjil">Semester 1 (Ganjil)</option>
-                                        <option value="Genap">Semester 2 (Genap)</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block font-bold text-slate-600 mb-1">Tahun Ajaran</label>
-                                    <select id="pTahunAjaranSelect" class="w-full bg-slate-50 border border-slate-200 font-semibold text-slate-800 rounded-xl px-3 py-2 outline-none">
-                                        <option value="2024/2025">2024 / 2025</option>
-                                        <option value="2025/2026" selected>2025 / 2026</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
-                            <div onclick="openFormForType('RPP')" class="p-3 bg-white hover:bg-pink-50 border border-pink-100 rounded-2xl text-center cursor-pointer transition-all">
-                                <i class="fa-solid fa-file-lines text-pink-500 text-lg mb-1"></i>
-                                <h4 class="font-extrabold text-xs text-slate-800">RPP</h4>
-                            </div>
-                            <div onclick="openFormForType('Modul Ajar')" class="p-3 bg-white hover:bg-purple-50 border border-purple-100 rounded-2xl text-center cursor-pointer transition-all">
-                                <i class="fa-solid fa-book text-purple-500 text-lg mb-1"></i>
-                                <h4 class="font-extrabold text-xs text-slate-800">Modul Ajar</h4>
-                            </div>
-                            <div onclick="openFormForType('Capaian Pembelajaran (CP)')" class="p-3 bg-white hover:bg-blue-50 border border-blue-100 rounded-2xl text-center cursor-pointer transition-all">
-                                <i class="fa-solid fa-bullseye text-blue-500 text-lg mb-1"></i>
-                                <h4 class="font-extrabold text-xs text-slate-800">CP</h4>
-                            </div>
-                            <div onclick="openFormForType('Tujuan Pembelajaran (TP)')" class="p-3 bg-white hover:bg-emerald-50 border border-emerald-100 rounded-2xl text-center cursor-pointer transition-all">
-                                <i class="fa-solid fa-list-check text-emerald-500 text-lg mb-1"></i>
-                                <h4 class="font-extrabold text-xs text-slate-800">TP</h4>
-                            </div>
-                            <div onclick="openFormForType('Alur Tujuan Pembelajaran (ATP)')" class="p-3 bg-white hover:bg-amber-50 border border-amber-100 rounded-2xl text-center cursor-pointer transition-all">
-                                <i class="fa-solid fa-diagram-project text-amber-500 text-lg mb-1"></i>
-                                <h4 class="font-extrabold text-xs text-slate-800">ATP</h4>
-                            </div>
-                            <div onclick="openFormForType('Bahan Ajar')" class="p-3 bg-white hover:bg-rose-50 border border-rose-100 rounded-2xl text-center cursor-pointer transition-all">
-                                <i class="fa-solid fa-box-archive text-rose-500 text-lg mb-1"></i>
-                                <h4 class="font-extrabold text-xs text-slate-800">Bahan Ajar</h4>
-                            </div>
-                            <div onclick="openFormForType('Perencanaan Asesmen & Rubrik')" class="p-3 bg-white hover:bg-teal-50 border border-teal-100 rounded-2xl text-center cursor-pointer transition-all">
-                                <i class="fa-solid fa-square-poll-vertical text-teal-500 text-lg mb-1"></i>
-                                <h4 class="font-extrabold text-xs text-slate-800">Asesmen</h4>
-                            </div>
-                        </div>
-
-                        <div class="bg-white/80 backdrop-blur-md p-6 rounded-3xl border border-pink-100 shadow-sm space-y-4">
-                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
-                                <div>
-                                    <h3 class="font-bold text-sm text-slate-800">Daftar Dokumen Perangkat Tersimpan</h3>
-                                    <p class="text-xs text-slate-400">Atur status publikasi dan visibilitas akses untuk siswa</p>
-                                </div>
-                                <div class="flex flex-wrap items-center gap-2">
-                                    <input type="text" id="perangkatSearchInput" oninput="renderPerangkatTable()" placeholder="Cari judul / materi..." class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs outline-none w-44">
-                                    <select id="perangkatStatusFilter" onchange="renderPerangkatTable()" class="bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs font-semibold outline-none">
-                                        <option value="Semua">Semua Status</option>
-                                        <option value="Dipublikasikan">Dipublikasikan</option>
-                                        <option value="Draft">Draft</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="overflow-x-auto">
-                                <table class="w-full text-left border-collapse text-xs">
-                                    <thead>
-                                        <tr class="border-b border-slate-100 text-slate-400 font-bold uppercase text-[10px]">
-                                            <th class="p-3">Judul & Topik</th>
-                                            <th class="p-3">Jenis</th>
-                                            <th class="p-3">Kelas & Mapel</th>
-                                            <th class="p-3">Status</th>
-                                            <th class="p-3">Visibilitas Siswa</th>
-                                            <th class="p-3 text-right">Aksi & Publikasi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="perangkatTableBody" class="divide-y divide-slate-100 font-medium">
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- VIEW 4: PERANGKAT PEMBELAJARAN (SISWA) -->
-                    <div id="view-perangkat-siswa" class="hidden space-y-6">
-                        <div class="bg-gradient-to-r from-purple-200/60 via-pink-200/50 to-blue-200/40 rounded-3xl p-6 border border-white/80 shadow-sm">
-                            <h2 class="text-xl font-extrabold text-slate-800">Perangkat Pembelajaran Kelas <span id="studentViewClassTitle">11 AKL 1</span></h2>
-                            <p class="text-xs text-slate-600">Dokumen dan materi resmi yang dipublikasikan oleh Guru Pengampu.</p>
-                        </div>
-                        <div id="studentPerangkatGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        </div>
-                    </div>
-
-                    <!-- ======================================================= -->
-                    <!-- VIEW 5: LMS & KATALOG MODUL PEMBELAJARAN (DIPERBAIKI)   -->
-                    <!-- ======================================================= -->
-                    <div id="view-lms" class="hidden space-y-6">
-                        <!-- HEADER LMS -->
-                        <div class="bg-gradient-to-r from-blue-200/60 via-purple-200/50 to-pink-200/40 rounded-3xl p-6 border border-white/80 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
-                            <div>
-                                <span class="px-3 py-1 bg-white/80 text-blue-600 font-bold text-[11px] rounded-full shadow-xs inline-block">
-                                    <i class="fa-solid fa-book-open-reader mr-1"></i> Learning Management System
-                                </span>
-                                <h2 class="text-xl font-extrabold text-slate-800 mt-1">LMS Pembelajaran Akuntansi</h2>
-                                <p class="text-xs text-slate-600">Katalog modul interaktif, materi teks, video YouTube, dan penugasan per mata pelajaran.</p>
-                            </div>
-                            <div id="lmsTeacherTopAction" class="hidden flex items-center gap-2">
-                                <button onclick="openLmsModuleModal()" class="px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center gap-2">
-                                    <i class="fa-solid fa-plus"></i> + Tambah Modul Pembelajaran
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- SUB-NAVIGASI LMS TAB -->
-                        <div class="bg-white/80 backdrop-blur-md p-2 rounded-2xl border border-blue-100 shadow-sm flex items-center gap-2 text-xs font-bold">
-                            <button id="lmsSubTabModul" onclick="switchLmsSubTab('modul')" class="flex-1 py-2.5 rounded-xl bg-blue-600 text-white transition-all text-center">
-                                <i class="fa-solid fa-cubes mr-1.5"></i> 1. Modul Pembelajaran
-                            </button>
-                            <button id="lmsSubTabMateri" onclick="switchLmsSubTab('materi')" class="flex-1 py-2.5 rounded-xl text-slate-500 hover:bg-slate-100 transition-all text-center">
-                                <i class="fa-solid fa-photo-film mr-1.5"></i> 2. Materi & Video
-                            </button>
-                            <button id="lmsSubTabTugas" onclick="switchLmsSubTab('tugas')" class="flex-1 py-2.5 rounded-xl text-slate-500 hover:bg-slate-100 transition-all text-center">
-                                <i class="fa-solid fa-list-check mr-1.5"></i> 3. Tugas & Kuis
-                            </button>
-                        </div>
-
-                        <!-- TAB 1: MODUL PEMBELAJARAN (KATALOG) -->
-                        <div id="lmsContentModul" class="space-y-4">
-                            <div class="bg-white/80 backdrop-blur-md p-6 rounded-3xl border border-blue-100 shadow-sm space-y-4">
-                                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-                                    <div>
-                                        <h3 class="font-extrabold text-sm text-slate-800">Katalog Modul Pembelajaran</h3>
-                                        <p class="text-xs text-slate-400">Mapel: <span id="lmsModulMapelTitle" class="font-bold text-blue-600">-</span></p>
-                                    </div>
-                                    <span class="text-xs font-bold text-slate-400" id="lmsModulCountBadge">0 Modul</span>
-                                </div>
-
-                                <div id="lmsModuleCatalogGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- TAB 2: MATERI & VIDEO PEMBELAJARAN -->
-                        <div id="lmsContentMateri" class="hidden space-y-4">
-                            <div class="bg-white/80 backdrop-blur-md p-6 rounded-3xl border border-purple-100 shadow-sm space-y-4">
-                                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-                                    <div>
-                                        <h3 class="font-extrabold text-sm text-slate-800">Materi Teks, Berkas & Video Pembelajaran</h3>
-                                        <p class="text-xs text-slate-400">Materi khusus untuk mata pelajaran terpilih</p>
-                                    </div>
-                                    <div id="lmsAddMaterialAction" class="hidden">
-                                        <button onclick="openLmsMaterialModal()" class="px-3.5 py-2 bg-purple-600 text-white font-bold text-xs rounded-xl shadow-sm flex items-center gap-1.5">
-                                            <i class="fa-solid fa-video"></i> + Tambah Materi / Video
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div id="lmsMaterialsContainer" class="space-y-6 text-xs">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- TAB 3: TUGAS DOKUMEN & KUIS (FITUR LAMA TETAP DIPERTAHANKAN) -->
-                        <div id="lmsContentTugas" class="hidden space-y-4">
-                            <div class="bg-white/80 backdrop-blur-md p-6 rounded-3xl border border-blue-100 shadow-sm space-y-4">
-                                <div class="flex items-center justify-between border-b border-slate-100 pb-4">
-                                    <div>
-                                        <h3 class="font-extrabold text-sm text-slate-800">Daftar Tugas Dokumen & Praktik</h3>
-                                        <p class="text-xs text-slate-400">Tugas yang ditugaskan untuk mata pelajaran terpilih</p>
-                                    </div>
-                                    <div id="lmsTeacherAction" class="hidden flex items-center gap-2">
-                                        <button onclick="openCreateTugasModal()" class="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center gap-2">
-                                            <i class="fa-solid fa-plus"></i> + Buat Tugas Dokumen
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div id="lmsTaskList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- VIEW 6: EVALUASI & KUIS ONLINE -->
-                    <div id="view-evaluasi" class="hidden space-y-6">
-                        <div class="bg-gradient-to-r from-emerald-200/60 via-teal-200/50 to-blue-200/40 rounded-3xl p-6 border border-white/80 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
-                            <div>
-                                <span class="px-3 py-1 bg-white/80 text-emerald-700 font-bold text-[11px] rounded-full shadow-xs inline-block">
-                                    <i class="fa-solid fa-file-pen mr-1"></i> Modul Evaluasi & Penilaian
-                                </span>
-                                <h2 class="text-xl font-extrabold text-slate-800 mt-1">Kuis Online & Evaluasi Pembelajaran</h2>
-                                <p class="text-xs text-slate-600">Ujian interaktif, kuis objektif, studi kasus jurnal, dan rekap penilaian.</p>
-                            </div>
-                            <div id="evalTeacherAction" class="hidden flex items-center gap-2">
-                                <button onclick="openCreateKuisModal()" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center gap-2">
-                                    <i class="fa-solid fa-plus"></i> + Buat Kuis Baru
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="bg-white/80 backdrop-blur-md p-6 rounded-3xl border border-emerald-100 shadow-sm space-y-4">
-                            <h3 class="font-extrabold text-sm text-slate-800 border-b border-slate-100 pb-3">Daftar Kuis & Evaluasi Aktif</h3>
-                            <div id="evalQuizList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
-                            </div>
-                        </div>
-
-                        <div id="teacherGradingSection" class="hidden bg-white/80 backdrop-blur-md p-6 rounded-3xl border border-emerald-100 shadow-sm space-y-4">
-                            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-                                <h3 class="font-extrabold text-sm text-slate-800">Rekap Pengumpulan & Penilaian Siswa</h3>
-                                <span class="text-xs font-bold text-emerald-600">Terhubung ke Analisis Nilai</span>
-                            </div>
-
-                            <div class="overflow-x-auto">
-                                <table class="w-full text-left border-collapse text-xs">
-                                    <thead>
-                                        <tr class="border-b border-slate-100 text-slate-400 font-bold uppercase text-[10px]">
-                                            <th class="p-3">Nama Siswa</th>
-                                            <th class="p-3">Judul Tugas / Kuis</th>
-                                            <th class="p-3">Waktu Pengumpulan</th>
-                                            <th class="p-3">Status Pengumpulan</th>
-                                            <th class="p-3">Skor / Nilai</th>
-                                            <th class="p-3">Status Nilai</th>
-                                            <th class="p-3 text-right">Aksi Penilaian</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="teacherGradingTableBody" class="divide-y divide-slate-100 font-medium">
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- VIEW 7: ANALISIS NILAI -->
-                    <div id="view-analisis" class="hidden space-y-6">
-                        <div class="bg-white/80 backdrop-blur-md p-6 rounded-3xl border border-amber-100 shadow-sm space-y-4">
-                            <h3 class="text-base font-extrabold text-slate-800 border-b pb-3">Modul Analisis & Visualisasi Data Nilai</h3>
-                            <p class="text-xs text-slate-500">Seluruh data penilaian tugas dan kuis online yang telah dirilis akan tersimpan secara terstruktur dan siap divisualisasikan pada grafik perkembangan siswa.</p>
-                        </div>
-                    </div>
-
-                    <!-- VIEW 8: PENGATURAN -->
-                    <div id="view-pengaturan" class="hidden p-8 bg-white rounded-3xl border border-slate-200 text-center"><h3 class="font-bold">Pengaturan Platform</h3></div>
-
-                </div>
-            </main>
-        </div>
-    </div>
-
-    <!-- ========================================== -->
-    <!-- MODAL KHUSUS LMS                           -->
-    <!-- ========================================== -->
-
-    <!-- MODAL TAMBAH/EDIT MODUL LMS -->
-    <div id="lmsModuleModal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl border border-purple-100 overflow-hidden my-auto">
-            <div class="p-5 border-b bg-purple-50/50 flex items-center justify-between">
-                <h3 class="font-extrabold text-sm text-slate-800"><i class="fa-solid fa-cubes text-purple-600 mr-2"></i> Kelola Modul Pembelajaran LMS</h3>
-                <button onclick="closeModal('lmsModuleModal')" class="text-slate-400 p-1"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            <form onsubmit="saveLmsModule(event)" class="p-6 space-y-4 text-xs">
-                <input type="hidden" id="editLmsModuleId" value="">
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">Judul Modul Pembelajaran <span class="text-rose-500">*</span></label>
-                    <input type="text" id="fLmsModuleTitle" required placeholder="Contoh: Rekonsiliasi Bank" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none">
-                </div>
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">Deskripsi Singkat Modul</label>
-                    <textarea id="fLmsModuleDesc" rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 outline-none" placeholder="Deskripsi materi dan capaian modul..."></textarea>
-                </div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block font-bold text-slate-700 mb-1">Status Publikasi</label>
-                        <select id="fLmsModuleStatus" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none font-bold text-purple-700">
-                            <option value="Dipublikasikan">Dipublikasikan</option>
-                            <option value="Draft">Draft</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block font-bold text-slate-700 mb-1">Urutan Tampil</label>
-                        <input type="number" id="fLmsModuleOrder" value="1" min="1" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none">
-                    </div>
-                </div>
-                <div class="pt-3 border-t flex justify-end gap-2">
-                    <button type="button" onclick="closeModal('lmsModuleModal')" class="px-4 py-2 bg-slate-200 text-slate-700 font-bold rounded-xl">Batal</button>
-                    <button type="submit" class="px-4 py-2 bg-purple-600 text-white font-bold rounded-xl shadow-sm">Simpan Modul</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL TAMBAH/EDIT MATERI & VIDEO LMS -->
-    <div id="lmsMaterialModal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white rounded-3xl max-w-xl w-full shadow-2xl border border-purple-100 overflow-hidden my-auto">
-            <div class="p-5 border-b bg-purple-50/50 flex items-center justify-between">
-                <h3 class="font-extrabold text-sm text-slate-800"><i class="fa-solid fa-photo-film text-purple-600 mr-2"></i> Tambah Materi & Video Pembelajaran</h3>
-                <button onclick="closeModal('lmsMaterialModal')" class="text-slate-400 p-1"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            <form onsubmit="saveLmsMaterial(event)" class="p-6 space-y-4 text-xs">
-                <input type="hidden" id="editLmsMaterialId" value="">
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">Pilih Modul Pembelajaran <span class="text-rose-500">*</span></label>
-                    <select id="fLmsMaterialModuleSelect" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none font-bold">
-                    </select>
-                </div>
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">Judul Materi / Topik <span class="text-rose-500">*</span></label>
-                    <input type="text" id="fLmsMaterialTitle" required placeholder="Contoh: Video Penjelasan Rekonsiliasi Bank" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none">
-                </div>
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">Teks / Penjelasan Pembelajaran</label>
-                    <textarea id="fLmsMaterialText" rows="4" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 outline-none" placeholder="Tuliskan ulasan ringkas materi atau contoh jurnal..."></textarea>
-                </div>
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">URL / Link Video YouTube (Opsional)</label>
-                    <input type="url" id="fLmsMaterialVideoUrl" placeholder="https://www.youtube.com/watch?v=..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none">
-                </div>
-                <div class="pt-3 border-t flex justify-end gap-2">
-                    <button type="button" onclick="closeModal('lmsMaterialModal')" class="px-4 py-2 bg-slate-200 text-slate-700 font-bold rounded-xl">Batal</button>
-                    <button type="submit" class="px-4 py-2 bg-purple-600 text-white font-bold rounded-xl shadow-sm">Simpan Materi</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL EKSISTING PERANGKAT PEMBELAJARAN GURU -->
-    <div id="perangkatFormModal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white rounded-3xl max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-pink-100 overflow-hidden my-auto">
-            <div class="p-5 border-b border-pink-50 bg-gradient-to-r from-pink-50 to-purple-50 flex items-center justify-between">
-                <div>
-                    <span id="modalFormTypeBadge" class="px-2.5 py-0.5 bg-pink-100 text-pink-700 font-bold text-[10px] rounded-md">RPP</span>
-                    <h3 id="modalFormTitle" class="text-base font-extrabold text-slate-800 mt-1">Buat Perangkat Pembelajaran</h3>
-                </div>
-                <button onclick="closePerangkatModal()" class="text-slate-400 hover:text-slate-600 p-1">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
-            </div>
-
-            <div class="p-6 overflow-y-auto custom-scrollbar space-y-5 text-xs">
-                <input type="hidden" id="editDocId" value="">
-
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 p-3 bg-slate-50 rounded-2xl border border-slate-100 font-semibold text-slate-600">
-                    <div><span class="block text-[10px] text-slate-400 font-normal">Kelas:</span> <span id="formContextKelas">11 AKL 1</span></div>
-                    <div><span class="block text-[10px] text-slate-400 font-normal">Mapel:</span> <span id="formContextMapel" class="truncate block">Akuntansi Keuangan</span></div>
-                    <div><span class="block text-[10px] text-slate-400 font-normal">Semester:</span> <span id="formContextSemester">Ganjil</span></div>
-                    <div><span class="block text-[10px] text-slate-400 font-normal">Tahun Ajaran:</span> <span id="formContextTA">2025/2026</span></div>
-                </div>
-
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">Judul / Topik Perangkat <span class="text-rose-500">*</span></label>
-                    <input type="text" id="fJudul" required placeholder="Contoh: Modul Ajar Jurnal Penyesuaian Perusahaan Jasa" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-800 font-medium outline-none">
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 p-4 bg-purple-50/50 rounded-2xl border border-purple-100">
-                    <div>
-                        <label class="block font-bold text-slate-700 mb-1">Status Publikasi</label>
-                        <select id="fStatusSelect" class="w-full bg-white border border-purple-200 rounded-xl px-3 py-2 font-bold text-purple-700 outline-none">
-                            <option value="Draft">Draft (Disimpan Saja)</option>
-                            <option value="Dipublikasikan">Dipublikasikan</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block font-bold text-slate-700 mb-1">Visibilitas Siswa</label>
-                        <select id="fVisibilitySelect" class="w-full bg-white border border-purple-200 rounded-xl px-3 py-2 font-bold text-purple-700 outline-none">
-                            <option value="Siswa">Bagikan kepada Siswa</option>
-                            <option value="Guru">Khusus Guru (Privat)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div id="dynamicFormFields" class="space-y-4">
-                </div>
-
-                <div class="pt-3 border-t border-slate-100 space-y-2">
-                    <label class="block font-bold text-slate-700">Lampirkan Dokumen (Word / PDF / Excel / Gambar)</label>
-                    <div class="flex items-center gap-3">
-                        <label class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl cursor-pointer transition-all text-xs flex items-center gap-2">
-                            <i class="fa-solid fa-paperclip"></i> Pilih Berkas
-                            <input type="file" id="fFileUpload" onchange="handleFileUpload(event)" accept=".doc,.docx,.pdf,.xls,.xlsx,image/*" class="hidden">
-                        </label>
-                        <span id="uploadedFileName" class="text-slate-400 text-xs truncate italic">Belum ada file dipilih</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="p-4 border-t border-slate-100 bg-slate-50 flex items-center justify-between gap-2">
-                <button type="button" onclick="closePerangkatModal()" class="px-4 py-2 bg-slate-200 text-slate-700 font-bold rounded-xl">Batal</button>
-                <div class="flex items-center gap-2">
-                    <button type="button" onclick="savePerangkat('Draft', 'Guru')" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl shadow-sm">Simpan Draft</button>
-                    <button type="button" onclick="savePerangkat('Dipublikasikan', 'Siswa')" class="px-4 py-2 bg-pink-500 hover:bg-pink-600 text-white font-bold rounded-xl shadow-sm flex items-center gap-1.5">
-                        <i class="fa-solid fa-share-nodes text-xs"></i> Simpan & Bagikan ke Siswa
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL TUGAS DOKUMEN (GURU) -->
-    <div id="tugasFormModal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-blue-100 overflow-hidden my-auto">
-            <div class="p-5 border-b bg-blue-50/50 flex items-center justify-between">
-                <h3 class="font-extrabold text-sm text-slate-800"><i class="fa-solid fa-file-arrow-up text-blue-600 mr-2"></i> Buat / Edit Tugas Dokumen</h3>
-                <button onclick="closeModal('tugasFormModal')" class="text-slate-400 p-1"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            <form onsubmit="saveTugas(event)" class="p-6 overflow-y-auto custom-scrollbar space-y-4 text-xs">
-                <input type="hidden" id="editTaskId" value="">
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">Judul Tugas <span class="text-rose-500">*</span></label>
-                    <input type="text" id="fTaskTitle" required placeholder="Contoh: Tugas Praktik Jurnal Penyesuaian" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none">
-                </div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block font-bold text-slate-700 mb-1">Kelas Tujuan</label>
-                        <select id="fTaskKelas" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none">
-                            <option value="10 AKL 1">10 AKL 1</option>
-                            <option value="10 AKL 2">10 AKL 2</option>
-                            <option value="11 AKL 1" selected>11 AKL 1</option>
-                            <option value="11 AKL 2">11 AKL 2</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block font-bold text-slate-700 mb-1">Mata Pelajaran</label>
-                        <select id="fTaskMapel" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none">
-                            <option value="Akuntansi Keuangan">Akuntansi Keuangan</option>
-                            <option value="Praktikum Akuntansi Perusahaan Jasa">Praktikum Akuntansi Perusahaan Jasa</option>
-                            <option value="Dasar-Dasar Akuntansi dan Keuangan Lembaga">Dasar-Dasar Akuntansi</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block font-bold text-slate-700 mb-1">Tenggat Waktu (Deadline)</label>
-                        <input type="datetime-local" id="fTaskDeadline" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block font-bold text-slate-700 mb-1">Nilai Maksimum</label>
-                        <input type="number" id="fTaskMaxScore" value="100" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none">
-                    </div>
-                </div>
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">Instruksi / Petunjuk Pengerjaan</label>
-                    <textarea id="fTaskInstruction" rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 outline-none" placeholder="Tuliskan petunjuk pengerjaan tugas..."></textarea>
-                </div>
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">Lampirkan File Soal (PDF/DOCX/XLSX)</label>
-                    <input type="file" id="fTaskFile" accept=".pdf,.doc,.docx,.xls,.xlsx,image/*" onchange="handleTaskFileUpload(event)" class="text-xs">
-                    <p id="taskFileNameLabel" class="text-[10px] text-slate-400 mt-1 italic">Belum ada file dipilih</p>
-                </div>
-                <div class="grid grid-cols-2 gap-3 pt-2 border-t">
-                    <div>
-                        <label class="block font-bold text-slate-700 mb-1">Status Publikasi</label>
-                        <select id="fTaskStatus" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none font-bold text-blue-600">
-                            <option value="Dipublikasikan">Dipublikasikan</option>
-                            <option value="Draft">Draft</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block font-bold text-slate-700 mb-1">Pengumpulan Terlambat</label>
-                        <select id="fTaskAllowLate" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none font-bold">
-                            <option value="Ya">Diizinkan</option>
-                            <option value="Tidak">Ditolak Otomatis</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="pt-3 border-t flex justify-end gap-2">
-                    <button type="button" onclick="closeModal('tugasFormModal')" class="px-4 py-2 bg-slate-200 text-slate-700 font-bold rounded-xl">Batal</button>
-                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white font-bold rounded-xl shadow-sm">Simpan Tugas</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL KUIS ONLINE (GURU) -->
-    <div id="kuisFormModal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white rounded-3xl max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-emerald-100 overflow-hidden my-auto">
-            <div class="p-5 border-b bg-emerald-50/50 flex items-center justify-between">
-                <h3 class="font-extrabold text-sm text-slate-800"><i class="fa-solid fa-list-check text-emerald-600 mr-2"></i> Buat Kuis Online Baru</h3>
-                <button onclick="closeModal('kuisFormModal')" class="text-slate-400 p-1"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            <form onsubmit="saveKuis(event)" class="p-6 overflow-y-auto custom-scrollbar space-y-4 text-xs">
-                <input type="hidden" id="editQuizId" value="">
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">Judul Kuis <span class="text-rose-500">*</span></label>
-                    <input type="text" id="fQuizTitle" required placeholder="Contoh: Kuis Keseimbangan Neraca Saldo" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none">
-                </div>
-                <div class="grid grid-cols-3 gap-3">
-                    <div>
-                        <label class="block font-bold text-slate-700 mb-1">Kelas Target</label>
-                        <select id="fQuizKelas" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none">
-                            <option value="11 AKL 1" selected>11 AKL 1</option>
-                            <option value="10 AKL 1">10 AKL 1</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block font-bold text-slate-700 mb-1">Durasi (Menit)</label>
-                        <input type="number" id="fQuizDuration" value="30" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none">
-                    </div>
-                    <div>
-                        <label class="block font-bold text-slate-700 mb-1">Status Publikasi</label>
-                        <select id="fQuizStatus" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none font-bold text-emerald-600">
-                            <option value="Dipublikasikan">Dipublikasikan</option>
-                            <option value="Draft">Draft</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="pt-3 border-t">
-                    <h4 class="font-bold text-slate-800 mb-2">Daftar Soal Kuis (Pilihan Ganda & Esai)</h4>
-                    <div id="quizQuestionBuilder" class="space-y-3">
-                    </div>
-                    <button type="button" onclick="addQuestionField()" class="mt-3 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold rounded-xl text-xs flex items-center gap-1">
-                        <i class="fa-solid fa-plus"></i> Tambah Soal
-                    </button>
-                </div>
-
-                <div class="pt-3 border-t flex justify-end gap-2">
-                    <button type="button" onclick="closeModal('kuisFormModal')" class="px-4 py-2 bg-slate-200 text-slate-700 font-bold rounded-xl">Batal</button>
-                    <button type="submit" class="px-4 py-2 bg-emerald-600 text-white font-bold rounded-xl shadow-sm">Simpan Kuis</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL PENGUMPULAN TUGAS (SISWA) -->
-    <div id="kumpulTugasModal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl border border-purple-100 overflow-hidden my-auto">
-            <div class="p-5 border-b bg-purple-50/50 flex items-center justify-between">
-                <h3 class="font-extrabold text-sm text-slate-800"><i class="fa-solid fa-cloud-arrow-up text-purple-600 mr-2"></i> Pengumpulan Tugas Siswa</h3>
-                <button onclick="closeModal('kumpulTugasModal')" class="text-slate-400 p-1"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            <form onsubmit="submitTaskAnswer(event)" class="p-6 space-y-4 text-xs">
-                <input type="hidden" id="submitTaskId" value="">
-                <div id="submitTaskDetail" class="p-3 bg-slate-50 rounded-2xl border space-y-1">
-                </div>
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">Unggah Berkas Jawaban (PDF/DOCX/XLSX) <span class="text-rose-500">*</span></label>
-                    <input type="file" id="fStudentAnswerFile" required accept=".pdf,.doc,.docx,.xls,.xlsx,image/*" onchange="handleStudentFileUpload(event)">
-                </div>
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">Catatan Pengumpulan (Opsional)</label>
-                    <textarea id="fStudentAnswerNote" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 outline-none" placeholder="Tambahkan catatan untuk guru..."></textarea>
-                </div>
-                <div class="pt-3 border-t flex justify-end gap-2">
-                    <button type="button" onclick="closeModal('kumpulTugasModal')" class="px-4 py-2 bg-slate-200 text-slate-700 font-bold rounded-xl">Batal</button>
-                    <button type="submit" class="px-4 py-2 bg-purple-600 text-white font-bold rounded-xl shadow-sm">Kirim Jawaban</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL KERJAKAN KUIS (SISWA) -->
-    <div id="kerjakanKuisModal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-emerald-100 overflow-hidden my-auto">
-            <div class="p-5 border-b bg-emerald-50/50 flex items-center justify-between">
-                <h3 id="takeQuizTitle" class="font-extrabold text-sm text-slate-800">Kuis Online</h3>
-                <span id="quizTimer" class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full font-bold text-xs"><i class="fa-solid fa-stopwatch mr-1"></i> 30:00</span>
-            </div>
-            <form onsubmit="submitQuizAnswers(event)" class="p-6 overflow-y-auto custom-scrollbar space-y-6 text-xs">
-                <input type="hidden" id="takeQuizId" value="">
-                <div id="takeQuizQuestionsContainer" class="space-y-6">
-                </div>
-                <div class="pt-4 border-t flex justify-end gap-2">
-                    <button type="submit" class="px-5 py-2.5 bg-emerald-600 text-white font-bold rounded-xl shadow-md">Selesaikan & Kirim Kuis</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL PENILAIAN GURU -->
-    <div id="penilaianModal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white rounded-3xl max-w-md w-full shadow-2xl border border-emerald-100 overflow-hidden my-auto">
-            <div class="p-5 border-b bg-emerald-50/50 flex items-center justify-between">
-                <h3 class="font-extrabold text-sm text-slate-800"><i class="fa-solid fa-pen-to-square text-emerald-600 mr-2"></i> Input Penilaian & Koreksi</h3>
-                <button onclick="closeModal('penilaianModal')" class="text-slate-400 p-1"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            <form onsubmit="saveTeacherGrade(event)" class="p-6 space-y-4 text-xs">
-                <input type="hidden" id="gradeSubmissionId" value="">
-                <div id="gradeSubmissionInfo" class="p-3 bg-slate-50 rounded-2xl border space-y-1">
-                </div>
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">Skor / Nilai Diperoleh <span class="text-rose-500">*</span></label>
-                    <input type="number" id="fGradeScore" required max="100" min="0" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none font-bold text-lg text-emerald-700">
-                </div>
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">Komentar & Catatan Guru</label>
-                    <textarea id="fGradeComment" rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 outline-none" placeholder="Tuliskan umpan balik untuk siswa..."></textarea>
-                </div>
-                <div>
-                    <label class="block font-bold text-slate-700 mb-1">Status Rilis Nilai</label>
-                    <select id="fGradeStatus" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none font-bold text-emerald-600">
-                        <option value="Dirilis">Dirilis (Dapat Dilihat Siswa)</option>
-                        <option value="Draft Nilai">Draft Nilai (Disimpan Saja)</option>
-                    </select>
-                </div>
-                <div class="pt-3 border-t flex justify-end gap-2">
-                    <button type="button" onclick="closeModal('penilaianModal')" class="px-4 py-2 bg-slate-200 text-slate-700 font-bold rounded-xl">Batal</button>
-                    <button type="submit" class="px-4 py-2 bg-emerald-600 text-white font-bold rounded-xl shadow-sm">Simpan Nilai</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- PREVIEW DOKUMEN MODAL -->
-    <div id="perangkatPreviewModal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-pink-100 overflow-hidden my-auto">
-            <div class="p-5 border-b bg-slate-50 flex items-center justify-between">
-                <h3 class="font-extrabold text-sm text-slate-800 flex items-center gap-2"><i class="fa-solid fa-file-invoice text-pink-500"></i> Pratinjau Dokumen</h3>
-                <button onclick="closeModal('perangkatPreviewModal')" class="text-slate-400 p-1"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            <div id="previewModalContent" class="p-8 overflow-y-auto custom-scrollbar text-xs space-y-6 bg-white text-slate-800 leading-relaxed"></div>
-            <div class="p-4 border-t bg-slate-50 flex justify-end gap-2">
-                <button onclick="closeModal('perangkatPreviewModal')" class="px-4 py-2 bg-slate-200 text-slate-700 font-bold rounded-xl">Tutup</button>
-                <button onclick="triggerPrintFromModal()" class="px-4 py-2 bg-pink-500 text-white font-bold rounded-xl shadow-sm flex items-center gap-2">
-                    <i class="fa-solid fa-print"></i> Cetak Dokumen
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ========================================== -->
-    <!-- JAVASCRIPT LOGIC LENGKAP & TERINTEGRASI    -->
-    <!-- ========================================== -->
-    <script>
-        const MAPPING_KELAS_MAPEL = {
-            '10 AKL 1': ['Dasar-Dasar Akuntansi dan Keuangan Lembaga'],
-            '10 AKL 2': ['Dasar-Dasar Akuntansi dan Keuangan Lembaga'],
-            '11 AKL 1': ['Akuntansi Keuangan', 'Praktikum Akuntansi Perusahaan Jasa', 'Praktikum Akuntansi Perusahaan Dagang', 'Komputer Akuntansi', 'Perpajakan'],
-            '11 AKL 2': ['Akuntansi Keuangan', 'Praktikum Akuntansi Perusahaan Jasa', 'Praktikum Akuntansi Perusahaan Dagang', 'Komputer Akuntansi', 'Perpajakan'],
-            '12 AKL 1': ['Akuntansi Keuangan', 'Praktikum Akuntansi Perusahaan Jasa', 'Praktikum Akuntansi Perusahaan Dagang', 'Komputer Akuntansi', 'Perpajakan'],
-            '12 AKL 2': ['Akuntansi Keuangan', 'Praktikum Akuntansi Perusahaan Jasa', 'Praktikum Akuntansi Perusahaan Dagang', 'Komputer Akuntansi', 'Perpajakan']
-        };
-
-        const INITIAL_LMS_SUBJECT_MODULES = {
-            'Dasar-Dasar Akuntansi dan Keuangan Lembaga': [
-                'Pengenalan Akuntansi', 'Konsep Dasar Akuntansi', 'Persamaan Dasar Akuntansi', 'Dokumen Transaksi',
-                'Mekanisme Debit dan Kredit', 'Jurnal Umum', 'Buku Besar', 'Neraca Saldo', 'Laporan Keuangan'
-            ],
-            'Akuntansi Keuangan': [
-                'Akuntansi Kas', 'Rekonsiliasi Bank', 'Akuntansi Piutang', 'Akuntansi Persediaan',
-                'Aset Tetap', 'Penyusutan', 'Akuntansi Utang', 'Ekuitas', 'Laporan Keuangan'
-            ],
-            'Praktikum Akuntansi Perusahaan Jasa': [
-                'Karakteristik Perusahaan Jasa', 'Bukti Transaksi', 'Jurnal Umum', 'Buku Besar',
-                'Neraca Saldo', 'Jurnal Penyesuaian', 'Neraca Lajur', 'Laporan Keuangan', 'Jurnal Penutup'
-            ],
-            'Praktikum Akuntansi Perusahaan Dagang': [
-                'Karakteristik Perusahaan Dagang', 'Pembelian dan Penjualan', 'Retur dan Potongan',
-                'Persediaan', 'Jurnal Khusus', 'Buku Besar Pembantu', 'Neraca Saldo', 'Jurnal Penyesuaian', 'Laporan Keuangan'
-            ],
-            'Komputer Akuntansi': [
-                'Pengenalan Komputer Akuntansi', 'Membuat Data Perusahaan', 'Pengaturan Daftar Akun',
-                'Saldo Awal', 'Data Pelanggan dan Pemasok', 'Transaksi Pembelian', 'Transaksi Penjualan',
-                'Transaksi Kas dan Bank', 'Laporan Keuangan Digital'
-            ],
-            'Perpajakan': [
-                'Pengantar Perpajakan', 'Jenis dan Fungsi Pajak', 'Administrasi Perpajakan',
-                'Pajak Penghasilan', 'PPh Pasal 21', 'PPh Pasal 23', 'Pajak Pertambahan Nilai',
-                'Dokumen Perpajakan', 'Studi Kasus Perpajakan'
-            ]
-        };
-
-        const MOCK_USERS = {
-            guru: { id: 'G-001', name: 'Nindy Octavia, S.Pd.', role: 'guru', roleLabel: 'Guru Pengampu AKL', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80' },
-            siswa_11_akl_1: { id: 'S-101', name: 'Ahmad Rizky', role: 'siswa', kelas: '11 AKL 1', roleLabel: 'Siswa 11 AKL 1', avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=100&auto=format&fit=crop&q=80' },
-            siswa_10_akl_1: { id: 'S-102', name: 'Budi Santoso', role: 'siswa', kelas: '10 AKL 1', roleLabel: 'Siswa 10 AKL 1', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80' },
-            siswa_10_akl_2: { id: 'S-103', name: 'Citra Dewi', role: 'siswa', kelas: '10 AKL 2', roleLabel: 'Siswa 10 AKL 2', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80' }
-        };
-
-        let currentPerangkatList = [];
-        let currentLmsModulesList = [];
-        let currentLmsMaterialsList = [];
-        let currentTugasKuisList = [];
-        let currentSubmissionsList = [];
-
-        let uploadedFileMeta = null;
-        let uploadedFileDataUrl = null;
-        let uploadedFileTaskMeta = null;
-        let uploadedFileTaskDataUrl = null;
-        let uploadedFileStudentMeta = null;
-        let uploadedFileStudentDataUrl = null;
-        let currentFormType = 'RPP';
-
-        window.addEventListener('DOMContentLoaded', () => {
-            initDataStores();
-            checkExistingSession();
-            initHeaderClassMapel();
-        });
-
-        function initDataStores() {
-            // 1. PERANGKAT GURU STORE (EKSISTING)
-            const existingPerangkat = localStorage.getItem('balanceaa_perangkat_guru');
-            if (!existingPerangkat) {
-                const samplePerangkat = [
-                    {
-                        id: 'DOC-001', authorId: 'G-001', author: 'Nindy Octavia, S.Pd.',
-                        title: 'Modul Ajar Pencatatan Jurnal Penyesuaian Perusahaan Jasa',
-                        type: 'Modul Ajar', kelas: '11 AKL 1', mapel: 'Akuntansi Keuangan',
-                        semester: 'Ganjil', tahunAjaran: '2025/2026', createdAt: '2026-03-15', updatedAt: '2026-03-15',
-                        status: 'Dipublikasikan', visibility: 'Siswa', fileAttachment: 'Modul_Ajar_Jurnal_Penyesuaian.pdf', fileDataUrl: null,
-                        content: {
-                            kompetensiAwal: 'Siswa memahami saldo normal akun dan jurnal umum.',
-                            profilPancasila: 'Bernalar Kritis dan Mandiri',
-                            pemahamanBermakna: 'Penyesuaian penting untuk menyajikan nilai riil beban dan kewajiban.',
-                            pertanyaanPemantik: 'Bagaimana jika beban sewa belum disesuaikan pada akhir periode?',
-                            materiMedia: 'Buku Akuntansi Keuangan, Slide PPT, Lembar Kerja',
-                            asesmen: 'Formative: Kuis singkat; Summative: Tes Praktik Jurnal'
-                        }
-                    }
-                ];
-                localStorage.setItem('balanceaa_perangkat_guru', JSON.stringify(samplePerangkat));
-                currentPerangkatList = samplePerangkat;
-            } else {
-                try { currentPerangkatList = JSON.parse(existingPerangkat); } catch(e) { currentPerangkatList = []; }
-            }
-
-            // 2. LMS MODULES STORE
-            const existingLmsModules = localStorage.getItem('balanceaa_lms_modules');
-            if (!existingLmsModules) {
-                let initialModules = [];
-                let counter = 100;
-                Object.keys(INITIAL_LMS_SUBJECT_MODULES).forEach(mapelName => {
-                    const titles = INITIAL_LMS_SUBJECT_MODULES[mapelName];
-                    titles.forEach((title, idx) => {
-                        counter++;
-                        initialModules.push({
-                            id: 'LMOD-' + counter,
-                            title: title,
-                            desc: `Modul dasar pembelajaran untuk topik ${title}`,
-                            mapel: mapelName,
-                            kelas: mapelName.includes('Dasar') ? '10 AKL 1' : '11 AKL 1',
-                            authorId: 'G-001',
-                            order: idx + 1,
-                            status: 'Dipublikasikan',
-                            updatedAt: '2026-03-15'
-                        });
-                    });
-                });
-                localStorage.setItem('balanceaa_lms_modules', JSON.stringify(initialModules));
-                currentLmsModulesList = initialModules;
-            } else {
-                try { currentLmsModulesList = JSON.parse(existingLmsModules); } catch(e) { currentLmsModulesList = []; }
-            }
-
-            // 3. LMS MATERIALS & VIDEOS STORE
-            const existingLmsMaterials = localStorage.getItem('balanceaa_lms_materials');
-            if (!existingLmsMaterials) {
-                const sampleMaterials = [
-                    {
-                        id: 'LMAT-001',
-                        moduleId: 'LMOD-110', // Rekonsiliasi Bank
-                        mapel: 'Akuntansi Keuangan',
-                        kelas: '11 AKL 1',
-                        title: 'Video Pembelajaran Rekonsiliasi Bank & Penyebab Perbedaan Saldo',
-                        text: 'Silakan pelajari video rekonsiliasi bank berikut untuk memahami penyesuaian saldo kas menurut bank dan catatan perusahaan.',
-                        videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-                        status: 'Dipublikasikan',
-                        updatedAt: '2026-03-16'
-                    }
-                ];
-                localStorage.setItem('balanceaa_lms_materials', JSON.stringify(sampleMaterials));
-                currentLmsMaterialsList = sampleMaterials;
-            } else {
-                try { currentLmsMaterialsList = JSON.parse(existingLmsMaterials); } catch(e) { currentLmsMaterialsList = []; }
-            }
-
-            // 4. TUGAS & KUIS STORE
-            const existingTugasKuis = localStorage.getItem('balanceaa_tugas_kuis');
-            if (!existingTugasKuis) {
-                const sampleTugasKuis = [
-                    {
-                        id: 'TK-001', category: 'Tugas', authorId: 'G-001', author: 'Nindy Octavia, S.Pd.',
-                        title: 'Tugas Praktik Jurnal Penyesuaian Perusahaan Jasa', kelas: '11 AKL 1', mapel: 'Akuntansi Keuangan',
-                        deadline: '2026-03-25T23:59', maxScore: 100, allowLate: 'Ya', status: 'Dipublikasikan',
-                        instruction: 'Kerjakan soal latihan lembar kerja pada PDF terlampir, lalu unggah file jawaban Anda.',
-                        fileAttachment: 'Soal_Praktik_Penyesuaian.pdf', fileDataUrl: null, questions: []
-                    },
-                    {
-                        id: 'TK-002', category: 'Kuis', authorId: 'G-001', author: 'Nindy Octavia, S.Pd.',
-                        title: 'Kuis Online Keseimbangan Neraca Saldo', kelas: '11 AKL 1', mapel: 'Akuntansi Keuangan',
-                        deadline: '2026-03-28T23:59', duration: 30, maxScore: 100, status: 'Dipublikasikan',
-                        instruction: 'Pilihlah jawaban yang paling tepat dan isi penjelasan singkat.',
-                        questions: [
-                            { id: 'q1', type: 'PG', questionText: 'Saldo normal akun Aset dan Beban berada di posisi?', options: ['Debet', 'Kredit', 'Ekuitas', 'Kewajiban'], correctAnswer: 'Debet', points: 40 },
-                            { id: 'q2', type: 'PG', questionText: 'Jika total debet Rp 5.000.000 dan kredit Rp 5.000.000, maka neraca saldo dinyatakan?', options: ['Tidak Kategori', 'Balance', 'Selisih', 'Rugi'], correctAnswer: 'Balance', points: 40 },
-                            { id: 'q3', type: 'Esai', questionText: 'Jelaskan mengapa akun perlengkapan harus disesuaikan pada akhir periode!', points: 20 }
-                        ]
-                    }
-                ];
-                localStorage.setItem('balanceaa_tugas_kuis', JSON.stringify(sampleTugasKuis));
-                currentTugasKuisList = sampleTugasKuis;
-            } else {
-                try { currentTugasKuisList = JSON.parse(existingTugasKuis); } catch(e) { currentTugasKuisList = []; }
-            }
-
-            // 5. SUBMISSIONS STORE
-            const existingSubmissions = localStorage.getItem('balanceaa_submissions');
-            if (!existingSubmissions) {
-                const sampleSubmissions = [
-                    {
-                        id: 'SUB-001', taskId: 'TK-001', studentId: 'S-101', studentName: 'Ahmad Rizky', studentKelas: '11 AKL 1',
-                        submittedAt: '2026-03-20 14:30', status: 'Sudah Dikumpulkan', fileAttachment: 'Jawaban_Ahmad_Rizky.pdf', fileDataUrl: null,
-                        studentNote: 'Sudah dikerjakan sesuai petunjuk Bu.', score: 90, comment: 'Pencatatan jurnal sudah sangat tepat dan balance.', gradeStatus: 'Dirilis'
-                    }
-                ];
-                localStorage.setItem('balanceaa_submissions', JSON.stringify(sampleSubmissions));
-                currentSubmissionsList = sampleSubmissions;
-            } else {
-                try { currentSubmissionsList = JSON.parse(existingSubmissions); } catch(e) { currentSubmissionsList = []; }
-            }
-        }
-
-        function initHeaderClassMapel() { onGlobalClassChange('11 AKL 1'); }
-
-        function updateSubjectDropdowns(selectedClass) {
-            const globalSub = document.getElementById('globalSubjectSelect');
-            const pMapel = document.getElementById('pMapelSelect');
-            if (!globalSub || !pMapel) return;
-            globalSub.innerHTML = ''; pMapel.innerHTML = '';
-            const mapelList = MAPPING_KELAS_MAPEL[selectedClass] || [];
-            mapelList.forEach(mapel => {
-                const opt1 = document.createElement('option'); opt1.value = mapel; opt1.innerText = mapel; globalSub.appendChild(opt1);
-                const opt2 = document.createElement('option'); opt2.value = mapel; opt2.innerText = mapel; pMapel.appendChild(opt2);
-            });
-        }
-
-        function onGlobalClassChange(selectedClass) {
-            const pKelas = document.getElementById('pKelasSelect');
-            if (pKelas) pKelas.value = selectedClass;
-            updateSubjectDropdowns(selectedClass);
-            const badge = document.getElementById('currentClassBadge');
-            if (badge) badge.innerText = selectedClass;
-            renderAllViewsData();
-        }
-
-        function onGlobalSubjectChange(selectedSubject) {
-            const pMapel = document.getElementById('pMapelSelect');
-            if (pMapel) pMapel.value = selectedSubject;
-            renderAllViewsData();
-        }
-
-        function onPerangkatClassChange(selectedClass) {
-            const gKelas = document.getElementById('globalClassSelect');
-            if (gKelas) gKelas.value = selectedClass;
-            updateSubjectDropdowns(selectedClass);
-            renderAllViewsData();
-        }
-
-        function onPerangkatMapelChange(selectedMapel) {
-            const gMapel = document.getElementById('globalSubjectSelect');
-            if (gMapel) gMapel.value = selectedMapel;
-            renderAllViewsData();
-        }
-
-        function renderAllViewsData() {
-            renderPerangkatTable();
-            renderStudentPerangkatGrid();
-            renderLmsAll();
-            renderEvalQuizList();
-            renderTeacherGradingTable();
-            renderDashboardGuruStats();
-            renderDashboardSiswaStats();
-        }
-
-        // PERBAIKAN LENGKAP PADA INTEGRASI LMS & DYNAMIC FILTER MAPEL
-        function switchLmsSubTab(subTab) {
-            const tabs = ['modul', 'materi', 'tugas'];
-            tabs.forEach(t => {
-                const contentEl = document.getElementById(`lmsContent${t.charAt(0).toUpperCase() + t.slice(1)}`);
-                const btnEl = document.getElementById(`lmsSubTab${t.charAt(0).toUpperCase() + t.slice(1)}`);
-                if (t === subTab) {
-                    if (contentEl) contentEl.classList.remove('hidden');
-                    if (btnEl) {
-                        btnEl.className = 'flex-1 py-2.5 rounded-xl bg-blue-600 text-white transition-all text-center';
-                    }
-                } else {
-                    if (contentEl) contentEl.classList.add('hidden');
-                    if (btnEl) {
-                        btnEl.className = 'flex-1 py-2.5 rounded-xl text-slate-500 hover:bg-slate-100 transition-all text-center';
-                    }
-                }
-            });
-        }
-
-        function renderLmsAll() {
-            let session = {};
-            try { session = JSON.parse(localStorage.getItem('balanceaa_session') || '{}'); } catch(e){}
-            const isGuru = session.role === 'guru';
-            const selectedClass = isGuru ? (document.getElementById('globalClassSelect')?.value || '11 AKL 1') : (session.kelas || '11 AKL 1');
-            const selectedMapel = isGuru ? (document.getElementById('globalSubjectSelect')?.value || MAPPING_KELAS_MAPEL[selectedClass]?.[0] || 'Akuntansi Keuangan') : (MAPPING_KELAS_MAPEL[selectedClass]?.[0] || 'Akuntansi Keuangan');
-
-            const titleEl = document.getElementById('lmsModulMapelTitle');
-            if (titleEl) titleEl.innerText = `${selectedMapel} (${selectedClass})`;
-
-            // 1. RENDER MODUL PEMBELAJARAN
-            const catalogGrid = document.getElementById('lmsModuleCatalogGrid');
-            if (catalogGrid) {
-                let modules = currentLmsModulesList.filter(m => m.mapel === selectedMapel);
-                if (!isGuru) modules = modules.filter(m => m.status === 'Dipublikasikan');
-
-                const countBadge = document.getElementById('lmsModulCountBadge');
-                if (countBadge) countBadge.innerText = `${modules.length} Modul`;
-
-                if (modules.length === 0) {
-                    catalogGrid.innerHTML = `<div class="col-span-full p-8 bg-slate-50 border border-dashed rounded-3xl text-center text-slate-400">Belum ada modul pembelajaran untuk mata pelajaran <b>${selectedMapel}</b> (${selectedClass}).</div>`;
-                } else {
-                    catalogGrid.innerHTML = modules.map(m => `
-                        <div class="bg-white p-5 rounded-3xl border border-blue-100/80 shadow-sm space-y-3 flex flex-col justify-between">
-                            <div class="space-y-1.5">
-                                <div class="flex items-center justify-between">
-                                    <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-blue-100 text-blue-700">Modul #${m.order || 1}</span>
-                                    <span class="text-[10px] font-extrabold ${m.status === 'Dipublikasikan' ? 'text-emerald-600' : 'text-amber-600'}">${m.status}</span>
-                                </div>
-                                <h4 class="font-bold text-sm text-slate-800">${m.title}</h4>
-                                <p class="text-slate-500 text-[11px] leading-snug">${m.desc || 'Materi inti modul pembelajaran akuntansi.'}</p>
-                            </div>
-                            <div class="pt-3 border-t flex items-center justify-between gap-2">
-                                <button onclick="openLmsMaterialForModule('${m.id}')" class="flex-1 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold rounded-xl text-xs"><i class="fa-solid fa-book-open mr-1"></i> Buka Materi</button>
-                                ${isGuru ? `
-                                    <button onclick="deleteLmsModule('${m.id}')" class="p-2 bg-rose-50 text-rose-600 rounded-xl" title="Hapus Modul"><i class="fa-solid fa-trash-can"></i></button>
-                                ` : ''}
-                            </div>
-                        </div>
-                    `).join('');
-                }
-            }
-
-            // 2. RENDER MATERI & VIDEO
-            const materialsContainer = document.getElementById('lmsMaterialsContainer');
-            if (materialsContainer) {
-                let materials = currentLmsMaterialsList.filter(m => m.mapel === selectedMapel);
-                if (!isGuru) materials = materials.filter(m => m.status === 'Dipublikasikan');
-
-                if (materials.length === 0) {
-                    materialsContainer.innerHTML = `<div class="p-8 bg-slate-50 border border-dashed rounded-3xl text-center text-slate-400">Belum ada materi atau video pembelajaran untuk mata pelajaran <b>${selectedMapel}</b>.</div>`;
-                } else {
-                    materialsContainer.innerHTML = materials.map(m => {
-                        const videoEmbed = getYoutubeEmbedUrl(m.videoUrl);
-                        return `
-                            <div class="bg-white p-5 rounded-3xl border border-purple-100 shadow-sm space-y-3">
-                                <div class="flex items-center justify-between">
-                                    <h4 class="font-extrabold text-sm text-slate-800">${m.title}</h4>
-                                    <span class="text-[10px] text-slate-400 font-semibold">${m.updatedAt}</span>
-                                </div>
-                                ${m.text ? `<p class="text-xs text-slate-600 leading-relaxed">${m.text}</p>` : ''}
-                                ${videoEmbed ? `
-                                    <div class="aspect-video w-full rounded-2xl overflow-hidden border border-slate-200">
-                                        <iframe class="w-full h-full" src="${videoEmbed}" title="${m.title}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                                    </div>
-                                ` : ''}
-                            </div>
-                        `;
-                    }).join('');
-                }
-            }
-
-            // 3. RENDER TUGAS DOKUMEN & KUIS (TETAP TERINTEGRASI KONTROL KELAS & MAPEL)
-            renderLmsTaskList();
-        }
-
-        function getYoutubeEmbedUrl(url) {
-            if (!url) return null;
-            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-            const match = url.match(regExp);
-            return (match && match[2].length === 11) ? `https://www.youtube.com/embed/${match[2]}` : null;
-        }
-
-        // AKSI KELOLA MODUL LMS (GURU)
-        function openLmsModuleModal() {
-            document.getElementById('editLmsModuleId').value = '';
-            document.getElementById('fLmsModuleTitle').value = '';
-            document.getElementById('fLmsModuleDesc').value = '';
-            openModal('lmsModuleModal');
-        }
-
-        function saveLmsModule(e) {
-            e.preventDefault();
-            const editId = document.getElementById('editLmsModuleId').value;
-            const title = document.getElementById('fLmsModuleTitle').value;
-            const desc = document.getElementById('fLmsModuleDesc').value;
-            const status = document.getElementById('fLmsModuleStatus').value;
-            const order = parseInt(document.getElementById('fLmsModuleOrder').value) || 1;
-
-            const selectedClass = document.getElementById('globalClassSelect')?.value || '11 AKL 1';
-            const selectedMapel = document.getElementById('globalSubjectSelect')?.value || 'Akuntansi Keuangan';
-
-            const newModule = {
-                id: editId || ('LMOD-' + Date.now().toString().slice(-4)),
-                title, desc, mapel: selectedMapel, kelas: selectedClass,
-                authorId: 'G-001', order, status, updatedAt: new Date().toISOString().split('T')[0]
-            };
-
-            if (editId) {
-                const idx = currentLmsModulesList.findIndex(m => m.id === editId);
-                if (idx >= 0) currentLmsModulesList[idx] = newModule;
-            } else {
-                currentLmsModulesList.push(newModule);
-            }
-
-            localStorage.setItem('balanceaa_lms_modules', JSON.stringify(currentLmsModulesList));
-            closeModal('lmsModuleModal');
-            renderLmsAll();
-            alert('Modul Pembelajaran LMS berhasil disimpan!');
-        }
-
-        function deleteLmsModule(id) {
-            if (confirm('Apakah Anda yakin ingin menghapus modul LMS ini?')) {
-                currentLmsModulesList = currentLmsModulesList.filter(m => m.id !== id);
-                localStorage.setItem('balanceaa_lms_modules', JSON.stringify(currentLmsModulesList));
-                renderLmsAll();
-            }
-        }
-
-        // AKSI KELOLA MATERI & VIDEO LMS (GURU)
-        function openLmsMaterialModal() {
-            const selectedMapel = document.getElementById('globalSubjectSelect')?.value || 'Akuntansi Keuangan';
-            const selectEl = document.getElementById('fLmsMaterialModuleSelect');
-            const availableModules = currentLmsModulesList.filter(m => m.mapel === selectedMapel);
-
-            if (selectEl) {
-                selectEl.innerHTML = availableModules.map(m => `<option value="${m.id}">${m.title}</option>`).join('');
-            }
-
-            document.getElementById('editLmsMaterialId').value = '';
-            document.getElementById('fLmsMaterialTitle').value = '';
-            document.getElementById('fLmsMaterialText').value = '';
-            document.getElementById('fLmsMaterialVideoUrl').value = '';
-            openModal('lmsMaterialModal');
-        }
-
-        function saveLmsMaterial(e) {
-            e.preventDefault();
-            const moduleId = document.getElementById('fLmsMaterialModuleSelect').value;
-            const title = document.getElementById('fLmsMaterialTitle').value;
-            const text = document.getElementById('fLmsMaterialText').value;
-            const videoUrl = document.getElementById('fLmsMaterialVideoUrl').value;
-
-            const selectedClass = document.getElementById('globalClassSelect')?.value || '11 AKL 1';
-            const selectedMapel = document.getElementById('globalSubjectSelect')?.value || 'Akuntansi Keuangan';
-
-            const newMat = {
-                id: 'LMAT-' + Date.now().toString().slice(-4),
-                moduleId, mapel: selectedMapel, kelas: selectedClass, title, text, videoUrl,
-                status: 'Dipublikasikan', updatedAt: new Date().toISOString().split('T')[0]
-            };
-
-            currentLmsMaterialsList.unshift(newMat);
-            localStorage.setItem('balanceaa_lms_materials', JSON.stringify(currentLmsMaterialsList));
-            closeModal('lmsMaterialModal');
-            switchLmsSubTab('materi');
-            renderLmsAll();
-            alert('Materi & Video Pembelajaran berhasil ditambahkan!');
-        }
-
-        function openLmsMaterialForModule(moduleId) {
-            switchLmsSubTab('materi');
-        }
-
-        // PERANGKAT GURU TABLE & EKSISTING LOGIC (TETAP UTUH)
-        function renderPerangkatTable() {
-            const tbody = document.getElementById('perangkatTableBody');
-            if (!tbody) return;
-
-            const selectedClass = document.getElementById('pKelasSelect')?.value || '11 AKL 1';
-            const selectedMapel = document.getElementById('pMapelSelect')?.value || '';
-            const searchText = document.getElementById('perangkatSearchInput')?.value.toLowerCase() || '';
-            const statusFilter = document.getElementById('perangkatStatusFilter')?.value || 'Semua';
-
-            let filtered = currentPerangkatList.filter(item => {
-                const matchClass = item.kelas === selectedClass;
-                const matchMapel = !selectedMapel || item.mapel === selectedMapel;
-                const matchSearch = item.title.toLowerCase().includes(searchText) || item.type.toLowerCase().includes(searchText);
-                const matchStatus = (statusFilter === 'Semua') || (item.status === statusFilter);
-                return matchClass && matchMapel && matchSearch && matchStatus;
-            });
-
-            if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-slate-400 font-medium">Belum ada dokumen perangkat untuk kelas <b>${selectedClass}</b>.</td></tr>`;
-                return;
-            }
-
-            tbody.innerHTML = filtered.map(item => `
-                <tr class="hover:bg-pink-50/40 transition-colors">
-                    <td class="p-3">
-                        <div class="font-bold text-slate-800 cursor-pointer hover:text-pink-600" onclick="previewPerangkatById('${item.id}')">${item.title}</div>
-                        <div class="text-[10px] text-slate-400">Diperbarui: ${item.updatedAt}</div>
-                    </td>
-                    <td class="p-3"><span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-pink-100 text-pink-700">${item.type}</span></td>
-                    <td class="p-3 text-slate-600">
-                        <div class="font-bold">${item.kelas}</div>
-                        <div class="text-[10px] text-slate-400 truncate max-w-[140px]">${item.mapel}</div>
-                    </td>
-                    <td class="p-3">
-                        <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold ${item.status === 'Dipublikasikan' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">
-                            ${item.status}
-                        </span>
-                    </td>
-                    <td class="p-3">
-                        <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold ${item.visibility === 'Siswa' ? 'bg-purple-100 text-purple-700' : 'bg-slate-100 text-slate-600'}">
-                            ${item.visibility === 'Siswa' ? '<i class="fa-solid fa-users mr-1"></i> Siswa' : '<i class="fa-solid fa-lock mr-1"></i> Khusus Guru'}
-                        </span>
-                    </td>
-                    <td class="p-3 text-right space-x-1">
-                        ${item.status === 'Dipublikasikan' && item.visibility === 'Siswa' ? `
-                            <button onclick="togglePublicAccess('${item.id}', false)" class="px-2 py-1 bg-amber-50 hover:bg-amber-100 text-amber-700 font-bold text-[10px] rounded-lg transition-all">
-                                <i class="fa-solid fa-eye-slash mr-1"></i> Tarik Publikasi
-                            </button>
-                        ` : `
-                            <button onclick="togglePublicAccess('${item.id}', true)" class="px-2 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-[10px] rounded-lg transition-all">
-                                <i class="fa-solid fa-share-nodes mr-1"></i> Publikasikan ke Siswa
-                            </button>
-                        `}
-                        <button onclick="editPerangkatById('${item.id}')" title="Edit" class="p-1.5 bg-blue-50 text-blue-600 rounded-lg"><i class="fa-solid fa-pen-to-square text-xs"></i></button>
-                        <button onclick="deletePerangkatById('${item.id}')" title="Hapus" class="p-1.5 bg-rose-50 text-rose-600 rounded-lg"><i class="fa-solid fa-trash-can text-xs"></i></button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function togglePublicAccess(id, publishToStudent) {
-            const doc = currentPerangkatList.find(d => d.id === id);
-            if (!doc) return;
-
-            if (publishToStudent) {
-                doc.status = 'Dipublikasikan';
-                doc.visibility = 'Siswa';
-            } else {
-                doc.visibility = 'Guru';
-            }
-            doc.updatedAt = new Date().toISOString().split('T')[0];
-
-            localStorage.setItem('balanceaa_perangkat_guru', JSON.stringify(currentPerangkatList));
-            renderPerangkatTable();
-            alert(publishToStudent ? `Perangkat "${doc.title}" berhasil dipublikasikan ke siswa kelas ${doc.kelas}!` : `Publikasi perangkat "${doc.title}" telah ditarik.`);
-        }
-
-        function openCreatePerangkatModal() { openFormForType('RPP'); }
-
-        function openFormForType(type) {
-            currentFormType = type;
-            document.getElementById('editDocId').value = '';
-            document.getElementById('modalFormTypeBadge').innerText = type;
-            document.getElementById('modalFormTitle').innerText = 'Buat ' + type + ' Baru';
-
-            const kelas = document.getElementById('pKelasSelect').value;
-            const mapel = document.getElementById('pMapelSelect').value || 'Akuntansi Keuangan';
-            const semester = document.getElementById('pSemesterSelect').value;
-            const ta = document.getElementById('pTahunAjaranSelect').value;
-
-            document.getElementById('formContextKelas').innerText = kelas;
-            document.getElementById('formContextMapel').innerText = mapel;
-            document.getElementById('formContextSemester').innerText = semester;
-            document.getElementById('formContextTA').innerText = ta;
-
-            document.getElementById('fJudul').value = type + ' - ' + mapel + ' (' + kelas + ')';
-            document.getElementById('fStatusSelect').value = 'Dipublikasikan';
-            document.getElementById('fVisibilitySelect').value = 'Siswa';
-
-            uploadedFileMeta = null; uploadedFileDataUrl = null;
-            document.getElementById('uploadedFileName').innerText = 'Belum ada file dipilih';
-
-            renderDynamicFields(type, {});
-            openModal('perangkatFormModal');
-        }
-
-        function renderDynamicFields(type, data) {
-            const container = document.getElementById('dynamicFormFields');
-            if (!container) return;
-
-            if (type === 'RPP') {
-                container.innerHTML = `
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div><label class="block font-bold text-slate-600 mb-1">Alokasi Waktu</label><input type="text" id="fAlokasiWaktu" value="${data.alokasiWaktu || '2 JP x 45 Menit'}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2"></div>
-                        <div><label class="block font-bold text-slate-600 mb-1">Metode Pembelajaran</label><input type="text" id="fMetode" value="${data.metodePembelajaran || 'Problem-Based Learning'}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2"></div>
-                    </div>
-                    <div><label class="block font-bold text-slate-600 mb-1">Tujuan Pembelajaran</label><textarea id="fTujuan" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5">${data.tujuanPembelajaran || 'Siswa mampu menganalisis transaksi keuangan secara sistematis.'}</textarea></div>
-                    <div><label class="block font-bold text-slate-600 mb-1">Langkah Kegiatan</label><textarea id="fLangkah" rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5">${data.langkahAktivitas || '1. Pendahuluan (15 mnt)\n2. Diskusi Studi Kasus (60 mnt)\n3. Penutup (15 mnt)'}</textarea></div>
-                `;
-            } else if (type === 'Modul Ajar') {
-                container.innerHTML = `
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div><label class="block font-bold text-slate-600 mb-1">Kompetensi Awal</label><input type="text" id="fKompetensiAwal" value="${data.kompetensiAwal || 'Memahami saldo normal akun'}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2"></div>
-                        <div><label class="block font-bold text-slate-600 mb-1">Profil Pelajar Pancasila</label><input type="text" id="fProfilPancasila" value="${data.profilPancasila || 'Bernalar Kritis, Mandiri'}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2"></div>
-                    </div>
-                    <div><label class="block font-bold text-slate-600 mb-1">Pemahaman Bermakna</label><input type="text" id="fPemahamanBermakna" value="${data.pemahamanBermakna || 'Penyesuaian penting untuk menyajikan nilai riil laporan.'}" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2"></div>
-                `;
-            } else {
-                container.innerHTML = `
-                    <div><label class="block font-bold text-slate-600 mb-1">Ringkasan Uraian / Konten Perangkat</label><textarea id="fUraianMateri" rows="4" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5">${data.uraianMateri || 'Materi pembelajaran mencakup transaksi keuangan, analisis jurnal, serta posting ke buku besar.'}</textarea></div>
-                `;
-            }
-        }
-
-        function handleFileUpload(event) {
-            const file = event.target.files[0];
-            const filenameEl = document.getElementById('uploadedFileName');
-            if (!file) return;
-
-            uploadedFileMeta = file.name;
-            const reader = new FileReader();
-            reader.onload = function(e) { uploadedFileDataUrl = e.target.result; };
-            reader.readAsDataURL(file);
-
-            if (filenameEl) filenameEl.innerText = file.name;
-        }
-
-        function savePerangkat(status, visibility) {
-            const title = document.getElementById('fJudul').value.trim();
-            if (!title) { alert('Judul wajib diisi!'); return; }
-
-            const docId = document.getElementById('editDocId').value || ('DOC-' + Date.now().toString().slice(-4));
-            const kelas = document.getElementById('pKelasSelect').value;
-            const mapel = document.getElementById('pMapelSelect').value || 'Akuntansi Keuangan';
-
-            const selectedStatus = status || document.getElementById('fStatusSelect').value;
-            const selectedVisibility = visibility || document.getElementById('fVisibilitySelect').value;
-
-            const existingDoc = currentPerangkatList.find(d => d.id === docId);
-
-            const newDoc = {
-                id: docId,
-                authorId: 'G-001',
-                author: 'Nindy Octavia, S.Pd.',
-                title: title,
-                type: currentFormType,
-                kelas: kelas,
-                mapel: mapel,
-                semester: document.getElementById('pSemesterSelect').value,
-                tahunAjaran: document.getElementById('pTahunAjaranSelect').value,
-                createdAt: existingDoc ? existingDoc.createdAt : new Date().toISOString().split('T')[0],
-                updatedAt: new Date().toISOString().split('T')[0],
-                status: selectedStatus,
-                visibility: selectedVisibility,
-                fileAttachment: uploadedFileMeta || (existingDoc ? existingDoc.fileAttachment : null),
-                fileDataUrl: uploadedFileDataUrl || (existingDoc ? existingDoc.fileDataUrl : null),
-                content: {
-                    alokasiWaktu: document.getElementById('fAlokasiWaktu')?.value,
-                    metodePembelajaran: document.getElementById('fMetode')?.value,
-                    tujuanPembelajaran: document.getElementById('fTujuan')?.value,
-                    langkahAktivitas: document.getElementById('fLangkah')?.value,
-                    kompetensiAwal: document.getElementById('fKompetensiAwal')?.value,
-                    profilPancasila: document.getElementById('fProfilPancasila')?.value,
-                    pemahamanBermakna: document.getElementById('fPemahamanBermakna')?.value,
-                    uraianMateri: document.getElementById('fUraianMateri')?.value
-                }
-            };
-
-            const existingIdx = currentPerangkatList.findIndex(d => d.id === docId);
-            if (existingIdx >= 0) { currentPerangkatList[existingIdx] = newDoc; }
-            else { currentPerangkatList.unshift(newDoc); }
-
-            localStorage.setItem('balanceaa_perangkat_guru', JSON.stringify(currentPerangkatList));
-            renderPerangkatTable();
-            closePerangkatModal();
-            alert(`Perangkat berhasil disimpan! (${selectedStatus} - Visibilitas: ${selectedVisibility})`);
-        }
-
-        function closePerangkatModal() { closeModal('perangkatFormModal'); }
-
-        function editPerangkatById(id) {
-            const doc = currentPerangkatList.find(d => d.id === id);
-            if (!doc) return;
-
-            currentFormType = doc.type;
-            document.getElementById('editDocId').value = doc.id;
-            document.getElementById('modalFormTypeBadge').innerText = doc.type;
-            document.getElementById('modalFormTitle').innerText = 'Edit ' + doc.type;
-            document.getElementById('fJudul').value = doc.title;
-            document.getElementById('fStatusSelect').value = doc.status;
-            document.getElementById('fVisibilitySelect').value = doc.visibility;
-
-            uploadedFileMeta = doc.fileAttachment;
-            uploadedFileDataUrl = doc.fileDataUrl || null;
-            document.getElementById('uploadedFileName').innerText = doc.fileAttachment || 'Belum ada file dipilih';
-
-            renderDynamicFields(doc.type, doc.content || {});
-            openModal('perangkatFormModal');
-        }
-
-        function deletePerangkatById(id) {
-            if (confirm('Apakah Anda yakin ingin menghapus perangkat ini?')) {
-                currentPerangkatList = currentPerangkatList.filter(d => d.id !== id);
-                localStorage.setItem('balanceaa_perangkat_guru', JSON.stringify(currentPerangkatList));
-                renderPerangkatTable();
-            }
-        }
-
-        function previewPerangkatById(id) {
-            const doc = currentPerangkatList.find(d => d.id === id);
-            if (!doc) return;
-
-            let html = `
-                <div class="text-center border-b pb-4 mb-6">
-                    <h1 class="text-xl font-bold uppercase">PERANGKAT PEMBELAJARAN SMK AKL</h1>
-                    <h2 class="text-sm font-semibold text-pink-600">${doc.type} - BALANCEAA</h2>
-                </div>
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-4 rounded-xl border mb-6 font-semibold">
-                    <div><span class="block text-slate-400 font-normal">Judul:</span> ${doc.title}</div>
-                    <div><span class="block text-slate-400 font-normal">Kelas:</span> ${doc.kelas}</div>
-                    <div><span class="block text-slate-400 font-normal">Mapel:</span> ${doc.mapel}</div>
-                    <div><span class="block text-slate-400 font-normal">Pembuat:</span> ${doc.author || 'Guru'}</div>
-                </div>
-                <div class="space-y-4">
-                    ${doc.content?.tujuanPembelajaran ? `<div class="p-4 bg-slate-50 rounded-xl"><b>Tujuan Pembelajaran:</b> <p>${doc.content.tujuanPembelajaran}</p></div>` : ''}
-                    ${doc.content?.langkahAktivitas ? `<div class="p-4 bg-slate-50 rounded-xl"><b>Langkah Kegiatan:</b> <p class="whitespace-pre-line">${doc.content.langkahAktivitas}</p></div>` : ''}
-                    ${doc.content?.uraianMateri ? `<div class="p-4 bg-slate-50 rounded-xl"><b>Uraian Materi:</b> <p>${doc.content.uraianMateri}</p></div>` : ''}
-                </div>
-            `;
-
-            if (doc.fileAttachment) {
-                html += `
-                    <div class="mt-6 pt-6 border-t flex items-center justify-between bg-pink-50/50 p-4 rounded-2xl">
-                        <span class="font-bold text-slate-700"><i class="fa-solid fa-file-pdf text-rose-500 mr-2"></i> ${doc.fileAttachment}</span>
-                        <button onclick="downloadMockDocument('${doc.fileAttachment}', '${doc.title}')" class="px-3.5 py-2 bg-pink-500 text-white font-bold rounded-xl text-xs"><i class="fa-solid fa-download"></i> Unduh Berkas</button>
-                    </div>
-                `;
-            }
-
-            document.getElementById('previewModalContent').innerHTML = html;
-            openModal('perangkatPreviewModal');
-        }
-
-        function triggerPrintFromModal() {
-            document.getElementById('printArea').innerHTML = document.getElementById('previewModalContent').innerHTML;
-            window.print();
-        }
-
-        function downloadMockDocument(filename, title) {
-            const dummyText = `=== BALANCEAA SMK AKL ===\nJudul: ${title}\nFilename: ${filename}\nStatus: Terverifikasi Sistem`;
-            const blob = new Blob([dummyText], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a'); a.href = url; a.download = filename;
-            document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
-        }
-
-        function renderStudentPerangkatGrid() {
-            const grid = document.getElementById('studentPerangkatGrid');
-            if (!grid) return;
-            let session = {};
-            try { session = JSON.parse(localStorage.getItem('balanceaa_session') || '{}'); } catch(e){}
-            const studentClass = session.kelas || '11 AKL 1';
-
-            let allowedDocs = currentPerangkatList.filter(doc => doc.kelas === studentClass && doc.status === 'Dipublikasikan' && doc.visibility === 'Siswa');
-            if (allowedDocs.length === 0) {
-                grid.innerHTML = `<div class="col-span-full p-6 bg-white rounded-3xl text-center text-slate-400">Belum ada perangkat pembelajaran yang dibagikan untuk kelas ${studentClass}.</div>`;
-                return;
-            }
-            grid.innerHTML = allowedDocs.map(doc => `
-                <div class="bg-white p-5 rounded-3xl border shadow-sm space-y-3">
-                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-purple-100 text-purple-700">${doc.type}</span>
-                    <h4 class="font-bold text-sm text-slate-800">${doc.title}</h4>
-                    <p class="text-xs text-slate-500">${doc.mapel}</p>
-                    <button onclick="previewPerangkatById('${doc.id}')" class="w-full py-2 bg-purple-50 text-purple-700 font-bold rounded-xl text-xs"><i class="fa-solid fa-eye mr-1"></i> Lihat Dokumen</button>
-                </div>
-            `).join('');
-        }
-
-        function renderDashboardGuruStats() {
-            const currentClass = document.getElementById('globalClassSelect')?.value || '11 AKL 1';
-            const dashClass = document.getElementById('dashClassText');
-            if (dashClass) dashClass.innerText = currentClass;
-
-            const activeTasks = currentTugasKuisList.filter(t => t.category === 'Tugas' && t.kelas === currentClass && t.status === 'Dipublikasikan');
-            const activeQuizzes = currentTugasKuisList.filter(t => t.category === 'Kuis' && t.kelas === currentClass && t.status === 'Dipublikasikan');
-            const submissions = currentSubmissionsList.filter(s => s.studentKelas === currentClass);
-            const pendingGrades = currentSubmissionsList.filter(s => s.studentKelas === currentClass && s.gradeStatus !== 'Dirilis');
-
-            document.getElementById('statTugasAktif').innerText = activeTasks.length;
-            document.getElementById('statKuisAktif').innerText = activeQuizzes.length;
-            document.getElementById('statPengumpulan').innerText = submissions.length;
-            document.getElementById('statPendingPenilaian').innerText = pendingGrades.length;
-
-            const container = document.getElementById('dashTeacherNotificationList');
-            if (!container) return;
-
-            if (submissions.length === 0) {
-                container.innerHTML = `<p class="text-slate-400 italic">Belum ada aktivitas pengumpulan dari siswa kelas ${currentClass}.</p>`;
-                return;
-            }
-
-            container.innerHTML = submissions.slice(0, 3).map(s => {
-                const task = currentTugasKuisList.find(t => t.id === s.taskId);
-                return `
-                    <div class="p-3 bg-purple-50/50 rounded-2xl border border-purple-100 flex items-center justify-between">
-                        <div>
-                            <p class="font-bold text-slate-800">${s.studentName} <span class="text-purple-600">(${s.status})</span></p>
-                            <p class="text-[11px] text-slate-500">${task ? task.title : 'Tugas'} • ${s.submittedAt}</p>
-                        </div>
-                        <button onclick="openGradeSubmissionModal('${s.id}')" class="px-3 py-1 bg-purple-600 text-white font-bold text-[10px] rounded-lg">Koreksi</button>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function renderDashboardSiswaStats() {
-            let session = {};
-            try { session = JSON.parse(localStorage.getItem('balanceaa_session') || '{}'); } catch(e){}
-            const studentClass = session.kelas || '11 AKL 1';
-            const studentId = session.id || 'S-101';
-
-            const activeTasks = currentTugasKuisList.filter(t => t.kelas === studentClass && t.status === 'Dipublikasikan');
-            const mySubmissions = currentSubmissionsList.filter(s => s.studentId === studentId);
-
-            const taskListEl = document.getElementById('dashStudentTaskList');
-            const gradeListEl = document.getElementById('dashStudentGradeList');
-
-            if (taskListEl) {
-                if (activeTasks.length === 0) {
-                    taskListEl.innerHTML = `<p class="text-slate-400 italic">Tidak ada tugas aktif untuk kelas ${studentClass}.</p>`;
-                } else {
-                    taskListEl.innerHTML = activeTasks.map(t => {
-                        const sub = mySubmissions.find(s => s.taskId === t.id);
-                        const isDone = !!sub;
-                        return `
-                            <div class="p-3 bg-slate-50 rounded-2xl border flex items-center justify-between">
-                                <div>
-                                    <span class="px-2 py-0.5 rounded text-[9px] font-bold ${t.category === 'Kuis' ? 'bg-emerald-100 text-emerald-700' : 'bg-blue-100 text-blue-700'}">${t.category}</span>
-                                    <h4 class="font-bold text-slate-800 mt-1">${t.title}</h4>
-                                    <p class="text-[10px] text-slate-400">Tenggat: ${t.deadline.replace('T', ' ')}</p>
-                                </div>
-                                <div>
-                                    ${isDone ? `<span class="px-2 py-1 bg-emerald-100 text-emerald-700 rounded-lg text-[10px] font-bold">Selesai</span>` : `
-                                        <button onclick="${t.category === 'Kuis' ? `startStudentQuiz('${t.id}')` : `openSubmitTaskModal('${t.id}')`}" class="px-3 py-1 bg-purple-600 text-white font-bold text-[10px] rounded-lg">Kerjakan</button>
-                                    `}
-                                </div>
-                            </div>
-                        `;
-                    }).join('');
-                }
-            }
-
-            if (gradeListEl) {
-                const releasedGrades = mySubmissions.filter(s => s.gradeStatus === 'Dirilis');
-                if (releasedGrades.length === 0) {
-                    gradeListEl.innerHTML = `<p class="text-slate-400 italic">Belum ada nilai yang dirilis oleh guru.</p>`;
-                } else {
-                    gradeListEl.innerHTML = releasedGrades.map(s => {
-                        const task = currentTugasKuisList.find(t => t.id === s.taskId);
-                        return `
-                            <div class="p-3 bg-pink-50/50 rounded-2xl border border-pink-100 flex items-center justify-between">
-                                <div>
-                                    <h4 class="font-bold text-slate-800">${task ? task.title : 'Tugas'}</h4>
-                                    <p class="text-[10px] text-slate-500">Komentar Guru: "${s.comment || 'Sangat baik'}"</p>
-                                </div>
-                                <span class="text-base font-extrabold text-pink-600">${s.score} / 100</span>
-                            </div>
-                        `;
-                    }).join('');
-                }
-            }
-        }
-
-        function renderLmsTaskList() {
-            const container = document.getElementById('lmsTaskList');
-            if (!container) return;
-            let session = {};
-            try { session = JSON.parse(localStorage.getItem('balanceaa_session') || '{}'); } catch(e){}
-            const isGuru = session.role === 'guru';
-            const userClass = isGuru ? (document.getElementById('globalClassSelect')?.value || '11 AKL 1') : (session.kelas || '11 AKL 1');
-            const userMapel = isGuru ? (document.getElementById('globalSubjectSelect')?.value || 'Akuntansi Keuangan') : (MAPPING_KELAS_MAPEL[userClass]?.[0] || 'Akuntansi Keuangan');
-
-            let tasks = currentTugasKuisList.filter(t => t.category === 'Tugas' && t.kelas === userClass && t.mapel === userMapel);
-            if (!isGuru) tasks = tasks.filter(t => t.status === 'Dipublikasikan');
-
-            if (tasks.length === 0) {
-                container.innerHTML = `<div class="col-span-full p-6 text-center text-slate-400">Belum ada tugas dokumen untuk mata pelajaran <b>${userMapel}</b> (${userClass}).</div>`;
-                return;
-            }
-
-            container.innerHTML = tasks.map(t => {
-                const mySub = currentSubmissionsList.find(s => s.taskId === t.id && s.studentId === session.id);
-                return `
-                    <div class="bg-white p-5 rounded-3xl border border-blue-100/80 shadow-sm space-y-3 flex flex-col justify-between">
-                        <div class="space-y-1.5">
-                            <div class="flex items-center justify-between">
-                                <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-blue-100 text-blue-700">Tugas Dokumen</span>
-                                <span class="text-[10px] font-extrabold ${t.status === 'Dipublikasikan' ? 'text-emerald-600' : 'text-amber-600'}">${t.status}</span>
-                            </div>
-                            <h4 class="font-bold text-sm text-slate-800">${t.title}</h4>
-                            <p class="text-slate-500 text-[11px] leading-snug">${t.instruction || '-'}</p>
-                            <p class="text-[10px] text-slate-400 font-semibold"><i class="fa-regular fa-clock mr-1"></i> Tenggat: ${t.deadline.replace('T', ' ')}</p>
-                        </div>
-                        <div class="pt-3 border-t flex items-center justify-between gap-2">
-                            ${isGuru ? `
-                                <button onclick="openTaskSubmissions('${t.id}')" class="w-full py-2 bg-blue-600 text-white font-bold rounded-xl text-xs">Lihat Pengumpulan</button>
-                            ` : `
-                                ${mySub ? `<span class="px-3 py-1.5 bg-emerald-100 text-emerald-700 font-bold rounded-xl text-xs"><i class="fa-solid fa-circle-check mr-1"></i> Terkumpul (${mySub.score !== null ? 'Nilai: ' + mySub.score : 'Belum Dinilai'})</span>` : `
-                                    <button onclick="openSubmitTaskModal('${t.id}')" class="w-full py-2 bg-blue-600 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1"><i class="fa-solid fa-upload"></i> Unggah Jawaban Saya</button>
-                                `}
-                            `}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function renderEvalQuizList() {
-            const container = document.getElementById('evalQuizList');
-            if (!container) return;
-            let session = {};
-            try { session = JSON.parse(localStorage.getItem('balanceaa_session') || '{}'); } catch(e){}
-            const isGuru = session.role === 'guru';
-            const userClass = isGuru ? (document.getElementById('globalClassSelect')?.value || '11 AKL 1') : (session.kelas || '11 AKL 1');
-
-            let quizzes = currentTugasKuisList.filter(t => t.category === 'Kuis' && t.kelas === userClass);
-            if (!isGuru) quizzes = quizzes.filter(t => t.status === 'Dipublikasikan');
-
-            if (quizzes.length === 0) {
-                container.innerHTML = `<div class="col-span-full p-6 text-center text-slate-400">Belum ada kuis online untuk kelas ${userClass}.</div>`;
-                return;
-            }
-
-            container.innerHTML = quizzes.map(q => {
-                const mySub = currentSubmissionsList.find(s => s.taskId === q.id && s.studentId === session.id);
-                return `
-                    <div class="bg-white p-5 rounded-3xl border border-emerald-100/80 shadow-sm space-y-3 flex flex-col justify-between">
-                        <div class="space-y-1.5">
-                            <div class="flex items-center justify-between">
-                                <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-emerald-100 text-emerald-700">Kuis Online</span>
-                                <span class="text-[10px] font-semibold text-slate-400">${q.duration || 30} Menit</span>
-                            </div>
-                            <h4 class="font-bold text-sm text-slate-800">${q.title}</h4>
-                            <p class="text-slate-500 text-[11px]">${q.questions ? q.questions.length : 0} Soal Evaluasi</p>
-                        </div>
-                        <div class="pt-3 border-t">
-                            ${isGuru ? `
-                                <button onclick="openTaskSubmissions('${q.id}')" class="w-full py-2 bg-emerald-600 text-white font-bold rounded-xl text-xs"><i class="fa-solid fa-list-check mr-1"></i> Hasil Kuis Siswa</button>
-                            ` : `
-                                ${mySub ? `<span class="block text-center py-2 bg-emerald-100 text-emerald-700 font-bold rounded-xl text-xs">Kuis Selesai (Skor: ${mySub.score || 0})</span>` : `
-                                    <button onclick="startStudentQuiz('${q.id}')" class="w-full py-2 bg-emerald-600 text-white font-bold rounded-xl text-xs"><i class="fa-solid fa-play mr-1"></i> Mulai Kerjakan Kuis</button>
-                                `}
-                            `}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function renderTeacherGradingTable() {
-            const tbody = document.getElementById('teacherGradingTableBody');
-            if (!tbody) return;
-            const currentClass = document.getElementById('globalClassSelect')?.value || '11 AKL 1';
-
-            const classSubs = currentSubmissionsList.filter(s => s.studentKelas === currentClass);
-            if (classSubs.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-slate-400">Belum ada pengumpulan jawaban dari siswa kelas ${currentClass}.</td></tr>`;
-                return;
-            }
-
-            tbody.innerHTML = classSubs.map(s => {
-                const task = currentTugasKuisList.find(t => t.id === s.taskId);
-                return `
-                    <tr class="hover:bg-slate-50">
-                        <td class="p-3 font-bold text-slate-800">${s.studentName}</td>
-                        <td class="p-3 text-slate-600">${task ? task.title : 'Tugas/Kuis'}</td>
-                        <td class="p-3 text-slate-400 text-[11px]">${s.submittedAt}</td>
-                        <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-700">${s.status}</span></td>
-                        <td class="p-3 font-extrabold text-emerald-600 text-sm">${s.score !== null ? s.score : '-'} / 100</td>
-                        <td class="p-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold ${s.gradeStatus === 'Dirilis' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">${s.gradeStatus}</span></td>
-                        <td class="p-3 text-right">
-                            <button onclick="openGradeSubmissionModal('${s.id}')" class="px-3 py-1.5 bg-emerald-600 text-white font-bold text-xs rounded-xl shadow-xs"><i class="fa-solid fa-pen-to-square mr-1"></i> Nilai</button>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-        }
-
-        function openCreateTugasModal() {
-            document.getElementById('editTaskId').value = '';
-            document.getElementById('fTaskTitle').value = '';
-            document.getElementById('fTaskInstruction').value = '';
-            document.getElementById('taskFileNameLabel').innerText = 'Belum ada file dipilih';
-            uploadedFileTaskMeta = null; uploadedFileTaskDataUrl = null;
-            openModal('tugasFormModal');
-        }
-
-        function handleTaskFileUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            uploadedFileTaskMeta = file.name;
-            const reader = new FileReader();
-            reader.onload = function(e) { uploadedFileTaskDataUrl = e.target.result; };
-            reader.readAsDataURL(file);
-            document.getElementById('taskFileNameLabel').innerText = file.name;
-        }
-
-        function saveTugas(e) {
-            e.preventDefault();
-            const editId = document.getElementById('editTaskId').value;
-            const title = document.getElementById('fTaskTitle').value;
-            const kelas = document.getElementById('fTaskKelas').value;
-            const mapel = document.getElementById('fTaskMapel').value;
-            const deadline = document.getElementById('fTaskDeadline').value;
-            const maxScore = parseFloat(document.getElementById('fTaskMaxScore').value) || 100;
-            const instruction = document.getElementById('fTaskInstruction').value;
-            const status = document.getElementById('fTaskStatus').value;
-            const allowLate = document.getElementById('fTaskAllowLate').value;
-
-            const newObj = {
-                id: editId || ('TK-' + Date.now().toString().slice(-4)),
-                category: 'Tugas', authorId: 'G-001', author: 'Nindy Octavia, S.Pd.',
-                title, kelas, mapel, deadline, maxScore, instruction, status, allowLate,
-                fileAttachment: uploadedFileTaskMeta || 'Soal_Tugas.pdf', fileDataUrl: uploadedFileTaskDataUrl
-            };
-
-            if (editId) {
-                const idx = currentTugasKuisList.findIndex(t => t.id === editId);
-                if (idx >= 0) currentTugasKuisList[idx] = newObj;
-            } else {
-                currentTugasKuisList.unshift(newObj);
-            }
-
-            localStorage.setItem('balanceaa_tugas_kuis', JSON.stringify(currentTugasKuisList));
-            closeModal('tugasFormModal');
-            renderAllViewsData();
-            alert('Tugas Dokumen berhasil disimpan!');
-        }
-
-        let quizQuestionCount = 0;
-        function openCreateKuisModal() {
-            document.getElementById('quizQuestionBuilder').innerHTML = '';
-            quizQuestionCount = 0;
-            addQuestionField();
-            openModal('kuisFormModal');
-        }
-
-        function addQuestionField() {
-            quizQuestionCount++;
-            const container = document.getElementById('quizQuestionBuilder');
-            const card = document.createElement('div');
-            card.className = 'p-3 bg-slate-50 border rounded-2xl space-y-2';
-            card.innerHTML = `
-                <div class="flex items-center justify-between">
-                    <span class="font-bold text-slate-700">Soal #${quizQuestionCount}</span>
-                    <select class="q-type border rounded-lg px-2 py-1 bg-white font-bold text-emerald-700">
-                        <option value="PG">Pilihan Ganda (Auto Score)</option>
-                        <option value="Esai">Esai / Jurnal (Manual)</option>
-                    </select>
-                </div>
-                <input type="text" placeholder="Teks Pertanyaan Soal..." class="q-text w-full border rounded-xl px-3 py-1.5 bg-white outline-none" required>
-                <div class="grid grid-cols-2 gap-2">
-                    <input type="text" placeholder="Pilihan A, B, C, D (Pisahkan Koma)" class="q-options w-full border rounded-xl px-3 py-1.5 bg-white outline-none">
-                    <input type="text" placeholder="Kunci Jawaban Tepat" class="q-key w-full border rounded-xl px-3 py-1.5 bg-white outline-none">
-                </div>
-            `;
-            container.appendChild(card);
-        }
-
-        function saveKuis(e) {
-            e.preventDefault();
-            const title = document.getElementById('fQuizTitle').value;
-            const kelas = document.getElementById('fQuizKelas').value;
-            const duration = parseInt(document.getElementById('fQuizDuration').value) || 30;
-            const status = document.getElementById('fQuizStatus').value;
-
-            const cards = document.querySelectorAll('#quizQuestionBuilder > div');
-            const questions = [];
-            cards.forEach((c, idx) => {
-                const qType = c.querySelector('.q-type').value;
-                const qText = c.querySelector('.q-text').value;
-                const qOptions = c.querySelector('.q-options').value.split(',').map(s => s.trim());
-                const qKey = c.querySelector('.q-key').value;
-                questions.push({ id: 'q_' + idx, type: qType, questionText: qText, options: qOptions, correctAnswer: qKey, points: 20 });
-            });
-
-            const newObj = {
-                id: 'TK-' + Date.now().toString().slice(-4),
-                category: 'Kuis', authorId: 'G-001', author: 'Nindy Octavia, S.Pd.',
-                title, kelas, mapel: 'Akuntansi Keuangan', deadline: '2026-04-01T23:59',
-                duration, maxScore: 100, status, questions
-            };
-
-            currentTugasKuisList.unshift(newObj);
-            localStorage.setItem('balanceaa_tugas_kuis', JSON.stringify(currentTugasKuisList));
-            closeModal('kuisFormModal');
-            renderAllViewsData();
-            alert('Kuis Online berhasil disimpan!');
-        }
-
-        function openSubmitTaskModal(taskId) {
-            const task = currentTugasKuisList.find(t => t.id === taskId);
-            if (!task) return;
-            document.getElementById('submitTaskId').value = taskId;
-            document.getElementById('submitTaskDetail').innerHTML = `
-                <p class="font-bold text-slate-800">${task.title}</p>
-                <p class="text-[11px] text-slate-500">${task.instruction}</p>
-                <p class="text-[10px] text-rose-500 font-bold">Tenggat: ${task.deadline.replace('T', ' ')}</p>
-            `;
-            openModal('kumpulTugasModal');
-        }
-
-        function handleStudentFileUpload(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-            uploadedFileStudentMeta = file.name;
-            const reader = new FileReader();
-            reader.onload = function(evt) { uploadedFileStudentDataUrl = evt.target.result; };
-            reader.readAsDataURL(file);
-        }
-
-        function submitTaskAnswer(e) {
-            e.preventDefault();
-            let session = {};
-            try { session = JSON.parse(localStorage.getItem('balanceaa_session') || '{}'); } catch(e){}
-            const taskId = document.getElementById('submitTaskId').value;
-            const note = document.getElementById('fStudentAnswerNote').value;
-
-            const subObj = {
-                id: 'SUB-' + Date.now().toString().slice(-4),
-                taskId, studentId: session.id || 'S-101', studentName: session.name || 'Ahmad Rizky', studentKelas: session.kelas || '11 AKL 1',
-                submittedAt: new Date().toLocaleString('id-ID'), status: 'Sudah Dikumpulkan',
-                fileAttachment: uploadedFileStudentMeta || 'Jawaban_Tugas.pdf', fileDataUrl: uploadedFileStudentDataUrl,
-                studentNote: note, score: null, comment: '', gradeStatus: 'Draft Nilai'
-            };
-
-            currentSubmissionsList.unshift(subObj);
-            localStorage.setItem('balanceaa_submissions', JSON.stringify(currentSubmissionsList));
-            closeModal('kumpulTugasModal');
-            renderAllViewsData();
-            alert('Jawaban tugas berhasil diunggah!');
-        }
-
-        function startStudentQuiz(quizId) {
-            const quiz = currentTugasKuisList.find(q => q.id === quizId);
-            if (!quiz) return;
-            document.getElementById('takeQuizId').value = quizId;
-            document.getElementById('takeQuizTitle').innerText = quiz.title;
-
-            const container = document.getElementById('takeQuizQuestionsContainer');
-            container.innerHTML = (quiz.questions || []).map((q, idx) => `
-                <div class="p-4 bg-slate-50 rounded-2xl border space-y-2">
-                    <p class="font-bold text-slate-800">${idx + 1}. ${q.questionText}</p>
-                    ${q.type === 'PG' ? `
-                        <div class="space-y-1">
-                            ${(q.options || []).map(opt => `
-                                <label class="flex items-center gap-2 p-2 bg-white rounded-xl border hover:bg-emerald-50 cursor-pointer">
-                                    <input type="radio" name="q_ans_${q.id}" value="${opt}" required>
-                                    <span>${opt}</span>
-                                </label>
-                            `).join('')}
-                        </div>
-                    ` : `
-                        <textarea name="q_ans_${q.id}" rows="3" class="w-full bg-white border rounded-xl p-2.5 outline-none" placeholder="Tuliskan jawaban esai atau analisis jurnal Anda..." required></textarea>
-                    `}
-                </div>
-            `).join('');
-
-            openModal('kerjakanKuisModal');
-        }
-
-        function submitQuizAnswers(e) {
-            e.preventDefault();
-            let session = {};
-            try { session = JSON.parse(localStorage.getItem('balanceaa_session') || '{}'); } catch(e){}
-            const quizId = document.getElementById('takeQuizId').value;
-            const quiz = currentTugasKuisList.find(q => q.id === quizId);
-
-            let autoScore = 0;
-            (quiz.questions || []).forEach(q => {
-                const selected = document.querySelector(`[name="q_ans_${q.id}"]:checked`) || document.querySelector(`[name="q_ans_${q.id}"]`);
-                if (q.type === 'PG' && selected && selected.value === q.correctAnswer) {
-                    autoScore += q.points;
-                }
-            });
-
-            const subObj = {
-                id: 'SUB-' + Date.now().toString().slice(-4),
-                taskId: quizId, studentId: session.id || 'S-101', studentName: session.name || 'Ahmad Rizky', studentKelas: session.kelas || '11 AKL 1',
-                submittedAt: new Date().toLocaleString('id-ID'), status: 'Selesai Kuis',
-                score: autoScore, comment: 'Kuis dinilai otomatis untuk PG.', gradeStatus: 'Dirilis'
-            };
-
-            currentSubmissionsList.unshift(subObj);
-            localStorage.setItem('balanceaa_submissions', JSON.stringify(currentSubmissionsList));
-            closeModal('kerjakanKuisModal');
-            renderAllViewsData();
-            alert(`Kuis selesai dikirim! Skor awal Pilihan Ganda: ${autoScore}`);
-        }
-
-        function openGradeSubmissionModal(subId) {
-            const sub = currentSubmissionsList.find(s => s.id === subId);
-            if (!sub) return;
-            document.getElementById('gradeSubmissionId').value = subId;
-            document.getElementById('gradeSubmissionInfo').innerHTML = `
-                <p class="font-bold text-slate-800">${sub.studentName} (${sub.studentKelas})</p>
-                <p class="text-[11px] text-slate-500">Dikumpulkan: ${sub.submittedAt}</p>
-                ${sub.fileAttachment ? `<p class="text-[11px] text-blue-600 font-bold"><i class="fa-solid fa-paperclip"></i> ${sub.fileAttachment}</p>` : ''}
-            `;
-            document.getElementById('fGradeScore').value = sub.score || 85;
-            document.getElementById('fGradeComment').value = sub.comment || '';
-            document.getElementById('fGradeStatus').value = sub.gradeStatus || 'Dirilis';
-            openModal('penilaianModal');
-        }
-
-        function saveTeacherGrade(e) {
-            e.preventDefault();
-            const subId = document.getElementById('gradeSubmissionId').value;
-            const score = parseFloat(document.getElementById('fGradeScore').value) || 0;
-            const comment = document.getElementById('fGradeComment').value;
-            const status = document.getElementById('fGradeStatus').value;
-
-            const idx = currentSubmissionsList.findIndex(s => s.id === subId);
-            if (idx >= 0) {
-                currentSubmissionsList[idx].score = score;
-                currentSubmissionsList[idx].comment = comment;
-                currentSubmissionsList[idx].gradeStatus = status;
-                localStorage.setItem('balanceaa_submissions', JSON.stringify(currentSubmissionsList));
-            }
-
-            closeModal('penilaianModal');
-            renderAllViewsData();
-            alert('Penilaian berhasil disimpan!');
-        }
-
-        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
-        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
-
-        function switchTab(tabName) {
-            let session = {};
-            try { session = JSON.parse(localStorage.getItem('balanceaa_session') || '{}'); } catch(e){}
-
-            if (session.role === 'siswa' && tabName === 'perangkat') {
-                alert('Akses Ditolak: Halaman Perangkat Guru hanya dapat dibuka oleh Guru.');
-                return;
-            }
-
-            const views = ['dashboard', 'dashboard-siswa', 'perangkat', 'perangkat-siswa', 'lms', 'evaluasi', 'analisis', 'pengaturan'];
-            views.forEach(v => {
-                const viewEl = document.getElementById(`view-${v}`);
-                const navEl = document.getElementById(`nav-${v}`);
-                if (v === tabName) {
-                    if (viewEl) viewEl.classList.remove('hidden');
-                    if (navEl) navEl.classList.add('bg-pink-100/80', 'text-pink-700', 'font-semibold');
-                } else {
-                    if (viewEl) viewEl.classList.add('hidden');
-                    if (navEl) navEl.classList.remove('bg-pink-100/80', 'text-pink-700', 'font-semibold');
-                }
-            });
-
-            renderAllViewsData();
-        }
-
-        function checkExistingSession() {
-            try {
-                const session = JSON.parse(localStorage.getItem('balanceaa_session'));
-                if (session && session.role) { renderAppForUser(session); return; }
-            } catch (e) {}
-            showLoginScreen();
-        }
-
-        function showLoginScreen() {
-            document.getElementById('view-login').classList.remove('hidden');
-            document.getElementById('app-container').classList.add('hidden');
-        }
-
-        function renderAppForUser(user) {
-            document.getElementById('view-login').classList.add('hidden');
-            document.getElementById('app-container').classList.remove('hidden');
-
-            document.getElementById('userNameSidebar').innerText = user.name;
-            document.getElementById('userRoleSidebar').innerText = user.roleLabel;
-            document.getElementById('userAvatar').src = user.avatar;
-
-            const teacherHeader = document.getElementById('teacherHeaderSelectors');
-            const studentHeader = document.getElementById('studentHeaderBadge');
-            const navDashboard = document.getElementById('nav-dashboard');
-            const navDashboardSiswa = document.getElementById('nav-dashboard-siswa');
-            const navPerangkat = document.getElementById('nav-perangkat');
-            const navPerangkatSiswa = document.getElementById('nav-perangkat-siswa');
-            const lmsTeacherTopAction = document.getElementById('lmsTeacherTopAction');
-            const lmsAddMaterialAction = document.getElementById('lmsAddMaterialAction');
-            const lmsTeacherAction = document.getElementById('lmsTeacherAction');
-            const evalTeacherAction = document.getElementById('evalTeacherAction');
-            const teacherGradingSection = document.getElementById('teacherGradingSection');
-
-            if (user.role === 'guru') {
-                document.getElementById('activeRoleBadge').innerText = 'Guru AKL';
-                if (teacherHeader) teacherHeader.classList.remove('hidden');
-                if (studentHeader) studentHeader.classList.add('hidden');
-
-                if (navDashboard) navDashboard.classList.remove('hidden');
-                if (navDashboardSiswa) navDashboardSiswa.classList.add('hidden');
-                if (navPerangkat) navPerangkat.classList.remove('hidden');
-                if (navPerangkatSiswa) navPerangkatSiswa.classList.add('hidden');
-
-                if (lmsTeacherTopAction) lmsTeacherTopAction.classList.remove('hidden');
-                if (lmsAddMaterialAction) lmsAddMaterialAction.classList.remove('hidden');
-                if (lmsTeacherAction) lmsTeacherAction.classList.remove('hidden');
-                if (evalTeacherAction) evalTeacherAction.classList.remove('hidden');
-                if (teacherGradingSection) teacherGradingSection.classList.remove('hidden');
-
-                switchTab('dashboard');
-            } else {
-                document.getElementById('activeRoleBadge').innerText = 'Siswa AKL';
-                document.getElementById('studentHeaderClass').innerText = user.kelas;
-                document.getElementById('studentGreetingName').innerText = `Selamat Datang, ${user.name}! 📚`;
-                document.getElementById('studentGreetingClass').innerText = user.kelas;
-                document.getElementById('studentViewClassTitle').innerText = user.kelas;
-
-                if (teacherHeader) teacherHeader.classList.add('hidden');
-                if (studentHeader) studentHeader.classList.remove('hidden');
-
-                if (navDashboard) navDashboard.classList.add('hidden');
-                if (navDashboardSiswa) navDashboardSiswa.classList.remove('hidden');
-                if (navPerangkat) navPerangkat.classList.add('hidden');
-                if (navPerangkatSiswa) navPerangkatSiswa.classList.remove('hidden');
-
-                if (lmsTeacherTopAction) lmsTeacherTopAction.classList.add('hidden');
-                if (lmsAddMaterialAction) lmsAddMaterialAction.classList.add('hidden');
-                if (lmsTeacherAction) lmsTeacherAction.classList.add('hidden');
-                if (evalTeacherAction) evalTeacherAction.classList.add('hidden');
-                if (teacherGradingSection) teacherGradingSection.classList.add('hidden');
-
-                switchTab('dashboard-siswa');
-            }
-        }
-
-        function selectLoginRole(roleKey) {
-            document.getElementById('loginRole').value = roleKey;
-            const btnGuru = document.getElementById('roleBtnGuru');
-            const btnSiswa = document.getElementById('roleBtnSiswa');
-            if (roleKey === 'guru') {
-                btnGuru.className = 'flex-1 py-2 text-xs font-bold rounded-xl bg-white text-pink-600 shadow-sm';
-                btnSiswa.className = 'flex-1 py-2 text-xs font-bold rounded-xl text-slate-500';
-            } else {
-                btnSiswa.className = 'flex-1 py-2 text-xs font-bold rounded-xl bg-white text-purple-600 shadow-sm';
-                btnGuru.className = 'flex-1 py-2 text-xs font-bold rounded-xl text-slate-500';
-            }
-        }
-
-        function quickLogin(roleKey) {
-            selectLoginRole(roleKey);
-            executeLogin(roleKey);
-        }
-
-        function handleLogin(e) {
-            if (e) e.preventDefault();
-            executeLogin(document.getElementById('loginRole').value || 'guru');
-        }
-
-        function executeLogin(roleKey) {
-            const targetUser = MOCK_USERS[roleKey] || MOCK_USERS['guru'];
-            const sessionPayload = {
-                id: targetUser.id, name: targetUser.name, role: targetUser.role,
-                kelas: targetUser.kelas || null, roleLabel: targetUser.roleLabel, avatar: targetUser.avatar
-            };
-            localStorage.setItem('balanceaa_session', JSON.stringify(sessionPayload));
-            renderAppForUser(sessionPayload);
-        }
-
-        function handleLogout() {
-            localStorage.removeItem('balanceaa_session');
-            showLoginScreen();
-        }
-
-        function toggleSidebar() {
-            document.getElementById('mainSidebar').classList.toggle('-translate-x-full');
-            document.getElementById('sidebarOverlay').classList.toggle('hidden');
-        }
-
-        function checkBalance() {
-            const debet = parseFloat(document.getElementById('debitInput').value) || 0;
-            const kredit = parseFloat(document.getElementById('kreditInput').value) || 0;
-            const statusEl = document.getElementById('balanceStatus');
-            if (debet === kredit && debet > 0) {
-                statusEl.className = 'text-xs font-extrabold px-3 py-1 rounded-full bg-emerald-100 text-emerald-700';
-                statusEl.innerHTML = '<i class="fa-solid fa-circle-check mr-1"></i> Balance';
-            } else {
-                statusEl.className = 'text-xs font-extrabold px-3 py-1 rounded-full bg-rose-100 text-rose-700';
-                statusEl.innerHTML = '<i class="fa-solid fa-circle-xmark mr-1"></i> Tidak Balance';
-            }
-        }
-    </script>
-</body>
-</html>
+PERBAIKAN KHUSUS LMS BALANCEAA — TAMBAHKAN FITUR MEMBUAT DAN MENGELOLA MODUL PEMBELAJARAN.
+
+Saya ingin memperbaiki bagian LMS pada website Balanceaa yang sudah dikembangkan.
+
+Saat ini LMS sudah memiliki tiga tab:
+1. Modul Pembelajaran.
+2. Materi & Video.
+3. Tugas & Kuis.
+
+Namun, terdapat masalah:
+
+- Belum ada fitur yang berfungsi untuk menambahkan Modul Pembelajaran.
+- Guru hanya bisa menambahkan materi atau video.
+- Materi dan video belum terorganisasi dengan jelas di dalam Modul Pembelajaran.
+- Guru membutuhkan fitur untuk membuat modul sendiri berdasarkan mata pelajaran.
+- Video yang sudah ditambahkan harus bisa diedit, diganti, atau dihapus.
+- Semua perubahan harus terintegrasi dengan akun Siswa.
+
+TUGAS UTAMA:
+**Tambahkan fitur CRUD Modul Pembelajaran pada tab "1. Modul Pembelajaran" dan hubungkan seluruh materi/video dengan modul tersebut.**
+
+# A. PERINGATAN KERAS — JANGAN MENGUBAH FITUR YANG SUDAH FIX
+
+Sebelum mengubah kode, buat backup atau checkpoint versi Balanceaa yang saat ini berfungsi.
+
+JANGAN:
+- Membangun ulang website.
+- Mengubah desain dashboard.
+- Mengubah sidebar.
+- Mengubah login Guru dan Siswa.
+- Mengubah Perangkat Guru.
+- Mengubah formulir RPP, Modul Ajar, CP, TP, ATP, Bahan Ajar, dan Rubrik.
+- Mengubah data atau penyimpanan Perangkat Guru.
+- Mengubah fitur Tugas Dokumen yang sudah berjalan.
+- Mengubah fitur Kuis dan Evaluasi.
+- Mengubah Analisis Nilai.
+- Mengubah Pengaturan.
+- Mengubah daftar kelas dan mata pelajaran yang sudah dikonfigurasi.
+- Menghapus atau mereset data lama.
+- Mengubah tampilan LMS yang sudah disetujui secara keseluruhan.
+
+Perubahan harus terbatas pada fitur Modul Pembelajaran dan relasinya dengan Materi & Video.
+
+Jika ada perubahan yang membutuhkan modifikasi file bersama dan berisiko mengubah fitur lain, jelaskan dampaknya terlebih dahulu dan minta persetujuan.
+
+# B. TAMBAHKAN TOMBOL "+ TAMBAH MODUL PEMBELAJARAN"
+
+Pada tab "1. Modul Pembelajaran", tampilkan tombol:
+
+**+ Tambah Modul Pembelajaran**
+
+Tombol harus berfungsi membuka formulir pembuatan modul.
+
+Formulir berisi:
+- Judul Modul.
+- Deskripsi Modul.
+- Kelas Tujuan.
+- Mata Pelajaran.
+- Semester.
+- Tahun Ajaran.
+- Nomor atau Urutan Modul.
+- Tujuan Pembelajaran.
+- Alokasi Waktu.
+- Status Draft atau Dipublikasikan.
+
+Kelas dan mata pelajaran harus mengambil data dari konfigurasi yang sudah ada.
+
+Guru dapat memilih kelas yang diampunya dan mata pelajaran yang sesuai.
+
+Jangan membuat daftar kelas atau mata pelajaran baru yang terpisah.
+
+# C. FITUR PENGELOLAAN MODUL
+
+Setelah modul dibuat, tampilkan kartu modul pada tab Modul Pembelajaran.
+
+Setiap kartu memiliki:
+- Judul Modul.
+- Mata Pelajaran.
+- Kelas.
+- Deskripsi singkat.
+- Jumlah materi.
+- Jumlah video.
+- Status publikasi.
+- Tombol Buka Modul.
+- Tombol Edit Modul.
+- Tombol Hapus Modul.
+- Tombol Publikasikan atau Tarik Publikasi.
+
+Guru harus dapat:
+1. Membuat modul.
+2. Menyimpan modul.
+3. Mengedit modul.
+4. Menghapus modul dengan konfirmasi.
+5. Mengatur urutan modul.
+6. Menambahkan isi modul.
+7. Memublikasikan modul.
+8. Menarik publikasi modul.
+
+Hapus modul tidak boleh secara tidak sengaja menghapus dokumen Perangkat Guru atau tugas yang digunakan di tempat lain.
+
+# D. HUBUNGKAN MATERI DAN VIDEO DENGAN MODUL
+
+Saat guru membuka suatu modul, tampilkan:
+
+**Isi Modul Pembelajaran**
+- Materi Teks.
+- File PDF/Word/PPT/Excel.
+- Video Pembelajaran.
+- Aktivitas Belajar.
+- Tugas dan Kuis yang terkait.
+
+Tambahkan tombol:
+- + Tambah Materi.
+- + Tambah Video.
+- Hubungkan Perangkat Guru.
+- Lihat Tugas & Kuis Terkait.
+
+Ketika guru menambahkan materi atau video, sistem wajib menyimpan ID modul terkait.
+
+Jangan menyimpan materi/video hanya berdasarkan judul mata pelajaran.
+
+Pada tab "2. Materi & Video", pertahankan fitur yang sudah ada, tetapi tambahkan filter atau pilihan Modul Pembelajaran.
+
+Guru dapat memilih modul terlebih dahulu, lalu melihat atau menambahkan materi/video untuk modul tersebut.
+
+Materi/video yang sudah ada jangan dihapus. Lakukan migrasi atau penautan yang aman agar konten lama tetap tersedia. Jika penautan tidak dapat ditentukan secara pasti, tampilkan sebagai konten "Belum Terhubung ke Modul" agar guru dapat memilih modul tujuan secara manual.
+
+# E. FITUR EDIT DAN GANTI VIDEO
+
+Pertahankan pemutar video yang sudah ada.
+
+Tambahkan pada setiap video:
+- Edit Video.
+- Ganti Link Video.
+- Hapus Video.
+
+Guru dapat mengubah:
+- Judul.
+- Deskripsi.
+- URL YouTube.
+- Modul tujuan, jika memiliki izin.
+
+Validasi URL sebelum menyimpan.
+
+Video lama harus digantikan oleh video baru pada data yang sama, bukan membuat video duplikat.
+
+Video contoh yang tidak sesuai materi, seperti video musik pada materi Rekonsiliasi Bank, jangan digunakan sebagai video pembelajaran default.
+
+Jangan menghapus video lama tanpa tindakan guru atau migrasi yang aman.
+
+# F. FILTER KELAS DAN MATA PELAJARAN
+
+Pastikan seluruh modul, materi, dan video mengikuti pilihan kelas serta mata pelajaran.
+
+Contoh:
+
+Kelas: 11 AKL 1
+Mata Pelajaran: Akuntansi Keuangan
+
+Tampilkan hanya modul Akuntansi Keuangan untuk 11 AKL 1.
+
+Ketika guru mengganti mata pelajaran menjadi Perpajakan, daftar modul harus berubah menjadi modul Perpajakan.
+
+Jika belum ada modul, tampilkan:
+
+"Belum ada modul pembelajaran untuk mata pelajaran ini."
+
+Dan tampilkan tombol "+ Tambah Modul Pembelajaran".
+
+Jangan menampilkan konten mata pelajaran lain.
+
+# G. INTEGRASI WAJIB DENGAN AKUN SISWA
+
+Ini merupakan persyaratan utama Balanceaa.
+
+Setiap modul yang dibuat guru harus terhubung dengan akun siswa sesuai kelas dan mata pelajaran.
+
+Alur wajib:
+
+1. Guru membuat modul pembelajaran.
+2. Guru memilih kelas dan mata pelajaran.
+3. Guru menambahkan materi dan video.
+4. Guru menyimpan modul sebagai Draft.
+5. Siswa belum dapat melihat modul Draft.
+6. Guru memublikasikan modul.
+7. Modul muncul di LMS akun siswa kelas tujuan.
+8. Siswa dapat membuka modul.
+9. Siswa dapat membaca materi.
+10. Siswa dapat menonton video.
+11. Siswa dapat mengunduh lampiran yang diizinkan.
+12. Jika guru mengganti video, video terbaru muncul pada akun siswa.
+13. Jika guru mengedit materi, perubahan tampil pada akun siswa.
+14. Jika publikasi ditarik, siswa tidak lagi dapat mengakses modul.
+
+Siswa hanya boleh melihat modul untuk kelas dan mata pelajaran yang terdaftar pada akunnya.
+
+Siswa tidak boleh membuat, mengedit, menghapus, atau memublikasikan modul guru.
+
+Gunakan database atau sumber data bersama yang sudah ada. Jangan membuat penyimpanan modul terpisah antara akun Guru dan Siswa.
+
+Jika masih menggunakan localStorage, jelaskan bahwa sinkronisasi lintas perangkat belum tersedia.
+
+# H. HUBUNGKAN DENGAN PERANGKAT GURU TANPA MENGUBAHNYA
+
+Pada editor Modul Pembelajaran LMS, sediakan tombol "Hubungkan Perangkat Guru".
+
+Guru dapat memilih TP, ATP, Modul Ajar, atau Bahan Ajar yang sudah tersimpan.
+
+Hubungkan melalui ID perangkat yang sudah ada.
+
+JANGAN:
+- Memindahkan Modul Pembelajaran ke Perangkat Guru.
+- Mengubah formulir Modul Ajar.
+- Menghapus perangkat lama.
+- Menggandakan perangkat tanpa kebutuhan.
+- Membuka dokumen Khusus Guru kepada siswa tanpa izin publikasi.
+
+Modul Ajar dan Modul Pembelajaran adalah dua fitur berbeda.
+
+# I. PENGUJIAN WAJIB
+
+Uji skenario berikut:
+
+1. Guru membuka tab Modul Pembelajaran.
+2. Guru menekan "+ Tambah Modul Pembelajaran".
+3. Formulir terbuka.
+4. Guru membuat modul "Rekonsiliasi Bank" untuk kelas 11 AKL 1, mata pelajaran Akuntansi Keuangan.
+5. Modul berhasil disimpan.
+6. Guru membuka modul tersebut.
+7. Guru menambahkan materi PDF.
+8. Guru menambahkan video YouTube.
+9. Guru mengedit link video.
+10. Materi dan video tetap terhubung dengan modul yang benar.
+11. Guru memublikasikan modul.
+12. Siswa kelas 11 AKL 1 melihat modul pada akun Siswa.
+13. Siswa dapat membaca materi dan menonton video.
+14. Siswa kelas 11 AKL 2 tidak dapat mengakses modul.
+15. Guru mengganti mata pelajaran dan daftar modul ikut berubah.
+16. Guru mengedit modul dan perubahan muncul pada akun siswa.
+17. Guru menarik publikasi dan siswa tidak dapat lagi membuka modul.
+18. Modul, materi, dan video tetap tersimpan setelah refresh sesuai kemampuan backend.
+
+PENGUJIAN REGRESI:
+- Perangkat Guru tetap berfungsi.
+- RPP tetap bisa dibuat dan dibuka.
+- Modul Ajar tetap bisa dibuat dan dibuka.
+- CP, TP, ATP, dan Bahan Ajar tetap aman.
+- Tugas Dokumen tetap tersedia.
+- Kuis tetap berfungsi.
+- Login Guru dan Siswa tetap berfungsi.
+- Dashboard dan sidebar tidak berubah.
+- Evaluasi dan Analisis Nilai tidak rusak.
+
+Jangan menyatakan pengujian berhasil tanpa benar-benar menjalankannya.
+
+# J. LAPORAN HASIL
+
+Setelah selesai, laporkan:
+1. File yang diubah.
+2. Fitur Modul Pembelajaran yang ditambahkan.
+3. Cara menambahkan materi dan video ke modul.
+4. Cara mengedit atau mengganti video.
+5. Cara modul muncul pada akun siswa.
+6. Mekanisme penyimpanan dan integrasi.
+7. Hasil pengujian.
+8. Hasil pengujian regresi.
+9. Keterbatasan yang masih ada.
+10. Langkah deployment jika diperlukan.
+
+PRIORITAS UTAMA:
+**Tambahkan fitur pembuatan Modul Pembelajaran di LMS tanpa mengubah, merusak, atau menghapus fitur Balanceaa yang sudah fix.**
+
+Jangan melakukan redesign atau refactoring besar yang tidak diperlukan.
