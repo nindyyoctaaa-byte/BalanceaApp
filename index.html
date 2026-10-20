@@ -104,7 +104,7 @@
                         <label class="block text-xs font-bold text-slate-700 mb-1.5">Email / Nama Pengguna</label>
                         <div class="relative">
                             <i class="fa-solid fa-envelope absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                            <input type="text" id="loginEmail" required value="guru" placeholder="Masukkan email atau nama pengguna" class="w-full bg-slate-50/80 border border-slate-200/80 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-pink-300 focus:bg-white transition-all">
+                            <input type="text" id="loginEmail" value="guru" placeholder="Masukkan email atau nama pengguna" class="w-full bg-slate-50/80 border border-slate-200/80 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-pink-300 focus:bg-white transition-all">
                         </div>
                     </div>
 
@@ -112,7 +112,7 @@
                         <label class="block text-xs font-bold text-slate-700 mb-1.5">Kata Sandi</label>
                         <div class="relative">
                             <i class="fa-solid fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                            <input type="password" id="loginPassword" required value="123" placeholder="Masukkan kata sandi" class="w-full bg-slate-50/80 border border-slate-200/80 rounded-2xl pl-10 pr-10 py-2.5 text-xs text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-pink-300 focus:bg-white transition-all">
+                            <input type="password" id="loginPassword" value="123" placeholder="Masukkan kata sandi" class="w-full bg-slate-50/80 border border-slate-200/80 rounded-2xl pl-10 pr-10 py-2.5 text-xs text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-pink-300 focus:bg-white transition-all">
                             <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
                                 <i id="eyeIcon" class="fa-solid fa-eye text-xs"></i>
                             </button>
@@ -126,17 +126,15 @@
 
                 <!-- DEMO ACCOUNTS CHEAT SHEET -->
                 <div class="relative z-10 pt-4 border-t border-slate-100 text-center space-y-2">
-                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Akun Demo Pengujian:</p>
+                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Akses Langsung Mode Pengujian:</p>
                     <div class="grid grid-cols-2 gap-2 text-[11px]">
-                        <button type="button" onclick="fillDemo('guru')" class="p-2 bg-pink-50/70 hover:bg-pink-100/70 border border-pink-100 rounded-xl text-left transition-all">
-                            <p class="font-bold text-pink-700"><i class="fa-solid fa-user-shield"></i> Guru Demo</p>
-                            <p class="text-slate-500 text-[10px]">guru</p>
-                            <p class="text-slate-400 text-[9px]">Sandi: 123</p>
+                        <button type="button" onclick="quickLogin('guru')" class="p-2.5 bg-pink-50/80 hover:bg-pink-100 border border-pink-200 rounded-xl text-left transition-all">
+                            <p class="font-bold text-pink-700"><i class="fa-solid fa-user-shield mr-1"></i> Mode Guru</p>
+                            <p class="text-slate-500 text-[10px]">Username: guru | 123</p>
                         </button>
-                        <button type="button" onclick="fillDemo('siswa')" class="p-2 bg-purple-50/70 hover:bg-purple-100/70 border border-purple-100 rounded-xl text-left transition-all">
-                            <p class="font-bold text-purple-700"><i class="fa-solid fa-user-graduate"></i> Siswa Demo</p>
-                            <p class="text-slate-500 text-[10px]">siswa</p>
-                            <p class="text-slate-400 text-[9px]">Sandi: 123</p>
+                        <button type="button" onclick="quickLogin('siswa')" class="p-2.5 bg-purple-50/80 hover:bg-purple-100 border border-purple-200 rounded-xl text-left transition-all">
+                            <p class="font-bold text-purple-700"><i class="fa-solid fa-user-graduate mr-1"></i> Mode Siswa</p>
+                            <p class="text-slate-500 text-[10px]">Username: siswa | 123</p>
                         </button>
                     </div>
                 </div>
@@ -397,4 +395,608 @@
                             </h3>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                                <div onclick="switchTab('perangkat')" class="group bg-white/80 backdrop-blur-md
+                                <div onclick="switchTab('perangkat')" class="group bg-white/80 backdrop-blur-md p-5 rounded-2xl border border-pink-100/80 hover:border-pink-300 shadow-sm hover:shadow-md transition-all cursor-pointer">
+                                    <div class="w-10 h-10 rounded-2xl bg-pink-100 text-pink-600 flex items-center justify-center font-bold mb-3 group-hover:scale-110 transition-transform">
+                                        <i class="fa-solid fa-folder-open"></i>
+                                    </div>
+                                    <h4 class="font-bold text-sm text-slate-800 group-hover:text-pink-600 transition-colors">1. Perangkat Guru</h4>
+                                    <p class="text-xs text-slate-400 mt-1">Rencana pembelajaran, CP/TP, Modul Ajar, dan Bahan Ajar AKL.</p>
+                                    <div class="mt-4 flex items-center text-xs font-bold text-pink-500 group-hover:translate-x-1 transition-transform">
+                                        Buka Perangkat <i class="fa-solid fa-arrow-right ml-1"></i>
+                                    </div>
+                                </div>
+
+                                <div onclick="switchTab('lms')" class="group bg-white/80 backdrop-blur-md p-5 rounded-2xl border border-purple-100/80 hover:border-purple-300 shadow-sm hover:shadow-md transition-all cursor-pointer">
+                                    <div class="w-10 h-10 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center font-bold mb-3 group-hover:scale-110 transition-transform">
+                                        <i class="fa-solid fa-book-open-reader"></i>
+                                    </div>
+                                    <h4 class="font-bold text-sm text-slate-800 group-hover:text-purple-600 transition-colors">2. LMS Akuntansi</h4>
+                                    <p class="text-xs text-slate-400 mt-1">Materi interaktif Jurnal, Buku Besar, dan Neraca Saldo.</p>
+                                    <div class="mt-4 flex items-center text-xs font-bold text-purple-500 group-hover:translate-x-1 transition-transform">
+                                        Akses Ruang Belajar <i class="fa-solid fa-arrow-right ml-1"></i>
+                                    </div>
+                                </div>
+
+                                <div onclick="switchTab('evaluasi')" class="group bg-white/80 backdrop-blur-md p-5 rounded-2xl border border-emerald-100/80 hover:border-emerald-300 shadow-sm hover:shadow-md transition-all cursor-pointer">
+                                    <div class="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold mb-3 group-hover:scale-110 transition-transform">
+                                        <i class="fa-solid fa-file-pen"></i>
+                                    </div>
+                                    <h4 class="font-bold text-sm text-slate-800 group-hover:text-emerald-600 transition-colors">3. Evaluasi & Ujian</h4>
+                                    <p class="text-xs text-slate-400 mt-1">Kuis pilihan ganda, studi kasus transaksi, dan Penilaian Harian.</p>
+                                    <div class="mt-4 flex items-center text-xs font-bold text-emerald-500 group-hover:translate-x-1 transition-transform">
+                                        Lihat Evaluasi <i class="fa-solid fa-arrow-right ml-1"></i>
+                                    </div>
+                                </div>
+
+                                <div onclick="switchTab('analisis')" class="group bg-white/80 backdrop-blur-md p-5 rounded-2xl border border-amber-100/80 hover:border-amber-300 shadow-sm hover:shadow-md transition-all cursor-pointer">
+                                    <div class="w-10 h-10 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center font-bold mb-3 group-hover:scale-110 transition-transform">
+                                        <i class="fa-solid fa-chart-line"></i>
+                                    </div>
+                                    <h4 class="font-bold text-sm text-slate-800 group-hover:text-amber-600 transition-colors">4. Analisis Nilai</h4>
+                                    <p class="text-xs text-slate-400 mt-1">Visualisasi grafik ketuntasan, analisis kognitif, dan laporan kelas.</p>
+                                    <div class="mt-4 flex items-center text-xs font-bold text-amber-500 group-hover:translate-x-1 transition-transform">
+                                        Lihat Grafik <i class="fa-solid fa-arrow-right ml-1"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- CHART PREVIEW & ACTIVITIES -->
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            <div class="lg:col-span-2 bg-white/80 backdrop-blur-md p-6 rounded-3xl border border-pink-100/80 shadow-sm space-y-4">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h3 class="font-bold text-sm text-slate-800">Ringkasan Nilai Rata-rata Per Kelas</h3>
+                                        <p class="text-xs text-slate-400">Kelas 10 & 11 AKL Semester Ganjil</p>
+                                    </div>
+                                    <span class="text-xs font-semibold px-2.5 py-1 rounded-lg bg-pink-50 text-pink-600">Terbaru</span>
+                                </div>
+                                <div class="h-60 w-full relative">
+                                    <canvas id="dashboardChart"></canvas>
+                                </div>
+                            </div>
+
+                            <div class="bg-white/80 backdrop-blur-md p-6 rounded-3xl border border-purple-100/80 shadow-sm space-y-4">
+                                <h3 class="font-bold text-sm text-slate-800 flex items-center justify-between">
+                                    <span>Aktivitas Terbaru</span>
+                                    <i class="fa-solid fa-clock-rotate-left text-xs text-purple-400"></i>
+                                </h3>
+
+                                <div class="space-y-3.5">
+                                    <div class="flex items-start gap-3 p-2.5 rounded-2xl hover:bg-slate-50 transition-colors">
+                                        <div class="w-8 h-8 rounded-xl bg-pink-100 text-pink-600 flex items-center justify-center text-xs shrink-0 mt-0.5">
+                                            <i class="fa-solid fa-upload"></i>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs font-bold text-slate-700">Materi Baru Diunggah</p>
+                                            <p class="text-[11px] text-slate-400">Jurnal Penyesuaian Perusahaan Jasa</p>
+                                            <span class="text-[10px] text-pink-400 font-semibold">10 menit lalu</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex items-start gap-3 p-2.5 rounded-2xl hover:bg-slate-50 transition-colors">
+                                        <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs shrink-0 mt-0.5">
+                                            <i class="fa-solid fa-check"></i>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs font-bold text-slate-700">32 Siswa Mengumpulkan</p>
+                                            <p class="text-[11px] text-slate-400">Kuis Keseimbangan Neraca - 11 AKL 1</p>
+                                            <span class="text-[10px] text-emerald-500 font-semibold">1 jam lalu</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- VIEW 2: BERANDA SISWA (NEW STUDENT HOME) -->
+                    <div id="view-dashboard-siswa" class="hidden space-y-6">
+                        <!-- BANNER SISWA -->
+                        <div class="bg-gradient-to-r from-purple-200/60 via-pink-200/50 to-blue-200/40 rounded-3xl p-6 sm:p-8 border border-white/80 shadow-sm relative overflow-hidden">
+                            <div class="relative z-10 max-w-2xl space-y-2">
+                                <span class="inline-block px-3 py-1 bg-white/80 text-purple-700 font-bold text-[11px] rounded-full shadow-xs">
+                                    <i class="fa-solid fa-user-graduate mr-1"></i> Ruang Belajar Siswa
+                                </span>
+                                <h2 class="text-xl sm:text-2xl font-extrabold text-slate-800 tracking-tight">
+                                    Semangat Belajar, Ahmad Rizky! 📚
+                                </h2>
+                                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                                    Kelas <span class="font-bold text-purple-600">11 AKL 1</span> • NISN: <span class="font-bold text-slate-700">0051234567</span>
+                                </p>
+                            </div>
+                            <i class="fa-solid fa-book-bookmark absolute -right-4 -bottom-6 text-9xl text-purple-300/30 transform -rotate-12 pointer-events-none"></i>
+                        </div>
+
+                        <!-- 4 STATS CARDS SISWA -->
+                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                            <div class="bg-white/80 backdrop-blur-md p-5 rounded-2xl border border-purple-100 shadow-sm">
+                                <p class="text-xs text-slate-400 font-medium">Mata Pelajaran Aktif</p>
+                                <h3 class="text-xl font-extrabold text-slate-800 mt-1">4 Matpel</h3>
+                                <p class="text-[11px] text-purple-500 font-semibold mt-1">Semester Ganjil</p>
+                            </div>
+                            <div class="bg-white/80 backdrop-blur-md p-5 rounded-2xl border border-pink-100 shadow-sm">
+                                <p class="text-xs text-slate-400 font-medium">Materi Terselesaikan</p>
+                                <h3 class="text-xl font-extrabold text-slate-800 mt-1">18 / 24</h3>
+                                <p class="text-[11px] text-pink-500 font-semibold mt-1">75% Progres</p>
+                            </div>
+                            <div class="bg-white/80 backdrop-blur-md p-5 rounded-2xl border border-emerald-100 shadow-sm">
+                                <p class="text-xs text-slate-400 font-medium">Tugas/Kuis Selesai</p>
+                                <h3 class="text-xl font-extrabold text-slate-800 mt-1">12 Kuis</h3>
+                                <p class="text-[11px] text-emerald-500 font-semibold mt-1">1 Perlu Dikerjakan</p>
+                            </div>
+                            <div class="bg-white/80 backdrop-blur-md p-5 rounded-2xl border border-amber-100 shadow-sm">
+                                <p class="text-xs text-slate-400 font-medium">Rata-rata Nilai Kamu</p>
+                                <h3 class="text-xl font-extrabold text-slate-800 mt-1">88.5</h3>
+                                <p class="text-[11px] text-amber-600 font-semibold mt-1">Sangat Baik (A)</p>
+                            </div>
+                        </div>
+
+                        <!-- STUDENT LEARNING MODULES & UPCOMING TASKS -->
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            <!-- UPCOMING TASKS FOR STUDENT -->
+                            <div class="lg:col-span-2 bg-white/80 backdrop-blur-md p-6 rounded-3xl border border-purple-100/80 shadow-sm space-y-4">
+                                <h3 class="font-bold text-sm text-slate-800 flex items-center gap-2">
+                                    <i class="fa-solid fa-list-check text-purple-500"></i> Tugas & Kuis Menunggu
+                                </h3>
+
+                                <div class="space-y-3">
+                                    <div class="p-4 bg-purple-50/50 rounded-2xl border border-purple-100 flex items-center justify-between gap-4">
+                                        <div class="space-y-1">
+                                            <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-md bg-amber-100 text-amber-700">Tugas Baru</span>
+                                            <h4 class="text-xs font-bold text-slate-800">Latihan Jurnal Penyesuaian - Perlengkapan & Penyusutan</h4>
+                                            <p class="text-[11px] text-slate-400">Batas Pengumpulan: Besok, 23:59 WIB</p>
+                                        </div>
+                                        <button onclick="switchTab('lms')" class="px-3 py-1.5 bg-purple-600 text-white font-bold text-xs rounded-xl hover:bg-purple-700 transition-all shrink-0">
+                                            Kerjakan
+                                        </button>
+                                    </div>
+
+                                    <div class="p-4 bg-emerald-50/50 rounded-2xl border border-emerald-100 flex items-center justify-between gap-4">
+                                        <div class="space-y-1">
+                                            <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-700">Selesai</span>
+                                            <h4 class="text-xs font-bold text-slate-800">Kuis Keseimbangan Neraca Saldo Perusahaan Jasa</h4>
+                                            <p class="text-[11px] text-slate-400">Nilai Kamu: <span class="font-bold text-emerald-600">95 / 100</span></p>
+                                        </div>
+                                        <span class="text-xs font-bold text-emerald-600"><i class="fa-solid fa-circle-check"></i> Tuntas</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- QUICK STUDENT BALANCE PRACTICE -->
+                            <div class="bg-white/80 backdrop-blur-md p-6 rounded-3xl border border-pink-100/80 shadow-sm space-y-4">
+                                <h3 class="font-bold text-sm text-slate-800 flex items-center gap-2">
+                                    <i class="fa-solid fa-calculator text-pink-500"></i> Latihan Cepat
+                                </h3>
+                                <p class="text-xs text-slate-500">Gunakan widget Balance Checker untuk menguji pemahaman debet dan kredit sebelum kuis.</p>
+                                <button onclick="switchTab('dashboard')" class="w-full py-2 bg-pink-50 hover:bg-pink-100 text-pink-600 font-bold text-xs rounded-xl border border-pink-200 transition-all">
+                                    Buka Balance Checker
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- VIEW 3: PERANGKAT GURU (RESTRICTED FOR SISWA) -->
+                    <div id="view-perangkat" class="hidden space-y-6">
+                        <div class="bg-white/80 backdrop-blur-md p-8 rounded-3xl border border-pink-100 shadow-sm text-center space-y-4">
+                            <div class="w-16 h-16 bg-pink-100 text-pink-600 rounded-2xl flex items-center justify-center text-2xl mx-auto">
+                                <i class="fa-solid fa-folder-open"></i>
+                            </div>
+                            <h3 class="text-lg font-extrabold text-slate-800">Modul 1: Perangkat Guru</h3>
+                            <p class="text-xs text-slate-500 max-w-md mx-auto">
+                                Halaman ini khusus pengelolaan RPP, Capaian Pembelajaran (CP), Tujuan Pembelajaran (TP), dan Alur Tujuan Pembelajaran (ATP) oleh Guru.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- VIEW 4: LMS (LMS AKUNTANSI) -->
+                    <div id="view-lms" class="hidden space-y-6">
+                        <div class="bg-white/80 backdrop-blur-md p-8 rounded-3xl border border-purple-100 shadow-sm text-center space-y-4">
+                            <div class="w-16 h-16 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center text-2xl mx-auto">
+                                <i class="fa-solid fa-book-open-reader"></i>
+                            </div>
+                            <h3 class="text-lg font-extrabold text-slate-800">Modul 2: Learning Management System (LMS)</h3>
+                            <p class="text-xs text-slate-500 max-w-md mx-auto">
+                                Ruang belajar interaktif: Ruang Baca, Simulasi Pencatatan Transaksi, Video Pembelajaran, dan Diskusi Kelompok.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- VIEW 5: EVALUASI & UJIAN -->
+                    <div id="view-evaluasi" class="hidden space-y-6">
+                        <div class="bg-white/80 backdrop-blur-md p-8 rounded-3xl border border-emerald-100 shadow-sm text-center space-y-4">
+                            <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center text-2xl mx-auto">
+                                <i class="fa-solid fa-file-pen"></i>
+                            </div>
+                            <h3 class="text-lg font-extrabold text-slate-800">Modul 3: Evaluasi & Penilaian Pembelajaran</h3>
+                            <p class="text-xs text-slate-500 max-w-md mx-auto">
+                                Lembar Kerja Siswa (LKS), Kuis Online, Simulasi Soal Kasus Akuntansi Jasa & Dagang, serta Penilaian Harian.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- VIEW 6: ANALISIS NILAI -->
+                    <div id="view-analisis" class="hidden space-y-6">
+                        <div class="bg-white/80 backdrop-blur-md p-8 rounded-3xl border border-amber-100 shadow-sm text-center space-y-4">
+                            <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center text-2xl mx-auto">
+                                <i class="fa-solid fa-chart-line"></i>
+                            </div>
+                            <h3 class="text-lg font-extrabold text-slate-800">Modul 4: Analisis & Visualisasi Data Nilai</h3>
+                            <p class="text-xs text-slate-500 max-w-md mx-auto">
+                                Visualisasi otomatis ketuntasan belajar, grafik distribusi nilai, serta laporan statistik perkembangan siswa.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- VIEW 7: PENGATURAN -->
+                    <div id="view-pengaturan" class="hidden space-y-6">
+                        <div class="bg-white/80 backdrop-blur-md p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4 max-w-xl mx-auto">
+                            <h3 class="text-base font-extrabold text-slate-800 border-b border-slate-100 pb-3">Pengaturan Profil & Sistem</h3>
+                            
+                            <div class="space-y-3 text-xs">
+                                <div>
+                                    <label class="block font-semibold text-slate-600 mb-1">Nama Pengguna</label>
+                                    <input type="text" id="settingNameInput" value="Nindy Octavia, S.Pd." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 font-medium focus:ring-2 focus:ring-pink-300 focus:outline-none">
+                                </div>
+
+                                <div>
+                                    <label class="block font-semibold text-slate-600 mb-1">Jurusan</label>
+                                    <input type="text" value="Akuntansi dan Keuangan Lembaga (AKL)" disabled class="w-full bg-slate-100 border border-slate-200 rounded-xl px-3 py-2 text-slate-500 cursor-not-allowed">
+                                </div>
+
+                                <button onclick="saveSettings()" class="w-full py-2.5 bg-pink-500 hover:bg-pink-600 text-white font-bold rounded-xl transition-all shadow-sm mt-2">
+                                    Simpan Perubahan
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 3. JAVASCRIPT AUTH & SYSTEM LOGIC          -->
+    <!-- ========================================== -->
+    <script>
+        // MOCK USER DATABASE (PROTOTYPE CLIENT-SIDE)
+        const MOCK_USERS = {
+            guru: {
+                email: 'guru',
+                username: 'guru',
+                passwordHash: '123',
+                name: 'Nindy Octavia, S.Pd.',
+                role: 'guru',
+                roleLabel: 'Guru Pengampu AKL',
+                avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80'
+            },
+            siswa: {
+                email: 'siswa',
+                username: 'siswa',
+                passwordHash: '123',
+                name: 'Ahmad Rizky (Siswa)',
+                role: 'siswa',
+                roleLabel: 'Siswa 11 AKL 1',
+                avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=100&auto=format&fit=crop&q=80'
+            }
+        };
+
+        let activeChartInstance = null;
+
+        // INITIALIZATION ON PAGE LOAD
+        window.addEventListener('DOMContentLoaded', () => {
+            checkExistingSession();
+            initChart();
+        });
+
+        // CHECK IF SESSION IS ACTIVE IN LOCALSTORAGE
+        function checkExistingSession() {
+            try {
+                const sessionData = localStorage.getItem('balanceaa_session');
+                if (sessionData) {
+                    const user = JSON.parse(sessionData);
+                    if (user && user.role) {
+                        renderAppForUser(user);
+                        return;
+                    }
+                }
+            } catch (e) {
+                console.warn('LocalStorage error:', e);
+            }
+            showLoginScreen();
+        }
+
+        // SHOW LOGIN SCREEN
+        function showLoginScreen() {
+            document.getElementById('view-login').classList.remove('hidden');
+            document.getElementById('app-container').classList.add('hidden');
+        }
+
+        // ROLE SELECTION TAB IN LOGIN FORM
+        function selectLoginRole(role) {
+            document.getElementById('loginRole').value = role;
+            const btnGuru = document.getElementById('roleBtnGuru');
+            const btnSiswa = document.getElementById('roleBtnSiswa');
+
+            if (role === 'guru') {
+                btnGuru.className = 'flex-1 py-2 text-xs font-bold rounded-xl transition-all duration-200 bg-white text-pink-600 shadow-sm';
+                btnSiswa.className = 'flex-1 py-2 text-xs font-bold rounded-xl transition-all duration-200 text-slate-500 hover:text-slate-700';
+            } else {
+                btnSiswa.className = 'flex-1 py-2 text-xs font-bold rounded-xl transition-all duration-200 bg-white text-purple-600 shadow-sm';
+                btnGuru.className = 'flex-1 py-2 text-xs font-bold rounded-xl transition-all duration-200 text-slate-500 hover:text-slate-700';
+            }
+            
+            // Auto fill username and password for convenience
+            document.getElementById('loginEmail').value = role;
+            document.getElementById('loginPassword').value = '123';
+            hideLoginError();
+        }
+
+        // QUICK ONE-CLICK LOGIN FOR DEMO
+        function quickLogin(role) {
+            selectLoginRole(role);
+            executeLogin(role);
+        }
+
+        // TOGGLE PASSWORD VISIBILITY
+        function togglePasswordVisibility() {
+            const passInput = document.getElementById('loginPassword');
+            const eyeIcon = document.getElementById('eyeIcon');
+            if (passInput.type === 'password') {
+                passInput.type = 'text';
+                eyeIcon.className = 'fa-solid fa-eye-slash text-xs';
+            } else {
+                passInput.type = 'password';
+                eyeIcon.className = 'fa-solid fa-eye text-xs';
+            }
+        }
+
+        // HANDLE LOGIN SUBMISSION
+        function handleLogin(event) {
+            if (event) event.preventDefault();
+            const selectedRole = document.getElementById('loginRole').value || 'guru';
+            executeLogin(selectedRole);
+        }
+
+        // CORE LOGIN EXECUTION
+        function executeLogin(role) {
+            const targetUser = MOCK_USERS[role] || MOCK_USERS['guru'];
+            hideLoginError();
+
+            const sessionPayload = {
+                email: targetUser.email,
+                name: targetUser.name,
+                role: targetUser.role,
+                roleLabel: targetUser.roleLabel,
+                avatar: targetUser.avatar,
+                loggedInAt: new Date().toISOString()
+            };
+
+            try {
+                localStorage.setItem('balanceaa_session', JSON.stringify(sessionPayload));
+            } catch (e) {
+                console.warn('LocalStorage save error:', e);
+            }
+
+            renderAppForUser(sessionPayload);
+        }
+
+        function showLoginError(msg) {
+            const alertEl = document.getElementById('loginErrorAlert');
+            if (alertEl) {
+                document.getElementById('loginErrorMsg').innerText = msg;
+                alertEl.classList.remove('hidden');
+            }
+        }
+
+        function hideLoginError() {
+            const alertEl = document.getElementById('loginErrorAlert');
+            if (alertEl) alertEl.classList.add('hidden');
+        }
+
+        // RENDER APPLICATION STATE BASED ON ROLE
+        function renderAppForUser(user) {
+            document.getElementById('view-login').classList.add('hidden');
+            document.getElementById('app-container').classList.remove('hidden');
+
+            // Update user identity in sidebar
+            const nameEl = document.getElementById('userNameSidebar');
+            if (nameEl) nameEl.innerText = user.name;
+            const roleEl = document.getElementById('userRoleSidebar');
+            if (roleEl) roleEl.innerText = user.roleLabel;
+            const avatarEl = document.getElementById('userAvatar');
+            if (avatarEl) avatarEl.src = user.avatar;
+            const settingName = document.getElementById('settingNameInput');
+            if (settingName) settingName.value = user.name;
+
+            const activeRoleBadge = document.getElementById('activeRoleBadge');
+            const navDashboard = document.getElementById('nav-dashboard');
+            const navDashboardSiswa = document.getElementById('nav-dashboard-siswa');
+            const navPerangkat = document.getElementById('nav-perangkat');
+
+            if (user.role === 'guru') {
+                if (activeRoleBadge) {
+                    activeRoleBadge.innerText = 'Guru AKL';
+                    activeRoleBadge.className = 'text-[11px] font-extrabold px-2.5 py-1 rounded-xl bg-pink-100 text-pink-700';
+                }
+
+                if (navDashboard) navDashboard.classList.remove('hidden');
+                if (navDashboardSiswa) navDashboardSiswa.classList.add('hidden');
+                if (navPerangkat) navPerangkat.classList.remove('hidden');
+
+                switchTab('dashboard');
+            } else {
+                if (activeRoleBadge) {
+                    activeRoleBadge.innerText = 'Siswa AKL';
+                    activeRoleBadge.className = 'text-[11px] font-extrabold px-2.5 py-1 rounded-xl bg-purple-100 text-purple-700';
+                }
+
+                if (navDashboard) navDashboard.classList.add('hidden');
+                if (navDashboardSiswa) navDashboardSiswa.classList.remove('hidden');
+                if (navPerangkat) navPerangkat.classList.add('hidden');
+
+                switchTab('dashboard-siswa');
+            }
+        }
+
+        // LOGOUT SESSION
+        function handleLogout() {
+            try {
+                localStorage.removeItem('balanceaa_session');
+            } catch (e) {}
+            showLoginScreen();
+        }
+
+        // SIDEBAR MOBILE TOGGLE
+        function toggleSidebar() {
+            const sidebar = document.getElementById('mainSidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            if (sidebar) sidebar.classList.toggle('-translate-x-full');
+            if (overlay) overlay.classList.toggle('hidden');
+        }
+
+        // TAB SWITCHER
+        function switchTab(tabName) {
+            let userRole = 'guru';
+            try {
+                const session = JSON.parse(localStorage.getItem('balanceaa_session') || '{}');
+                if (session.role) userRole = session.role;
+            } catch (e) {}
+
+            // Access control check for Siswa
+            if (userRole === 'siswa' && tabName === 'perangkat') {
+                alert('Akses Ditolak: Modul Perangkat Guru hanya dapat diakses oleh akun Guru.');
+                return;
+            }
+
+            const views = ['dashboard', 'dashboard-siswa', 'perangkat', 'lms', 'evaluasi', 'analisis', 'pengaturan'];
+            const titles = {
+                'dashboard': 'Dashboard Utama Guru',
+                'dashboard-siswa': 'Beranda Siswa AKL',
+                'perangkat': 'Perangkat Guru AKL',
+                'lms': 'LMS Akuntansi & Keuangan',
+                'evaluasi': 'Evaluasi & Penilaian Pembelajaran',
+                'analisis': 'Analisis & Visualisasi Nilai Siswa',
+                'pengaturan': 'Pengaturan Platform Balanceaa'
+            };
+
+            views.forEach(v => {
+                const viewEl = document.getElementById(`view-${v}`);
+                const navEl = document.getElementById(`nav-${v}`);
+                if (v === tabName) {
+                    if (viewEl) viewEl.classList.remove('hidden');
+                    if (navEl) {
+                        navEl.classList.add('bg-gradient-to-r', 'from-pink-100/80', 'to-purple-100/50', 'text-pink-700', 'shadow-sm', 'font-semibold');
+                        navEl.classList.remove('text-slate-600');
+                    }
+                } else {
+                    if (viewEl) viewEl.classList.add('hidden');
+                    if (navEl) {
+                        navEl.classList.remove('bg-gradient-to-r', 'from-pink-100/80', 'to-purple-100/50', 'text-pink-700', 'shadow-sm', 'font-semibold');
+                        navEl.classList.add('text-slate-600');
+                    }
+                }
+            });
+
+            const titleEl = document.getElementById('pageTitle');
+            if (titleEl) titleEl.innerText = titles[tabName] || 'Balanceaa';
+
+            // Close mobile sidebar if open
+            if (window.innerWidth < 1024) {
+                const sidebar = document.getElementById('mainSidebar');
+                const overlay = document.getElementById('sidebarOverlay');
+                if (sidebar) sidebar.classList.add('-translate-x-full');
+                if (overlay) overlay.classList.add('hidden');
+            }
+        }
+
+        // CLASS SELECTOR CONTEXT
+        function updateClassContext(className) {
+            const el = document.getElementById('currentClassBadge');
+            if (el) el.innerText = className;
+        }
+
+        // BALANCE CHECKER LOGIC
+        function checkBalance() {
+            const debet = parseFloat(document.getElementById('debitInput').value) || 0;
+            const kredit = parseFloat(document.getElementById('kreditInput').value) || 0;
+            const statusEl = document.getElementById('balanceStatus');
+
+            if (statusEl) {
+                if (debet === kredit && debet > 0) {
+                    statusEl.className = 'text-xs font-extrabold px-3 py-1 rounded-full bg-emerald-100 text-emerald-700';
+                    statusEl.innerHTML = '<i class="fa-solid fa-circle-check mr-1"></i> Balance';
+                } else {
+                    statusEl.className = 'text-xs font-extrabold px-3 py-1 rounded-full bg-rose-100 text-rose-700';
+                    statusEl.innerHTML = '<i class="fa-solid fa-circle-xmark mr-1"></i> Tidak Balance (Selisih: Rp ' + Math.abs(debet - kredit).toLocaleString('id-ID') + ')';
+                }
+            }
+        }
+
+        // SAVE SETTINGS
+        function saveSettings() {
+            const inputEl = document.getElementById('settingNameInput');
+            if (inputEl && inputEl.value.trim() !== '') {
+                const newName = inputEl.value.trim();
+                const nameSidebar = document.getElementById('userNameSidebar');
+                if (nameSidebar) nameSidebar.innerText = newName;
+                const greeting = document.getElementById('greetingText');
+                if (greeting) greeting.innerText = 'Selamat Datang Kembali, ' + newName + '! 👋';
+                
+                try {
+                    const session = JSON.parse(localStorage.getItem('balanceaa_session') || '{}');
+                    session.name = newName;
+                    localStorage.setItem('balanceaa_session', JSON.stringify(session));
+                } catch(e) {}
+
+                alert('Pengaturan profil berhasil diperbarui!');
+            }
+        }
+
+        // CHART INIT
+        function initChart() {
+            const canvas = document.getElementById('dashboardChart');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            activeChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['10 AKL 1', '10 AKL 2', '11 AKL 1', '11 AKL 2'],
+                    datasets: [{
+                        label: 'Rata-Rata Nilai Akuntansi',
+                        data: [84, 82, 88, 85],
+                        backgroundColor: [
+                            'rgba(251, 207, 232, 0.85)',
+                            'rgba(233, 213, 255, 0.85)',
+                            'rgba(187, 247, 208, 0.85)',
+                            'rgba(254, 215, 170, 0.85)'
+                        ],
+                        borderColor: [
+                            '#db2777',
+                            '#9333ea',
+                            '#16a34a',
+                            '#ea580c'
+                        ],
+                        borderWidth: 1.5,
+                        borderRadius: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            min: 60,
+                            max: 100,
+                            grid: { color: 'rgba(241, 245, 249, 0.8)' }
+                        },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
